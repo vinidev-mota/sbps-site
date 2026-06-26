@@ -68,14 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modal-title');
     const modalDate = document.getElementById('modal-date');
     const modalDesc = document.getElementById('modal-description');
-    const modalLink = document.getElementById('modal-link');
     const closeModalBtn = document.querySelector('.close-modal');
 
     function openModal(title, date, content, link) {
         modalTitle.textContent = title;
         modalDate.innerHTML = `<i class="fa-regular fa-calendar"></i> ${date}`;
         modalDesc.innerHTML = content;
-        modalLink.href = link;
 
         // Corrige os links do Google News dentro do modal para abrirem em nova aba
         modalDesc.querySelectorAll('a').forEach(a => a.setAttribute('target', '_blank'));
