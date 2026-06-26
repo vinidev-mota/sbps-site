@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "title": "Nova regra do INSS impacta aposentadorias em 2026",
+    "date": "2026-06-25",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "Uma análise profunda sobre a recente mudança nas regras de concessão."
+  },
+  {
+    "id": 2,
+    "title": "TNU julga critérios para concessão do BPC e distinção entre deficiência e incapacidade",
+    "date": "2026-06-20",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "A Turma Nacional de Uniformização firmou nova tese sobre o BPC."
+  },
+  {
+    "id": 3,
+    "title": "SBPS envia ofício ao INSS e pede esclarecimentos sobre requerimentos",
+    "date": "2026-06-15",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "A Sociedade enviou ofício solicitando respostas rápidas do instituto."
+  },
+  {
+    "id": 4,
+    "title": "STF forma maioria em ação sobre a revisão da vida toda",
+    "date": "2026-06-10",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "O Supremo Tribunal Federal avançou mais um passo na revisão da vida toda."
+  },
+  {
+    "id": 5,
+    "title": "Mudanças no auxílio-doença: o que o trabalhador precisa saber",
+    "date": "2026-06-05",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "As regras para envio de atestados médicos sofreram alterações."
+  },
+  {
+    "id": 6,
+    "title": "Como fica a pensão por morte após a reforma?",
+    "date": "2026-05-30",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "Entenda as cotas e como o cálculo é feito hoje."
+  },
+  {
+    "id": 7,
+    "title": "Congresso discute nova alíquota para servidores públicos",
+    "date": "2026-05-25",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "Debate acalorado nas comissões do Senado sobre contribuições."
+  },
+  {
+    "id": 8,
+    "title": "Aposentadoria Rural: Desafios e Comprovações",
+    "date": "2026-05-20",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "A dificuldade de comprovar o trabalho no campo na era digital."
+  },
+  {
+    "id": 9,
+    "title": "Governo lança novo portal Meu INSS",
+    "date": "2026-05-15",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "A plataforma foi atualizada para ficar mais amigável aos idosos."
+  },
+  {
+    "id": 10,
+    "title": "Aposentadoria especial para profissionais de saúde",
+    "date": "2026-05-10",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "Os requisitos atuais para médicos e enfermeiros."
+  },
+  {
+    "id": 11,
+    "title": "Notícia Antiga que não deve aparecer na home",
+    "date": "2026-05-01",
+    "image": "images/capa-noticias.png",
+    "link": "#",
+    "description": "Se a lógica funcionar, esta só vai aparecer na página de Ver Todas."
+  }
+]

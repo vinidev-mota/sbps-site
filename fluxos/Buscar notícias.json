@@ -1,0 +1,724 @@
+{
+  "name": "Buscar notícias",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d75229a4-b034-4b10-8fd5-bcab3742e83b",
+              "leftValue": "={{ $json.output.relevante }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2288,
+        320
+      ],
+      "id": "c4577efd-85f7-4b05-b3a9-0568e7f21381",
+      "name": "relevante = true?"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  // 1. Portais Governamentais e Jurídicos (Via Google News para evitar erro 403 e 404)\n  { \n    url: \"https://news.google.com/rss/search?q=site:gov.br+previdencia&hl=pt-BR&gl=BR&ceid=BR:pt-419\", \n    fonte: \"Gov.br\" \n  },\n  { \n    url: \"https://news.google.com/rss/search?q=site:stf.jus.br+previdencia&hl=pt-BR&gl=BR&ceid=BR:pt-419\", \n    fonte: \"STF\" \n  },\n  { \n    url: \"https://news.google.com/rss/search?q=site:stj.jus.br+previdencia&hl=pt-BR&gl=BR&ceid=BR:pt-419\", \n    fonte: \"STJ\" \n  },\n  \n  // 2. Grandes Portais (Via RSS Nativo - Testados com Sucesso)\n  { \n    url: \"https://g1.globo.com/rss/g1/economia/\", \n    fonte: \"G1\" \n  },\n  { \n    url: \"https://rss.uol.com.br/feed/economia.xml\", \n    fonte: \"UOL\" \n  },\n  { \n    url: \"https://www.cnnbrasil.com.br/feed/\", \n    fonte: \"CNN Brasil\" \n  },\n  { \n    url: \"https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml\", \n    fonte: \"Agência Brasil\" \n  },\n  { \n    url: \"https://feeds.folha.uol.com.br/mercado/rss091.xml\", \n    fonte: \"Folha de São Paulo\" \n  },\n  \n  // 3. Portais Especializados em Previdência\n  { \n    url: \"https://previdenciarista.com/blog/feed/\", \n    fonte: \"Previdenciarista\" // RSS Nativo funcionando perfeitamente\n  },\n  { \n    url: \"https://news.google.com/rss/search?q=site:previdenciatotal.com.br+previdencia&hl=pt-BR&gl=BR&ceid=BR:pt-419\", \n    fonte: \"Previdência Total\" // Via Google News para evitar erro 404\n  },\n  { \n    url: \"https://news.google.com/rss/search?q=site:ieprev.com.br+previdencia&hl=pt-BR&gl=BR&ceid=BR:pt-419\", \n    fonte: \"IEPREV\" // Via Google News para evitar erro 404\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "92b9fc24-09d3-4cbe-ba5e-3ac382159808",
+      "name": "urls de sites pra busca"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 12
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2fb27995-e88d-475f-bab1-71aa18cc5246",
+      "name": "a cada 35 min"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "cb7f14ec-34cc-42cc-8564-8d7928983dd4",
+      "name": "1 site por vez"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        16
+      ],
+      "id": "9ae88ce7-a4f7-4dc2-b2b5-a510c2c8ad03",
+      "name": "Todas as notícias"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. PALAVRAS FORTES (Específicas)\nconst strongKeywords = [\n  \"inss\", \"previdência\", \"previdencia\", \"loas\", \"bpc\", \n  \"revisão da vida toda\", \"direito previdenciário\", \"benefício previdenciário\", \"auxílio-doença\"\n];\n\n// 2. PALAVRAS FRACAS (Agora mais focadas)\nconst weakKeywords = [\n  \"aposentadoria\", \"aposentado\", \"pensão\"\n];\n\n// 3. BLACKLIST (Lista Negra expandida com saúde, dieta e comportamento)\nconst negativeKeywords = [\n  // Esportes e Famosos\n  \"futebol\", \"jogador\", \"técnico\", \"esporte\", \"campeonato\", \"novela\", \n  \"filme\", \"ator\", \"atriz\", \"cinema\", \"show\", \"música\", \"fofoca\", \"bbb\",\n  // Saúde e Culinária\n  \"alimento\", \"superalimento\", \"dieta\", \"nutrição\", \"receita\", \"saúde mental\",\n  \"emagrecer\", \"calorias\", \"prato\", \"gastronomia\", \"chef\"\n];\n\nconst filteredItems = [];\n\n// Função auxiliar para buscar palavras exatas (evita que \"inss\" aprove \"inssuportável\")\nfunction containsWord(text, wordList) {\n  return wordList.some(word => {\n    // Cria uma regra que exige que a palavra esteja \"solta\" no texto\n    const regex = new RegExp(`\\\\b${word}\\\\b`, 'i'); \n    return regex.test(text);\n  });\n}\n\nfor (const item of $input.all()) {\n  const title = (item.json.title || \"\").toLowerCase();\n  const content = (item.json.content || item.json.contentSnippet || item.json.description || \"\").toLowerCase();\n  \n  // Removemos a acentuação para a análise ficar ainda mais perfeita\n  const textToAnalyze = (title + \" \" + content)\n    .normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\");\n\n  // Removemos acentos das nossas listas de palavras antes de testar\n  const cleanNegatives = negativeKeywords.map(w => w.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\"));\n  const cleanStrong = strongKeywords.map(w => w.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\"));\n  const cleanWeak = weakKeywords.map(w => w.normalize('NFD').replace(/[\\u0300-\\u036f]/g, \"\"));\n\n  // 1. Passa pela Blacklist?\n  if (containsWord(textToAnalyze, cleanNegatives)) {\n    continue; // Descarta imediatamente\n  }\n\n  // 2. Tem palavra Forte?\n  const hasStrong = containsWord(textToAnalyze, cleanStrong);\n  \n  // 3. Tem palavra Fraca?\n  const hasWeak = containsWord(textToAnalyze, cleanWeak);\n\n  // Aprova apenas se for o assunto certo!\n  if (hasStrong || hasWeak) {\n    filteredItems.push(item);\n  }\n}\n\nreturn filteredItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        16
+      ],
+      "id": "113d3ea8-fc97-4832-9090-d3ad174cab73",
+      "name": "filtro inicial notícias"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1072,
+        16
+      ],
+      "id": "457251aa-e8bb-49f8-ab91-ec88516adac3",
+      "name": "1 notícia filtrada por vez"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Avalie esta notícia:\nTítulo: {{ $('1 notícia filtrada por vez').item.json.title }}\nResumo/Conteúdo Original: {{ $('1 notícia filtrada por vez').item.json.contentSnippet }}\nFonte: {{ $('1 notícia filtrada por vez').item.json.categories[0] }}\nLink: {{ $('1 notícia filtrada por vez').item.json.link }}\nData: {{ $('1 notícia filtrada por vez').item.json.pubDate }}\nISO Date: {{ $('1 notícia filtrada por vez').item.json.isoDate }}\n",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Você é um Curador Chefe Especialista em Direito Previdenciário, INSS e Benefícios Sociais do Brasil. Sua função é analisar notícias e decidir com extremo rigor se elas devem ser aprovadas para um portal especializado.  REGRAS DE APROVAÇÃO: - Aceite APENAS regras do INSS, BPC/LOAS, pensões, auxílios, direito trabalhista, decisões do STF/STJ que afetem essas áreas, e serviços corporativos para servidores/beneficiários. - REJEITE IMEDIATAMENTE: Política não-relacionada, esportes, celebridades, receitas, dicas de saúde, investimentos gerais, bolsa de valores, dicas financeiras amplas e notícias do exterior (ex: EUA, Europa). Seja implacável ao rejeitar.  TAREFA ADICIONAL (LIMPEZA E ESTRUTURAÇÃO): Se a notícia for APROVADA (relevante = true), formate o título, escreva um resumo de até 2 ou 3 frases (sem propagandas ou links) e limpe o conteúdo principal.  \n\nFORMATO DE RESPOSTA OBRIGATÓRIO:\nVocê DEVE retornar APENAS um objeto JSON válido. \nNÃO USE blocos de código markdown (como ```json). A sua resposta deve começar com { e terminar com }.\n\nSe APROVADA, preencha os campos com os dados REAIS da notícia:\n{\n  \"relevante\": true,\n  \"title\": \"Título formatado\",\n  \"summary\": \"Resumo criado por você\",\n  \"content\": \"Conteúdo limpo da notícia\",\n  \"source\": \"Nome do site (ex: G1)\",\n  \"url\": \"Link original exato\",\n  \"image_url\": \"Link da imagem (ou \\\"\\\" se não tiver)\",\n  \"published_at\": \"Data de publicação (ou \\\"\\\" se não tiver)\"\n}\n\nSe REPROVADA, retorne os dados vazios:\n{\n  \"relevante\": false,\n  \"title\": \"\",\n  \"summary\": \"\",\n  \"content\": \"\",\n  \"source\": \"\",\n  \"url\": \"\",\n  \"image_url\": \"\",\n  \"published_at\": \"\"\n}\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1696,
+        16
+      ],
+      "id": "7c419acf-aa1e-41e6-a81b-1190cba63a9f",
+      "name": "Validação final da notícia"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "sbps",
+          "mode": "list",
+          "cachedResultName": "sbps"
+        },
+        "table": {
+          "__rl": true,
+          "value": "news",
+          "mode": "list",
+          "cachedResultName": "news"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "title": "={{ $json.output.title }}",
+            "summary": "={{ $json.output.summary }}",
+            "content": "={{ $json.output.content }}",
+            "source": "={{ $json.output.source }}",
+            "url": "={{ $json.output.url }}",
+            "image_url": "={{ $json.output.image_url }}",
+            "published_at": "={{ $json.output.published_at }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "author",
+              "displayName": "author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "image_url",
+              "displayName": "image_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "published_at",
+              "displayName": "published_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2544,
+        304
+      ],
+      "id": "91fcadb7-e8c7-4809-b2d3-3bed4969495f",
+      "name": "Sobe as notícias pro banco de dados",
+      "credentials": {
+        "postgres": {
+          "id": "q1745eLyLUYnlyyg",
+          "name": "Postgres coolify"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1696,
+        240
+      ],
+      "id": "7d2bc54b-3921-44e0-97e8-eef8f9fe7744",
+      "name": "2.5-flash - 0.2 temperatura",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "cbuKmaJGnyymXUR7",
+          "name": "search-news"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1840,
+        352
+      ],
+      "id": "8bd4acb7-1dac-4344-bb31-bd0f80695b84",
+      "name": "2.5-flash - 0.2 temperature",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "cbuKmaJGnyymXUR7",
+          "name": "search-news"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"relevante\": true,\n  \"title\": \"Novo lote do PIS é liberado hoje\",\n  \"summary\": \"Trabalhadores podem sacar o novo lote do PIS a partir de hoje...\",\n  \"content\": \"Texto longo da notícia sobre o PIS aqui...\",\n  \"source\": \"G1\",\n  \"url\": \"https://g1.globo.com/noticia/pis\",\n  \"image_url\": \"https://s2-g1.globo.com/imagem.jpg\",\n  \"published_at\": \"2023-10-25T14:30:00Z\"\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1840,
+        192
+      ],
+      "id": "88d69467-2b12-4758-9059-a747c789c060",
+      "name": "Validação da estrutura do output"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -144
+      ],
+      "id": "d6c448a1-bfc5-4413-b9cd-b6aac34e8ab4",
+      "name": "Não executa nada - fim do fluxo"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id FROM sbps.news WHERE url = '{{ $json.link }}'\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1280,
+        32
+      ],
+      "id": "831c358c-13d2-4ec2-ad64-cc8b5a4c20d8",
+      "name": "Execute a SQL query",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "q1745eLyLUYnlyyg",
+          "name": "Postgres coolify"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "88252200-812c-418e-bc2e-3f6086bc0e78",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1472,
+        32
+      ],
+      "id": "df45f10e-7f36-43cd-b121-f9f8ca4e18b8",
+      "name": "Não existe no bd?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": ""
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  JSON.stringify({\n    \"generationConfig\": {\n      \"responseMimeType\": \"application/json\"\n    },\n    \"contents\": [\n      {\n        \"parts\": [\n          {\n            \"text\": \"Você é um Curador Chefe Especialista em Direito Previdenciário, INSS e Benefícios Sociais do Brasil. Sua função é analisar notícias e decidir com extremo rigor se elas devem ser aprovadas para um portal especializado.\\n\\nREGRAS DE APROVAÇÃO:\\n- Aceite APENAS regras do INSS, BPC/LOAS, pensões, auxílios, direito trabalhista, decisões do STF/STJ que afetem essas áreas, e serviços corporativos para servidores/beneficiários.\\n- REJEITE IMEDIATAMENTE: Política não-relacionada, esportes, celebridades, receitas, dicas de saúde, investimentos gerais, bolsa de valores, dicas financeiras amplas e notícias do exterior (ex: EUA, Europa). Seja implacável ao rejeitar.\\n\\nTAREFA ADICIONAL (LIMPEZA E ESTRUTURAÇÃO):\\nSe a notícia for APROVADA (relevante = true), formate o título, escreva um resumo de até 2 ou 3 frases (sem propagandas ou links) e limpe o conteúdo principal.\\n\\nFORMATO DE RESPOSTA OBRIGATÓRIO:\\nVocê DEVE retornar APENAS um objeto JSON válido. \\nNÃO USE blocos de código markdown. A sua resposta deve começar com { e terminar com }.\\n\\nSe APROVADA, preencha os campos com os dados REAIS da notícia:\\n{\\n  \\\"relevante\\\": true,\\n  \\\"title\\\": \\\"Título formatado\\\",\\n  \\\"summary\\\": \\\"Resumo criado por você\\\",\\n  \\\"content\\\": \\\"Conteúdo limpo da notícia\\\",\\n  \\\"source\\\": \\\"Nome do site\\\",\\n  \\\"url\\\": \\\"Link original exato\\\",\\n  \\\"image_url\\\": \\\"Link da imagem\\\",\\n  \\\"published_at\\\": \\\"Data de publicação\\\"\\n}\\n\\nSe REPROVADA, retorne os dados vazios:\\n{\\n  \\\"relevante\\\": false,\\n  \\\"title\\\": \\\"\\\",\\n  \\\"summary\\\": \\\"\\\",\\n  \\\"content\\\": \\\"\\\",\\n  \\\"source\\\": \\\"\\\",\\n  \\\"url\\\": \\\"\\\",\\n  \\\"image_url\\\": \\\"\\\",\\n  \\\"published_at\\\": \\\"\\\"\\n}\\n\\n=================================\\n\\nAGORA AVALIE ESTA NOTÍCIA:\\nTítulo: \" + $('1 notícia filtrada por vez').item.json.title + \"\\nResumo/Conteúdo Original: \" + $('1 notícia filtrada por vez').item.json.contentSnippet + \"\\nFonte: \" + ($('1 notícia filtrada por vez').item.json.categories ? $('1 notícia filtrada por vez').item.json.categories[0] : 'Desconhecida') + \"\\nLink: \" + $('1 notícia filtrada por vez').item.json.link + \"\\nData: \" + $('1 notícia filtrada por vez').item.json.pubDate + \"\\nISO Date: \" + $('1 notícia filtrada por vez').item.json.isoDate\n          }\n        ]\n      }\n    ]\n  })\n}}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1712,
+        -208
+      ],
+      "id": "13d70776-3253-498f-83e0-a497b89d8b78",
+      "name": "Requisição Gemini"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Array para guardar os itens formatados\nconst newItems = [];\n\nfor (const item of $input.all()) {\n  try {\n    // 1. Acessa o texto bruto que o Gemini gerou\n    const rawText = item.json.candidates[0].content.parts[0].text;\n    \n    // 2. Converte a string (texto) em um Objeto JSON real\n    const parsedData = JSON.parse(rawText);\n    \n    // 3. Substitui toda a bagunça do Google apenas pelos nossos dados limpinhos\n    newItems.push({\n      json: parsedData\n    });\n\n  } catch (error) {\n    // Se por acaso a IA bugar e não retornar um JSON válido, salvamos o erro para não quebrar o fluxo\n    newItems.push({\n      json: {\n        erro_no_parse: error.message,\n        retorno_original: item.json\n      }\n    });\n  }\n}\n\n// Retorna os dados limpos para os próximos nós do n8n\nreturn newItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1936,
+        -208
+      ],
+      "id": "aa2ac0f1-5e3e-47d0-a6b5-e2692f07251c",
+      "name": "Output estruturado"
+    },
+    {
+      "parameters": {
+        "content": "Evita o erro de Excesso de Requisição\nOpção de usar a IA por HTTP Request (se necessário) e estruturar o output com o nó code (Gasta mais Tokens)",
+        "height": 304,
+        "width": 528,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1616,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "cf910607-4c14-46c3-b375-dac90c8a9ae7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2816,
+        576
+      ],
+      "id": "9c1d8c1c-f2c0-4ccc-b6fe-2ed2b754cc43",
+      "name": "espera 6s",
+      "webhookId": "a5a339c5-54c8-4f4e-8782-0e7438847ed7"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "relevante = true?": {
+      "main": [
+        [
+          {
+            "node": "Sobe as notícias pro banco de dados",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "espera 6s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "urls de sites pra busca": {
+      "main": [
+        [
+          {
+            "node": "1 site por vez",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "a cada 35 min": {
+      "main": [
+        [
+          {
+            "node": "urls de sites pra busca",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1 site por vez": {
+      "main": [
+        [
+          {
+            "node": "Não executa nada - fim do fluxo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Todas as notícias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Todas as notícias": {
+      "main": [
+        [
+          {
+            "node": "filtro inicial notícias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtro inicial notícias": {
+      "main": [
+        [
+          {
+            "node": "1 notícia filtrada por vez",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1 notícia filtrada por vez": {
+      "main": [
+        [
+          {
+            "node": "1 site por vez",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validação final da notícia": {
+      "main": [
+        [
+          {
+            "node": "relevante = true?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2.5-flash - 0.2 temperatura": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Validação final da notícia",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2.5-flash - 0.2 temperature": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Validação da estrutura do output",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validação da estrutura do output": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Validação final da notícia",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sobe as notícias pro banco de dados": {
+      "main": [
+        [
+          {
+            "node": "espera 6s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Não existe no bd?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Não existe no bd?": {
+      "main": [
+        [
+          {
+            "node": "Validação final da notícia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "1 notícia filtrada por vez",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Requisição Gemini": {
+      "main": [
+        [
+          {
+            "node": "Output estruturado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output estruturado": {
+      "main": [
+        []
+      ]
+    },
+    "espera 6s": {
+      "main": [
+        [
+          {
+            "node": "1 notícia filtrada por vez",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c1e3f7a0-f57a-4ef1-955f-4d34e696179c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0abc1313c0f80f64c46fd52d77bafe0581491f6a87956f5984fac7e0651e0f57"
+  },
+  "nodeGroups": [],
+  "id": "p0p7yRra58kJ74yu",
+  "tags": []
+}

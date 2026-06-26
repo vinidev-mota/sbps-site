@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBPS - Sociedade Brasileira de Previdência Social</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Wrapper for Sticky Position -->
+    <div class="header-wrapper">
+        <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container top-bar-inner">
+            <div class="top-bar-left">
+                <a href="mailto:contato@sbps.org.br"><i class="fa-solid fa-envelope"></i> contato@sbps.org.br</a>
+                <a href="#"><i class="fa-solid fa-phone"></i> (00) 0000-0000</a>
+                <a href="#"><i class="fa-solid fa-user"></i> Área do Associado</a>
+            </div>
+            <div class="top-bar-right">
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Nav -->
+    <header class="main-header">
+        <div class="container header-inner">
+            <div class="logo">
+                <img src="images/image-header.png" alt="SBPS Logo" class="logo-img">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="dropdown">
+                        <a href="#">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">OBJETIVOS</a></li>
+                            <li><a href="#">DIRETORIA</a></li>
+                            <li><a href="#">DESCRIÇÃO DE DIRETORIAS</a></li>
+                            <li><a href="#">RESOLUÇÕES</a></li>
+                            <li><a href="#">ESTATUTO</a></li>
+                            <li><a href="#">CONVÊNIOS</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">PUBLICAÇÕES</a></li>
+                    <li><a href="#">EVENTOS</a></li>
+                    <li><a href="#">NOTAS</a></li>
+                    <li><a href="#">CONTATOS</a></li>
+                </ul>
+                <a href="#" class="btn btn-associe">ASSOCIE-SE</a>
+                <button class="search-btn"><i class="fa-solid fa-search"></i></button>
+            </nav>
+        </div>
+    </header>
+    </div>
+
+    <!-- Quem Somos Section -->
+    <section class="section quem-somos">
+        <div class="container grid-2">
+            <div class="image-collage">
+                <img src="images/capa-sociedade.png" alt="Capa Sociedade" class="img-main anim-float">
+                <img src="images/capa.jpg" alt="Edifício" class="img-secondary anim-float-delayed">
+            </div>
+            <div class="text-content">
+                <span class="subtitle">QUEM SOMOS</span>
+                <h1 class="title">Sociedade Brasileira de Previdência Social (SBPS)</h1>
+                <p class="description">
+                    A Sociedade Brasileira de Previdência Social (SBPS) é uma associação civil de cunho científico, acadêmico e de finalidade sociocultural, sem fins lucrativos e apartidária. Regida pelas disposições do Código Civil Brasileiro e por seu Estatuto Social, a SBPS é constituída por prazo indeterminado e possui atuação em todo o território nacional, promovendo o estudo, a difusão e o aprimoramento da previdência social no país.
+                </p>
+                <a href="#" class="btn btn-primary mt-4">SAIBA MAIS</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notícias Section -->
+    <section class="section noticias">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <span class="subtitle">NOTÍCIAS & ARTIGOS</span>
+                    <h2 class="title">SBPS em destaque</h2>
+                </div>
+                <a href="noticias.html" class="link-all">ver todos <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="carousel-container" data-carousel>
+                <button class="carousel-btn prev-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="carousel-track-wrapper">
+                    <div class="carousel-track" id="news-carousel-track">
+                        <!-- Os cards serão injetados aqui via Javascript -->
+                    </div>
+                </div>
+                <button class="carousel-btn next-btn"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Associe-se Section -->
+    <section class="section associe-se bg-light">
+        <div class="container grid-2">
+            <div class="text-content">
+                <span class="subtitle">ASSOCIE-SE</span>
+                <h2 class="title">Seja um associado da SBPS</h2>
+                <p class="description highlight-text">
+                    <strong>A SBPS não tem fins lucrativos ou políticos.</strong><br>
+                    Conheça os principais benefícios de se tornar associado:
+                </p>
+                <ul class="benefits-list">
+                    <li>
+                        <div class="icon-box"><i class="fa-solid fa-percent"></i></div>
+                        <p>Desconto exclusivo nas inscrições de eventos (congressos, seminários e simpósios) realizados pela SBPS.</p>
+                    </li>
+                    <li>
+                        <div class="icon-box"><i class="fa-solid fa-tags"></i></div>
+                        <p>Valores diferenciados na inscrição de cursos presenciais, online e mentorias de capacitação.</p>
+                    </li>
+                    <li>
+                        <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                        <p>Acesso a informativos, boletins periódicos e artigos acadêmicos com atualizações da área previdenciária.</p>
+                    </li>
+                    <li>
+                        <div class="icon-box"><i class="fa-solid fa-users"></i></div>
+                        <p>Participação em uma comunidade ativa para fomento de debates jurídicos, científicos e networking profissional.</p>
+                    </li>
+                </ul>
+                <a href="#" class="btn btn-primary mt-4">SAIBA MAIS</a>
+            </div>
+            <div class="image-wrapper">
+                <img src="images/seja-associado.png" alt="Associe-se" class="img-full rounded shadow-lg hover-scale">
+            </div>
+        </div>
+    </section>
+
+    <!-- Cursos e Eventos Section -->
+    <section class="section cursos-eventos">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <span class="subtitle">CURSOS & EVENTOS</span>
+                    <h2 class="title">Próximos cursos e eventos</h2>
+                </div>
+                <a href="#" class="link-all">ver todos <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="carousel-container" data-carousel>
+                <button class="carousel-btn prev-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="carousel-track-wrapper">
+                    <div class="carousel-track">
+                        <!-- Course 1 -->
+                        <div class="news-card">
+                            <div class="news-img">
+                                <img src="images/ref2.jpg" alt="Curso 1">
+                                <span class="badge" style="background-color: var(--color-primary); color: #fff;">curso presencial</span>
+                            </div>
+                            <div class="news-content">
+                                <p class="news-date">INSCRIÇÕES: 13/06/2026 à 01/08/2026</p>
+                                <h3 class="news-title">Planejamento Previdenciário Integrado - Método 4x4 - Presencial em Recife/PE</h3>
+                                <a href="#" class="read-more">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- Course 2 -->
+                        <div class="news-card">
+                            <div class="news-img">
+                                <img src="images/ref1.jpg" alt="Curso 2">
+                                <span class="badge" style="background-color: var(--color-primary); color: #fff;">encontro de associados</span>
+                            </div>
+                            <div class="news-content">
+                                <p class="news-date">INSCRIÇÕES: 17/06/2026 à 09/07/2026</p>
+                                <h3 class="news-title">Encontro de Associados: Aposentadoria da Pessoa com Deficiência: Avaliação Biopsicossocial</h3>
+                                <a href="#" class="read-more">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- Course 3 -->
+                        <div class="news-card">
+                            <div class="news-img">
+                                <img src="images/ref3.png" alt="Curso 3">
+                                <span class="badge" style="background-color: var(--color-primary); color: #fff;">encontro de associados</span>
+                            </div>
+                            <div class="news-content">
+                                <p class="news-date">INSCRIÇÕES: 15/06/2026 à 16/07/2026</p>
+                                <h3 class="news-title">Encontro de Associados: Reformas Previdenciárias Estaduais</h3>
+                                <a href="#" class="read-more">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-btn next-btn"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>Onde estamos</h3>
+                <p><strong>Sociedade Brasileira de Previdência Social</strong></p>
+                <p>Endereço completo da sede da SBPS.</p>
+                <p>CEP: 00000-000</p>
+                <br>
+                <p><strong>Horário de atendimento:</strong></p>
+                <p>Segunda a sexta das 9h às 18h.</p>
+                <div class="social-links mt-3">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Acesso rápido</h3>
+                <ul>
+                    <li><a href="#">Área do associado</a></li>
+                    <li><a href="#">Publicações</a></li>
+                    <li><a href="#">Cursos & Eventos</a></li>
+                    <li><a href="#">Notas</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contatos</h3>
+                <p><strong>Atendimento:</strong></p>
+                <p>(00) 0000-0000</p>
+                <p>contato@sbps.org.br</p>
+                <br>
+                <p><strong>Administrativo:</strong></p>
+                <p>adm@sbps.org.br</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Sociedade Brasileira de Previdência Social. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- News Modal -->
+    <div id="news-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal"><i class="fa-solid fa-xmark"></i></span>
+            <div class="modal-body">
+                <p class="modal-date" id="modal-date"></p>
+                <h2 id="modal-title"></h2>
+                <div id="modal-description" class="modal-desc"></div>
+                <div class="modal-footer">
+                    <a href="#" id="modal-link" target="_blank" class="btn btn-primary">Ler matéria completa no site original</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/5500000000000" target="_blank" class="whatsapp-btn">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    
+    <script src="scripts/script.js"></script>
+</body>
+</html>
