@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // Evento para abrir o modal
+            // Redireciona para a página da notícia
             card.querySelector('.read-more').addEventListener('click', () => {
-                openModal(item.title, dateStr, cleanContent, item.link);
+                window.location.href = `noticia.html?id=${item.id}`;
             });
 
             if (track) {
@@ -63,34 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (track) initCarousel();
     }
 
-    // Lógica do Modal
-    const modal = document.getElementById('news-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalDate = document.getElementById('modal-date');
-    const modalDesc = document.getElementById('modal-description');
-    const closeModalBtn = document.querySelector('.close-modal');
-
-    function openModal(title, date, content, link) {
-        modalTitle.textContent = title;
-        modalDate.innerHTML = `<i class="fa-regular fa-calendar"></i> ${date}`;
-        modalDesc.innerHTML = content;
-
-        // Corrige os links do Google News dentro do modal para abrirem em nova aba
-        modalDesc.querySelectorAll('a').forEach(a => a.setAttribute('target', '_blank'));
-
-        modal.classList.add('show');
-        document.body.style.overflow = 'hidden'; // Impede rolagem da página de fundo
-    }
-
-    function closeModal() {
-        modal.classList.remove('show');
-        document.body.style.overflow = '';
-    }
-
-    closeModalBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
+    // (Lógica de Modal removida, pois agora usamos uma página dedicada)
 
     // Função de Carrossel adaptada
     function initCarousel() {
@@ -215,6 +188,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Marca para não inicializar de novo no fetch
             cursosCarousel.removeAttribute('data-carousel');
+        }
+    }
+
+    // --- Lógica da Página de Artigo Completo (noticia.html) ---
+    const articleContainer = document.querySelector('.article-page');
+    if (articleContainer) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const articleId = urlParams.get('id');
+        
+        if (articleId) {
+            fetch('data/noticias.json')
+                .then(response => response.json())
+                .then(data => {
+                    const item = data.find(n => n.id == articleId);
+                    if (item) {
+                        document.getElementById('article-loading').style.display = 'none';
+                        document.getElementById('article-content').style.display = 'block';
+                        
+                        document.getElementById('page-article-title').textContent = item.title;
+                        
+                        const dateObj = new Date(item.date);
+                        dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
+                        const dateStr = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+                        document.getElementById('page-article-meta').innerHTML = `<i class="fa-regular fa-calendar"></i> ${dateStr}`;
+                        
+                        const imgWrapper = document.querySelector('.article-image-wrapper');
+                        
+                        if (item.image) {
+                            imgWrapper.innerHTML = `<img id="page-article-image" src="${item.image}" alt="Capa da notícia" style="width: 100%; height: auto; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">`;
+                            const img = document.getElementById('page-article-image');
+                            img.onerror = () => { imgWrapper.style.display = 'none'; };
+                        } else {
+                            imgWrapper.innerHTML = `<img id="page-article-image" src="images/header-noticias.png" alt="Capa da notícia" style="width: 100%; height: auto; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">`;
+                            const img = document.getElementById('page-article-image');
+                            img.onerror = () => { imgWrapper.style.display = 'none'; };
+                        }
+                        
+                        document.getElementById('page-article-body').innerHTML = item.description || "Conteúdo não disponível.";
+                        
+                        const sourceLink = document.getElementById('page-article-link');
+                        if (item.link && item.link !== '#') {
+                            sourceLink.href = item.link;
+                        } else {
+                            document.querySelector('.article-footer').style.display = 'none';
+                        }
+                    } else {
+                        document.getElementById('article-loading').style.display = 'none';
+                        document.getElementById('article-error').style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    console.error('Erro ao buscar notícia:', err);
+                    document.getElementById('article-loading').style.display = 'none';
+                    document.getElementById('article-error').style.display = 'block';
+                });
+        } else {
+            document.getElementById('article-loading').style.display = 'none';
+            document.getElementById('article-error').style.display = 'block';
         }
     }
 });

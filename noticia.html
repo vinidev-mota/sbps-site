@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notícias - Sociedade Brasileira de Previdência Social</title>
+    <title>Notícia - Sociedade Brasileira de Previdência Social</title>
     <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,18 +63,37 @@
     </header>
     </div>
 
-    <!-- Notícias Section -->
-    <section class="section noticias" style="min-height: 60vh;">
-        <div class="container">
-            <div class="section-header">
-                <div>
-                    <span class="subtitle">ARQUIVO COMPLETO</span>
-                    <h2 class="title">Todas as Notícias</h2>
-                </div>
+    <!-- Artigo Section -->
+    <section class="section article-page" style="min-height: 60vh;">
+        <div class="container article-container">
+            <!-- Loading Indicator -->
+            <div id="article-loading" style="text-align: center; padding: 50px 0;">
+                <p>Carregando notícia...</p>
             </div>
             
-            <div class="news-grid" id="all-news-grid" style="margin-bottom: 40px;">
-                <!-- Os cards serão injetados aqui via Javascript -->
+            <!-- Article Content (hidden initially) -->
+            <div id="article-content" style="display: none;">
+                
+                <div class="article-image-wrapper">
+                    <img id="page-article-image" src="" alt="Capa da notícia">
+                </div>
+
+                <h1 class="article-title" id="page-article-title"></h1>
+                <p class="article-meta" id="page-article-meta"></p>
+
+                <div class="article-body" id="page-article-body"></div>
+                
+                <div class="article-footer">
+                    <p>Fonte:</p>
+                    <a href="#" id="page-article-link" target="_blank" class="article-source-link">Acessar matéria na fonte original <i class="fa-solid fa-external-link-alt"></i></a>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="article-error" style="display: none; text-align: center; padding: 50px 0;">
+                <h2>Notícia não encontrada</h2>
+                <p>A notícia que você está procurando não existe ou foi removida.</p>
+                <a href="noticias.html" class="btn btn-primary mt-3">Voltar para notícias</a>
             </div>
         </div>
     </section>
@@ -122,7 +141,6 @@
             </div>
         </div>
     </footer>
-
 
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/5500000000000" target="_blank" class="whatsapp-btn">
