@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const newsItems = allNewsGrid ? items : items.slice(0, 10);
 
         newsItems.forEach(item => {
-            let imageUrl = item.image || 'images/capa-noticias.png';
+            let imageUrl = (item.image && item.image !== "[empty]") ? item.image : 'images/capa-noticias.png';
 
             // Formatar data (assumindo formato YYYY-MM-DD ou similar)
             const dateObj = new Date(item.date);
@@ -215,15 +215,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         const imgWrapper = document.querySelector('.article-image-wrapper');
                         
-                        if (item.image) {
-                            imgWrapper.innerHTML = `<img id="page-article-image" src="${item.image}" alt="Capa da notícia" style="width: 100%; height: auto; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">`;
-                            const img = document.getElementById('page-article-image');
-                            img.onerror = () => { imgWrapper.style.display = 'none'; };
-                        } else {
-                            imgWrapper.innerHTML = `<img id="page-article-image" src="images/header-noticias.png" alt="Capa da notícia" style="width: 100%; height: auto; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">`;
-                            const img = document.getElementById('page-article-image');
-                            img.onerror = () => { imgWrapper.style.display = 'none'; };
-                        }
+                        let imageUrl = (item.image && item.image !== "[empty]") ? item.image : "images/capa-noticias.png";
+                        imgWrapper.innerHTML = `<img id="page-article-image" src="${imageUrl}" alt="Capa da notícia" style="width: 100%; height: 350px; object-fit: cover; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">`;
+                        const img = document.getElementById('page-article-image');
+                        img.onerror = function() {
+                            if (!this.src.includes('capa-noticias.png')) {
+                                this.src = 'images/capa-noticias.png';
+                            } else {
+                                imgWrapper.style.display = 'none';
+                            }
+                        };
                         
                         document.getElementById('page-article-body').innerHTML = item.description || "Conteúdo não disponível.";
                         
