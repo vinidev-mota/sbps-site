@@ -110,24 +110,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             let interval = setInterval(moveNext, 5000);
+            let isHovered = false;
 
             if (nextBtn && prevBtn) {
                 nextBtn.addEventListener('click', () => {
                     clearInterval(interval);
                     moveNext();
-                    interval = setInterval(moveNext, 5000);
+                    if (!isHovered) interval = setInterval(moveNext, 5000);
                 });
 
                 prevBtn.addEventListener('click', () => {
                     clearInterval(interval);
                     movePrev();
-                    interval = setInterval(moveNext, 5000);
+                    if (!isHovered) interval = setInterval(moveNext, 5000);
                 });
             }
 
             // Pause on hover
-            carousel.addEventListener('mouseenter', () => clearInterval(interval));
+            carousel.addEventListener('mouseenter', () => {
+                isHovered = true;
+                clearInterval(interval);
+            });
             carousel.addEventListener('mouseleave', () => {
+                isHovered = false;
+                clearInterval(interval);
                 interval = setInterval(moveNext, 5000);
             });
         });
@@ -174,17 +180,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             let interval = setInterval(moveNext, 5000);
+            let isHovered = false;
 
             if (nextBtn && prevBtn) {
                 nextBtn.addEventListener('click', () => {
-                    clearInterval(interval); moveNext(); interval = setInterval(moveNext, 5000);
+                    clearInterval(interval); 
+                    moveNext(); 
+                    if (!isHovered) interval = setInterval(moveNext, 5000);
                 });
                 prevBtn.addEventListener('click', () => {
-                    clearInterval(interval); movePrev(); interval = setInterval(moveNext, 5000);
+                    clearInterval(interval); 
+                    movePrev(); 
+                    if (!isHovered) interval = setInterval(moveNext, 5000);
                 });
             }
-            cursosCarousel.addEventListener('mouseenter', () => clearInterval(interval));
-            cursosCarousel.addEventListener('mouseleave', () => { interval = setInterval(moveNext, 5000); });
+            cursosCarousel.addEventListener('mouseenter', () => {
+                isHovered = true;
+                clearInterval(interval);
+            });
+            cursosCarousel.addEventListener('mouseleave', () => { 
+                isHovered = false;
+                clearInterval(interval);
+                interval = setInterval(moveNext, 5000); 
+            });
 
             // Marca para não inicializar de novo no fetch
             cursosCarousel.removeAttribute('data-carousel');
