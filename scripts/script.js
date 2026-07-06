@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Fetch News from local JSON file
-    fetch('data/noticias.json')
+    fetch('data/noticias.json?t=' + new Date().getTime())
         .then(response => response.json())
         .then(data => {
             if (data && data.length > 0) {
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const articleId = urlParams.get('id');
         
         if (articleId) {
-            fetch('data/noticias.json')
+            fetch('data/noticias.json?t=' + new Date().getTime())
                 .then(response => response.json())
                 .then(data => {
                     const item = data.find(n => n.id == articleId);
