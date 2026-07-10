@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Determine base path to handle root vs subfolder
+    const isSubfolder = window.location.pathname.includes('/pages/');
+    const basePath = isSubfolder ? '../' : './';
+
     // 1. Fetch News from local JSON file
-    fetch('data/noticias.json?t=' + new Date().getTime())
+    fetch(basePath + 'data/noticias.json?t=' + new Date().getTime())
         .then(response => response.json())
         .then(data => {
             if (data && data.length > 0) {
@@ -23,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const newsItems = allNewsGrid ? items : items.slice(0, 10);
 
         newsItems.forEach(item => {
-            let imageUrl = (item.image && item.image !== "[empty]") ? item.image : 'images/capa-noticias.png';
+            let imageUrl = (item.image && item.image !== "[empty]") ? item.image : basePath + 'images/capa-noticias.png';
 
             // Formatar data (assumindo formato YYYY-MM-DD ou similar)
             const dateObj = new Date(item.date);
@@ -38,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             card.innerHTML = `
                 <div class="news-img">
-                    <img src="${imageUrl}" alt="${item.title}" onerror="this.src='images/capa-noticias.png'">
+                    <img src="${imageUrl}" alt="${item.title}" onerror="this.src='${basePath}images/capa-noticias.png'">
                     <span class="badge">destaque</span>
                 </div>
                 <div class="news-content">
@@ -50,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Redireciona para a página da notícia
             card.querySelector('.read-more').addEventListener('click', () => {
-                window.location.href = `noticia.html?id=${item.id}`;
+                const targetPage = isSubfolder ? 'noticia.html' : 'pages/noticia.html';
+                window.location.href = `${targetPage}?id=${item.id}`;
             });
 
             if (track) {
@@ -216,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const articleId = urlParams.get('id');
         
         if (articleId) {
-            fetch('data/noticias.json?t=' + new Date().getTime())
+            fetch(basePath + 'data/noticias.json?t=' + new Date().getTime())
                 .then(response => response.json())
                 .then(data => {
                     const item = data.find(n => n.id == articleId);
@@ -233,12 +238,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         const imgWrapper = document.querySelector('.article-image-wrapper');
                         
-                        let imageUrl = (item.image && item.image !== "[empty]") ? item.image : "images/capa-noticias.png";
+                        let imageUrl = (item.image && item.image !== "[empty]") ? item.image : basePath + "images/capa-noticias.png";
                         imgWrapper.innerHTML = `<img id="page-article-image" src="${imageUrl}" alt="Capa da notícia" style="width: 100%; height: 350px; object-fit: cover; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">`;
                         const img = document.getElementById('page-article-image');
                         img.onerror = function() {
                             if (!this.src.includes('capa-noticias.png')) {
-                                this.src = 'images/capa-noticias.png';
+                                this.src = basePath + 'images/capa-noticias.png';
                             } else {
                                 imgWrapper.style.display = 'none';
                             }
@@ -267,4 +272,173 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('article-error').style.display = 'block';
         }
     }
+
+    // --- Lógica de Busca Global ---
+    
+    // Injeta o HTML do modal de busca no body se não existir
+    if (!document.getElementById('global-search-modal')) {
+        const modalHtml = `
+            <div id="global-search-modal" class="search-modal">
+                <div class="search-modal-content">
+                    <span class="close-search">&times;</span>
+                    <h2>O que você procura?</h2>
+                    <p style="color: #666; font-size: 0.95rem;">Pesquise por notícias, cursos, páginas e palavras-chave.</p>
+                    <form class="global-search-form" id="global-search-form">
+                        <input type="text" class="global-search-input" id="global-search-input" placeholder="Digite sua busca..." required>
+                        <button type="submit" class="global-search-submit"><i class="fa-solid fa-search"></i></button>
+                    </form>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    const searchModal = document.getElementById('global-search-modal');
+    const closeSearchBtn = document.querySelector('.close-search');
+    const searchForm = document.getElementById('global-search-form');
+    const searchInput = document.getElementById('global-search-input');
+
+    // Abre o modal ao clicar em botões de busca
+    document.querySelectorAll('.search-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            searchModal.classList.add('show');
+            setTimeout(() => searchInput.focus(), 100);
+        });
+    });
+
+    // Fecha o modal
+    if(closeSearchBtn) {
+        closeSearchBtn.addEventListener('click', () => {
+            searchModal.classList.remove('show');
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === searchModal) {
+            searchModal.classList.remove('show');
+        }
+    });
+
+    // Executa a busca (Redireciona para busca.html)
+    if(searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const query = searchInput.value.trim();
+            if (query) {
+                const searchPageUrl = isSubfolder ? 'busca.html' : 'pages/busca.html';
+                window.location.href = `${searchPageUrl}?q=${encodeURIComponent(query)}`;
+            }
+        });
+    }
+
+    // Também interceptar a barra de busca local na página "notas.html"
+    const localSearchForm = document.querySelector('.search-form');
+    if (localSearchForm && !localSearchForm.id) {
+        localSearchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const localInput = localSearchForm.querySelector('.search-input');
+            if (localInput && localInput.value.trim()) {
+                window.location.href = `busca.html?q=${encodeURIComponent(localInput.value.trim())}`;
+            }
+        });
+    }
+
+    // --- Lógica da Página de Resultados de Busca (busca.html) ---
+    const searchResultsContainer = document.getElementById('search-results-container');
+    const searchStatus = document.getElementById('search-status');
+    
+    if (searchResultsContainer && searchStatus) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+        
+        if (!query) {
+            searchStatus.innerHTML = "Por favor, digite um termo para pesquisar.";
+            return;
+        }
+
+        searchStatus.innerHTML = `Buscando resultados para: <strong>"${query}"</strong>...`;
+        
+        // Buscar o índice estático e as notícias
+        Promise.all([
+            fetch(basePath + 'data/search-index.json?t=' + new Date().getTime()).then(r => r.json()).catch(() => []),
+            fetch(basePath + 'data/noticias.json?t=' + new Date().getTime()).then(r => r.json()).catch(() => [])
+        ]).then(([staticIndex, noticias]) => {
+            // Unificar dados
+            const allItems = [...staticIndex];
+            
+            noticias.forEach(noticia => {
+                allItems.push({
+                    id: noticia.id,
+                    type: 'Notícia',
+                    title: noticia.title,
+                    url: `noticia.html?id=${noticia.id}`,
+                    content: noticia.description || "",
+                    keywords: ""
+                });
+            });
+            
+            const lowerQuery = query.toLowerCase();
+            const results = [];
+            
+            // Algoritmo de Prioridade (Scoring)
+            allItems.forEach(item => {
+                let score = 0;
+                const lowerTitle = (item.title || "").toLowerCase();
+                const lowerContent = (item.content || "").toLowerCase();
+                const lowerKeywords = (item.keywords || "").toLowerCase();
+                
+                // 1. Correspondência exata no título (Maior prioridade: 100)
+                if (lowerTitle === lowerQuery) {
+                    score += 100;
+                } else if (lowerTitle.includes(lowerQuery)) {
+                    // 2. Correspondência parcial no título
+                    score += 50;
+                }
+                
+                // 3. Correspondência nas palavras-chave (Keywords)
+                if (lowerKeywords.includes(lowerQuery)) {
+                    score += 40;
+                }
+                
+                // 4. Correspondência no conteúdo
+                if (lowerContent.includes(lowerQuery)) {
+                    score += 10;
+                }
+                
+                if (score > 0) {
+                    results.push({ item, score });
+                }
+            });
+            
+            // Ordenar por score (maior para menor)
+            results.sort((a, b) => b.score - a.score);
+            
+            if (results.length === 0) {
+                searchStatus.innerHTML = `Não encontramos nenhum resultado para <strong>"${query}"</strong>. Tente usar outras palavras-chave.`;
+            } else {
+                searchStatus.innerHTML = `Encontramos ${results.length} resultado(s) para <strong>"${query}"</strong>:`;
+                
+                results.forEach(res => {
+                    const { item } = res;
+                    // Monta o resumo (até 200 caracteres)
+                    let excerpt = item.content.replace(/<[^>]+>/g, ''); // Remove HTML
+                    if (excerpt.length > 200) {
+                        excerpt = excerpt.substring(0, 200) + "...";
+                    }
+                    
+                    const resultHtml = `
+                        <div class="post-item">
+                            <span class="badge" style="background-color: var(--color-primary); color: #fff; display: inline-block; margin-bottom: 10px;">${item.type}</span>
+                            <h3>${item.title}</h3>
+                            <p class="post-excerpt">${excerpt}</p>
+                            <a href="${isSubfolder ? '../' : ''}${item.url}" class="post-link">Acessar página <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                    `;
+                    searchResultsContainer.insertAdjacentHTML('beforeend', resultHtml);
+                });
+            }
+        });
+    }
+
 });

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contatos - Sociedade Brasileira de Previdência Social</title>
-    <link rel="icon" type="image/png" href="images/logo.png">
+    <title>Informações - Sociedade Brasileira de Previdência Social</title>
+    <link rel="icon" type="image/png" href="../images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="../style/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -34,26 +34,26 @@
     <header class="main-header">
         <div class="container header-inner">
             <div class="logo">
-                <a href="index.html">
-                    <img src="images/image-header.png" alt="SBPS Logo" class="logo-img">
+                <a href="../index.html">
+                    <img src="../images/image-header.png" alt="SBPS Logo" class="logo-img">
                 </a>
             </div>
             <nav class="main-nav">
                 <ul>
                     <li class="dropdown">
-                        <a href="index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
+                        <a href="../index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">OBJETIVOS</a></li>
-                            <li><a href="#">DIRETORIA</a></li>
-                            <li><a href="#">DESCRIÇÃO DE DIRETORIAS</a></li>
-                            <li><a href="#">RESOLUÇÕES</a></li>
-                            <li><a href="#">ESTATUTO</a></li>
-                            <li><a href="#">CONVÊNIOS</a></li>
+                            <li><a href="objetivos.html">OBJETIVOS</a></li>
+                            <li><a href="diretoria.html">DIRETORIA</a></li>
+                            <li><a href="descricaodiretorias.html">DESCRIÇÃO DE DIRETORIAS</a></li>
+                            <li><a href="resolucoes.html">RESOLUÇÕES</a></li>
+                            <li><a href="estatuto.html">ESTATUTO</a></li>
+                            <li><a href="convênios.html">CONVÊNIOS</a></li>
                         </ul>
                     </li>
                     <li><a href="noticias.html">PUBLICAÇÕES</a></li>
-                    <li><a href="#">EVENTOS</a></li>
-                    <li><a href="#">NOTAS</a></li>
+                    <li><a href="eventos.html">EVENTOS</a></li>
+                    <li><a href="notas.html">NOTAS</a></li>
                     <li><a href="contatos.html">CONTATOS</a></li>
                     <li><a href="informacoes.html">INFORMAÇÕES</a></li>
                 </ul>
@@ -64,17 +64,49 @@
     </header>
     </div>
 
-    <!-- Contatos Section -->
+    <!-- Informações Section -->
     <section class="section informacoes-page" style="min-height: 60vh; background-color: var(--color-light-bg);">
         <div class="container">
             <div class="section-header" style="text-align: center; justify-content: center; margin-bottom: 50px;">
                 <div>
-                    <span class="subtitle">FALE CONOSCO</span>
-                    <h2 class="title">Canais de Atendimento</h2>
+                    <span class="subtitle">DADOS DA INSTITUIÇÃO</span>
+                    <h2 class="title">Informações Úteis</h2>
                 </div>
             </div>
             
-            <div class="info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 60px;">
+            <div class="info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 40px;">
+                
+                <!-- Horário de Atendimento -->
+                <div class="info-box" style="background: #fff; padding: 40px 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; transition: transform 0.3s ease;">
+                    <div style="width: 60px; height: 60px; background-color: rgba(11, 24, 54, 0.05); color: var(--color-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin: 0 auto 20px;">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+                    <h3 style="color: var(--color-title); margin-bottom: 15px; font-size: 1.2rem;">Horário de Atendimento</h3>
+                    <p style="color: var(--color-text); margin-bottom: 5px;">Segunda a Sexta-feira</p>
+                    <p style="color: var(--color-text); font-weight: 600;">Das 09h às 18h</p>
+                </div>
+                
+                <!-- Endereço / Localização -->
+                <div class="info-box" style="background: #fff; padding: 40px 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; transition: transform 0.3s ease;">
+                    <div style="width: 60px; height: 60px; background-color: rgba(11, 24, 54, 0.05); color: var(--color-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin: 0 auto 20px;">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <h3 style="color: var(--color-title); margin-bottom: 15px; font-size: 1.2rem;">Endereço / Localização</h3>
+                    <p style="color: var(--color-text); margin-bottom: 5px;">Rua Exemplo, 123 - Centro</p>
+                    <p style="color: var(--color-text); margin-bottom: 15px;">Brasília - DF, CEP: 70000-000</p>
+                    <a href="javascript:void(0)" onclick="document.getElementById('mapModal').style.display='block'" style="color: var(--color-accent); font-weight: 700; font-size: 0.95rem;">Ver no Mapa <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                
+                <!-- CNPJ e Razão Social -->
+                <div class="info-box" style="background: #fff; padding: 40px 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; transition: transform 0.3s ease;">
+                    <div style="width: 60px; height: 60px; background-color: rgba(11, 24, 54, 0.05); color: var(--color-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin: 0 auto 20px;">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <h3 style="color: var(--color-title); margin-bottom: 15px; font-size: 1.2rem;">CNPJ e Razão Social</h3>
+                    <p style="color: var(--color-text); margin-bottom: 10px;"><strong>Sociedade Brasileira de Previdência Social</strong></p>
+                    <p style="color: var(--color-text); font-weight: 600; color: var(--color-primary);">CNPJ: 00.000.000/0001-00</p>
+                </div>
+                
                 <!-- E-mails -->
                 <div class="info-box" style="background: #fff; padding: 40px 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: left; transition: transform 0.3s ease;">
                     <div style="width: 60px; height: 60px; background-color: rgba(11, 24, 54, 0.05); color: var(--color-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin: 0 auto 20px;">
@@ -132,62 +164,8 @@
                         </a>
                     </div>
                 </div>
-            </div>
-
-            <!-- Formulário de Solicitação de Contato -->
-            <div class="contact-form-section" style="max-width: 700px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
-                <h3 style="color: var(--color-title); margin-bottom: 30px; font-size: 1.5rem; text-align: center;">Solicitação de Contato</h3>
                 
-                <form id="contactForm" action="#" method="POST">
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label for="nome" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-text);">Nome Completo</label>
-                        <input type="text" id="nome" name="nome" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 1rem;">
-                    </div>
-                    
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--color-text);">Como prefere ser contatado?</label>
-                        <div style="display: flex; gap: 20px; margin-bottom: 15px;">
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--color-text);">
-                                <input type="radio" name="contactType" value="email" checked onchange="toggleContactInput()" style="width: 18px; height: 18px; accent-color: var(--color-primary);"> E-mail
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--color-text);">
-                                <input type="radio" name="contactType" value="whatsapp" onchange="toggleContactInput()" style="width: 18px; height: 18px; accent-color: var(--color-primary);"> WhatsApp
-                            </label>
-                        </div>
-                        <input type="email" id="contactValue" name="contactValue" placeholder="Seu endereço de e-mail" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 1rem;">
-                    </div>
-            
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label for="assunto" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-text);">Assunto</label>
-                        <input type="text" id="assunto" name="assunto" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 1rem;">
-                    </div>
-            
-                    <div class="form-group" style="margin-bottom: 25px;">
-                        <label for="mensagem" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-text);">Mensagem</label>
-                        <textarea id="mensagem" name="mensagem" rows="5" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 1rem; resize: vertical;"></textarea>
-                    </div>
-            
-                    <button type="submit" class="btn" style="width: 100%; padding: 15px; font-size: 1.1rem; background-color: var(--color-primary); color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s; font-weight: bold;">Enviar Solicitação</button>
-                </form>
             </div>
-            
-            <script>
-                function toggleContactInput() {
-                    const contactType = document.querySelector('input[name="contactType"]:checked').value;
-                    const inputField = document.getElementById('contactValue');
-                    
-                    if (contactType === 'email') {
-                        inputField.type = 'email';
-                        inputField.placeholder = 'Seu endereço de e-mail';
-                        inputField.value = ''; // Limpa o campo ao trocar
-                    } else {
-                        inputField.type = 'tel';
-                        inputField.placeholder = 'Seu número de WhatsApp (com DDD)';
-                        inputField.value = ''; // Limpa o campo ao trocar
-                    }
-                }
-            </script>
-
         </div>
     </section>
 
@@ -234,6 +212,17 @@
             </div>
         </div>
     </footer>
+
+    <!-- Modal do Mapa -->
+    <div id="mapModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(3px);">
+        <div style="background-color: #fff; margin: 10% auto; padding: 20px; border-radius: 12px; width: 90%; max-width: 800px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+            <span onclick="document.getElementById('mapModal').style.display='none'" style="color: #666; position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s;" onmouseover="this.style.color='#000'" onmouseout="this.style.color='#666'">&times;</span>
+            <h3 style="margin-top: 5px; margin-bottom: 20px; color: var(--color-title); font-size: 1.4rem;">Nossa Localização</h3>
+            <div style="width: 100%; height: 450px; border-radius: 8px; overflow: hidden; background: #f4f4f4;">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3839.114345521514!2d-47.897562300000004!3d-15.797923599999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935a3aebf7c37b33%3A0x97a0b49c1934dccf!2sMota%20%26%20Advogados%20Associados!5e0!3m2!1spt-BR!2sbr!4v1783101971456!5m2!1spt-BR!2sbr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+        </div>
+    </div>
 
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/5500000000000" target="_blank" class="whatsapp-btn">

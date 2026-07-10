@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notícia - Sociedade Brasileira de Previdência Social</title>
+    <link rel="icon" type="image/png" href="../images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Wrapper for Sticky Position -->
+    <div class="header-wrapper">
+        <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container top-bar-inner">
+            <div class="top-bar-left">
+                <a href="mailto:contato@sbps.org.br"><i class="fa-solid fa-envelope"></i> contato@sbps.org.br</a>
+                <a href="#"><i class="fa-solid fa-phone"></i> (00) 0000-0000</a>
+                <a href="#"><i class="fa-solid fa-user"></i> Área do Associado</a>
+            </div>
+            <div class="top-bar-right">
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Nav -->
+    <header class="main-header">
+        <div class="container header-inner">
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="../images/image-header.png" alt="SBPS Logo" class="logo-img">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="dropdown">
+                        <a href="../index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="objetivos.html">OBJETIVOS</a></li>
+                            <li><a href="diretoria.html">DIRETORIA</a></li>
+                            <li><a href="descricaodiretorias.html">DESCRIÇÃO DE DIRETORIAS</a></li>
+                            <li><a href="resolucoes.html">RESOLUÇÕES</a></li>
+                            <li><a href="estatuto.html">ESTATUTO</a></li>
+                            <li><a href="convênios.html">CONVÊNIOS</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="noticias.html">PUBLICAÇÕES</a></li>
+                    <li><a href="eventos.html">EVENTOS</a></li>
+                    <li><a href="notas.html">NOTAS</a></li>
+                    <li><a href="contatos.html">CONTATOS</a></li>
+                    <li><a href="informacoes.html">INFORMAÇÕES</a></li>
+                </ul>
+                <a href="#" class="btn btn-associe">ASSOCIE-SE</a>
+                <button class="search-btn"><i class="fa-solid fa-search"></i></button>
+            </nav>
+        </div>
+    </header>
+    </div>
+
+    <!-- Artigo Section -->
+    <section class="section article-page" style="min-height: 60vh;">
+        <div class="container article-container">
+            <!-- Loading Indicator -->
+            <div id="article-loading" style="text-align: center; padding: 50px 0;">
+                <p>Carregando notícia...</p>
+            </div>
+            
+            <!-- Article Content (hidden initially) -->
+            <div id="article-content" style="display: none;">
+                
+                <div class="article-image-wrapper">
+                    <img id="page-article-image" src="" alt="Capa da notícia">
+                </div>
+
+                <h1 class="article-title" id="page-article-title"></h1>
+                <p class="article-meta" id="page-article-meta"></p>
+
+                <div class="article-body" id="page-article-body"></div>
+                
+                <div class="article-footer">
+                    <p>Fonte:</p>
+                    <a href="#" id="page-article-link" target="_blank" class="article-source-link">Acessar matéria na fonte original <i class="fa-solid fa-external-link-alt"></i></a>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="article-error" style="display: none; text-align: center; padding: 50px 0;">
+                <h2>Notícia não encontrada</h2>
+                <p>A notícia que você está procurando não existe ou foi removida.</p>
+                <a href="noticias.html" class="btn btn-primary mt-3">Voltar para notícias</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>Onde estamos</h3>
+                <p><strong>Sociedade Brasileira de Previdência Social</strong></p>
+                <p>Endereço completo da sede da SBPS.</p>
+                <p>CEP: 00000-000</p>
+                <br>
+                <p><strong>Horário de atendimento:</strong></p>
+                <p>Segunda a sexta das 9h às 18h.</p>
+                <div class="social-links mt-3">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Acesso rápido</h3>
+                <ul>
+                    <li><a href="#">Área do associado</a></li>
+                    <li><a href="noticias.html">Publicações</a></li>
+                    <li><a href="#">Cursos & Eventos</a></li>
+                    <li><a href="#">Notas</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contatos</h3>
+                <p><strong>Atendimento:</strong></p>
+                <p>(00) 0000-0000</p>
+                <p>contato@sbps.org.br</p>
+                <br>
+                <p><strong>Administrativo:</strong></p>
+                <p>adm@sbps.org.br</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Sociedade Brasileira de Previdência Social. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/5500000000000" target="_blank" class="whatsapp-btn">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    
+    <script src="scripts/script.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "page-objetivos",
+    "type": "Página",
+    "title": "Objetivos da SBPS",
+    "url": "pages/objetivos.html",
+    "content": "Para cumprir seus objetivos, poderão ser desenvolvidas as seguintes atividades: Planejamento, produção e edição de obras e materiais informativos relativos à previdência social e outros temas jurídicos...",
+    "keywords": "objetivo, missão, atividade, previdência social, propósito"
+  },
+  {
+    "id": "page-diretoria",
+    "type": "Página",
+    "title": "Diretoria e Membros",
+    "url": "pages/diretoria.html",
+    "content": "Diretoria Executiva, Conselhos, Coordenações Regionais.",
+    "keywords": "diretoria, presidente, josé antonio savaris, gisele lemos kravchychyn, rafaela lopes de melo cosme, membros, conselho, tesoureira, coordenadores"
+  },
+  {
+    "id": "page-descricaodiretorias",
+    "type": "Página",
+    "title": "Descrição de Diretorias",
+    "url": "pages/descricaodiretorias.html",
+    "content": "Responsável por planejar e executar as estratégias de comunicação e divulgação da SBPS. Ouvidoria. Diretoria Comercial. Diretoria de Direito à Saúde.",
+    "keywords": "descrição de diretoria, marketing, ouvidoria, comercial, direito à saúde, função, cargos"
+  },
+  {
+    "id": "page-resolucoes",
+    "type": "Página",
+    "title": "Resoluções",
+    "url": "pages/resolucoes.html",
+    "content": "A Presidente da Sociedade Brasileira de Previdência Social, resoluções de nomeação, revogação.",
+    "keywords": "resoluções, nomeação, revogação, documentos, oficial"
+  },
+  {
+    "id": "page-estatuto",
+    "type": "Página",
+    "title": "Estatuto Social",
+    "url": "pages/estatuto.html",
+    "content": "Estatuto Social da Sociedade Brasileira de Previdência Social. CAPÍTULO I – DENOMINAÇÃO, MISSÃO E OBJETIVOS.",
+    "keywords": "estatuto, regras, associação civil, código civil, lei, artigo, regulamento"
+  },
+  {
+    "id": "page-convenios",
+    "type": "Página",
+    "title": "Convênios",
+    "url": "pages/convenios.html",
+    "content": "Instituto Connect de Direito Social, ICDS. Esmafe – Escola Superior da Magistratura Federal RS.",
+    "keywords": "convênios, parceiros, icds, esmafe, desconto, cursos"
+  },
+  {
+    "id": "page-eventos",
+    "type": "Página",
+    "title": "Eventos e Cursos",
+    "url": "pages/eventos.html",
+    "content": "Próximos cursos e eventos da SBPS. Planejamento Previdenciário Integrado - Método 4x4 - Presencial em Recife/PE. Encontro de Associados: Aposentadoria da Pessoa com Deficiência: Avaliação Biopsicossocial. Encontro de Associados: Reformas Previdenciárias Estaduais",
+    "keywords": "eventos, cursos, palestras, seminários, simpósio, congresso, encontro, aula"
+  },
+  {
+    "id": "page-notas",
+    "type": "Página",
+    "title": "Notas Técnicas",
+    "url": "pages/notas.html",
+    "content": "NOTA TÉCNICA n.º 05/2026 | LEI Nº 15.415/2026 E A EFETIVIDADE DA PROTEÇÃO PREVIDENCIÁRIA À MATERNIDADE. NOTA TÉCNICA n.04/2026 | A SUPRESSÃO DO AUXÍLIO-RECLUSÃO PELA LEI Nº 15.358/2026.",
+    "keywords": "notas técnicas, pareceres, documentos, análise, lei, técnica, ofício"
+  }
+]

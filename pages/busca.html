@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notícia - Sociedade Brasileira de Previdência Social</title>
-    <link rel="icon" type="image/png" href="images/logo.png">
+    <title>Resultados da Busca - Sociedade Brasileira de Previdência Social</title>
+    <link rel="icon" type="image/png" href="../images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="../style/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    <!-- Header Wrapper for Sticky Position -->
+<body class="search-results-page">
+     <!-- Header Wrapper for Sticky Position -->
     <div class="header-wrapper">
         <!-- Top Bar -->
     <div class="top-bar">
@@ -34,26 +34,26 @@
     <header class="main-header">
         <div class="container header-inner">
             <div class="logo">
-                <a href="index.html">
-                    <img src="images/image-header.png" alt="SBPS Logo" class="logo-img">
+                <a href="../index.html">
+                    <img src="../images/image-header.png" alt="SBPS Logo" class="logo-img">
                 </a>
             </div>
             <nav class="main-nav">
                 <ul>
                     <li class="dropdown">
-                        <a href="index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
+                        <a href="../index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">OBJETIVOS</a></li>
-                            <li><a href="#">DIRETORIA</a></li>
-                            <li><a href="#">DESCRIÇÃO DE DIRETORIAS</a></li>
-                            <li><a href="#">RESOLUÇÕES</a></li>
-                            <li><a href="#">ESTATUTO</a></li>
-                            <li><a href="#">CONVÊNIOS</a></li>
+                            <li><a href="objetivos.html">OBJETIVOS</a></li>
+                            <li><a href="diretoria.html">DIRETORIA</a></li>
+                            <li><a href="descricaodiretorias.html">DESCRIÇÃO DE DIRETORIAS</a></li>
+                            <li><a href="resolucoes.html">RESOLUÇÕES</a></li>
+                            <li><a href="estatuto.html">ESTATUTO</a></li>
+                            <li><a href="convenios.html">CONVÊNIOS</a></li>
                         </ul>
                     </li>
                     <li><a href="noticias.html">PUBLICAÇÕES</a></li>
-                    <li><a href="#">EVENTOS</a></li>
-                    <li><a href="#">NOTAS</a></li>
+                    <li><a href="eventos.html">EVENTOS</a></li>
+                    <li><a href="notas.html">NOTAS</a></li>
                     <li><a href="contatos.html">CONTATOS</a></li>
                     <li><a href="informacoes.html">INFORMAÇÕES</a></li>
                 </ul>
@@ -62,39 +62,17 @@
             </nav>
         </div>
     </header>
-    </div>
-
-    <!-- Artigo Section -->
-    <section class="section article-page" style="min-height: 60vh;">
-        <div class="container article-container">
-            <!-- Loading Indicator -->
-            <div id="article-loading" style="text-align: center; padding: 50px 0;">
-                <p>Carregando notícia...</p>
+    
+    <section class="section" style="padding-top: 60px;">
+        <div class="container">
+            <h2 class="title eventos-page-title">Resultados da Busca</h2>
+            
+            <div id="search-status" style="margin-bottom: 30px; font-size: 1.1rem; color: #555;">
+                Carregando resultados...
             </div>
             
-            <!-- Article Content (hidden initially) -->
-            <div id="article-content" style="display: none;">
-                
-                <div class="article-image-wrapper">
-                    <img id="page-article-image" src="" alt="Capa da notícia">
-                </div>
-
-                <h1 class="article-title" id="page-article-title"></h1>
-                <p class="article-meta" id="page-article-meta"></p>
-
-                <div class="article-body" id="page-article-body"></div>
-                
-                <div class="article-footer">
-                    <p>Fonte:</p>
-                    <a href="#" id="page-article-link" target="_blank" class="article-source-link">Acessar matéria na fonte original <i class="fa-solid fa-external-link-alt"></i></a>
-                </div>
-            </div>
-
-            <!-- Error Message -->
-            <div id="article-error" style="display: none; text-align: center; padding: 50px 0;">
-                <h2>Notícia não encontrada</h2>
-                <p>A notícia que você está procurando não existe ou foi removida.</p>
-                <a href="noticias.html" class="btn btn-primary mt-3">Voltar para notícias</a>
+            <div id="search-results-container">
+                <!-- Resultados serão injetados aqui -->
             </div>
         </div>
     </section>
@@ -121,8 +99,8 @@
                 <ul>
                     <li><a href="#">Área do associado</a></li>
                     <li><a href="noticias.html">Publicações</a></li>
-                    <li><a href="#">Cursos & Eventos</a></li>
-                    <li><a href="#">Notas</a></li>
+                    <li><a href="eventos.html">Cursos & Eventos</a></li>
+                    <li><a href="notas.html">Notas</a></li>
                     <li><a href="#">Blog</a></li>
                 </ul>
             </div>
@@ -148,6 +126,6 @@
         <i class="fa-brands fa-whatsapp"></i>
     </a>
     
-    <script src="scripts/script.js?v=2"></script>
+    <script src="../scripts/script.js?v=3"></script>
 </body>
 </html>
