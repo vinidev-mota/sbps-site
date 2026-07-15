@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --color-bg: #ffffff;
     --color-text: #505050;
     --color-title: #0B1836;
@@ -275,7 +275,7 @@ ul {
     font-weight: 500;
 }
 
-/* Linha verde abaixo do título no Quem Somos */
+/* Linha verde abaixo do tÃ­tulo no Quem Somos */
 .quem-somos .title {
     position: relative;
     padding-bottom: 20px;
@@ -462,7 +462,7 @@ ul {
     color: #888;
 }
 
-/* Notícias */
+/* NotÃ­cias */
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -874,9 +874,9 @@ ul {
     margin-left: 8px;
 }
 
-/* --- Responsividade da Página de Notícia --- */
+/* --- Responsividade da PÃ¡gina de NotÃ­cia --- */
 
-/* Celulares (até 576px) */
+/* Celulares (atÃ© 576px) */
 @media (max-width: 576px) {
     .article-page.section {
         padding: 5% 0;
@@ -900,7 +900,7 @@ ul {
     }
 }
 
-/* Tablets (de 577px até 768px) */
+/* Tablets (de 577px atÃ© 768px) */
 @media (max-width: 768px) and (min-width: 577px) {
     .article-page.section {
         padding: 8% 0;
@@ -1575,7 +1575,7 @@ ul {
 
 .title-divider {
     border: none;
-    border-top: 3px solid var(--color-accent);
+    border-top: 3px solid var(--color-secondary);
     width: 60px;
     margin-bottom: 25px;
 }
@@ -1592,6 +1592,11 @@ ul {
     padding-left: 0;
 }
 
+.styled-sobre-list {
+    list-style: disc;
+    padding-left: 0;
+}
+
 .styled-list li {
     position: relative;
     padding-left: 20px;
@@ -1601,7 +1606,7 @@ ul {
 }
 
 .styled-list li::before {
-    content: '�';
+    content: 'ï¿½';
     color: var(--color-accent);
     font-weight: bold;
     position: absolute;
@@ -1617,7 +1622,7 @@ ul {
 
 .page-sidebar .sidebar-divider {
     border: none;
-    border-top: 3px solid var(--color-accent);
+    border-top: 3px solid var(--color-secondary);
     width: 40px;
     margin-bottom: 20px;
 }
