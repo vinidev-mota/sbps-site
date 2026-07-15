@@ -1545,3 +1545,101 @@ ul {
 }
 
 .article-body img { max-width: 100%; height: auto; border-radius: 8px; margin: 20px 0; display: block; }
+
+/* Sidebar Page Layout */
+.page-with-sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+.page-main-content {
+    flex: 1 1 65%;
+    min-width: 300px;
+}
+
+.page-sidebar {
+    flex: 1 1 25%;
+    min-width: 250px;
+    background-color: #fff;
+    padding: 0 0 20px 20px;
+}
+
+.page-title {
+    font-size: 2.2rem;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+
+.title-divider {
+    border: none;
+    border-top: 3px solid var(--color-accent);
+    width: 60px;
+    margin-bottom: 25px;
+}
+
+.section-subtitle {
+    font-size: 1.3rem;
+    color: var(--color-primary);
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.styled-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.styled-list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.styled-list li::before {
+    content: '•';
+    color: var(--color-accent);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.page-sidebar .sidebar-title {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+
+.page-sidebar .sidebar-divider {
+    border: none;
+    border-top: 3px solid var(--color-accent);
+    width: 40px;
+    margin-bottom: 20px;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 15px;
+}
+
+.sidebar-nav li a {
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    display: block;
+    transition: color 0.3s ease;
+}
+
+.sidebar-nav li a:hover, .sidebar-nav li a.active {
+    color: var(--color-primary);
+}
