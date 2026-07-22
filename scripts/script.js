@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="badge">destaque</span>
                 </div>
                 <div class="news-content">
+                    <p style="font-size: 0.75rem; color: #777; margin-bottom: 8px; font-style: italic;">Foto: Edifício sede da Previdência Social/Agência Brasil</p>
                     <p class="news-date"><i class="fa-regular fa-calendar"></i> ${dateStr}</p>
                     <h3 class="news-title">${item.title}</h3>
                     <a href="javascript:void(0)" class="read-more">Ler Mais <i class="fa-solid fa-arrow-right"></i></a>
@@ -239,7 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         const imgWrapper = document.querySelector('.article-image-wrapper');
                         
                         let imageUrl = (item.image && item.image !== "[empty]") ? item.image : basePath + "images/capa-noticias.png";
-                        imgWrapper.innerHTML = `<img id="page-article-image" src="${imageUrl}" alt="Capa da notícia" style="width: 100%; height: 350px; object-fit: cover; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">`;
+                        imgWrapper.innerHTML = `<img id="page-article-image" src="${imageUrl}" alt="Capa da notícia" style="width: 100%; height: 350px; object-fit: cover; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">
+                        <p style="text-align: center; font-size: 0.8rem; color: #666; margin-top: 8px; font-style: italic;">Foto: Edifício sede da Previdência Social/Agência Brasil</p>`;
                         const img = document.getElementById('page-article-image');
                         img.onerror = function() {
                             if (!this.src.includes('capa-noticias.png')) {

@@ -300,7 +300,7 @@ ul {
 }
 
 .img-main {
-    width: 70%;
+    width: 60%;
     border-radius: 8px;
     position: absolute;
     top: 0;
@@ -1647,4 +1647,13 @@ ul {
 
 .sidebar-nav li a:hover, .sidebar-nav li a.active {
     color: var(--color-primary);
+}
+
+.link-footer {
+    color: var(--color-bg);
+    font-weight: 500;
+}
+
+.link-footer:hover {
+    color: var(--color-accent);
 }
