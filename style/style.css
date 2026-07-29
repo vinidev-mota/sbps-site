@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --color-bg: #ffffff;
     --color-text: #505050;
     --color-title: #0B1836;
@@ -273,6 +273,52 @@ ul {
     margin-bottom: 20px;
     line-height: 28px;
     font-weight: 500;
+}
+
+.estatuto {
+    flex: 1;
+}
+
+.estatuto h2.title {
+    margin-bottom: 30px;
+    position: relative;
+    padding-bottom: 15px;
+}
+.estatuto h2.title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 60px;
+    height: 4px;
+    background-color: var(--color-secondary);
+}
+
+.estatuto p {
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.estatuto p:empty {
+    display: none;
+}
+
+.capitulos-estatuto {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-title);
+    margin-top: 25px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.secoes-estatuto {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 }
 
 /* Linha verde abaixo do tÃ­tulo no Quem Somos */
@@ -945,6 +991,13 @@ ul {
 
 .content-main p {
     margin-bottom: 20px;
+    color: #444;
+}
+
+.capitulos-estatuto {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
     color: #444;
 }
 
@@ -1657,3 +1710,108 @@ ul {
 .link-footer:hover {
     color: var(--color-accent);
 }
+
+/* Toast Notification for Phone Copy */
+.toast-notification {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background-color: var(--color-title);
+    color: #ffffff;
+    padding: 14px 22px;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    border-left: 4px solid var(--color-secondary);
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.toast-notification i {
+    color: var(--color-secondary);
+    font-size: 1.2rem;
+}
+
+.phone-copy-link {
+    cursor: pointer;
+}
+
+/* Email Popover Menu */
+.email-action-link {
+    cursor: pointer;
+    user-select: none;
+}
+
+.email-chevron {
+    font-size: 0.7rem !important;
+    margin-left: 4px;
+    opacity: 0.8;
+    transition: transform 0.2s ease;
+}
+
+.email-popover-menu {
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    padding: 8px 0;
+    min-width: 230px;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.96);
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.2s;
+    border: 1px solid rgba(11, 24, 54, 0.12);
+}
+
+.email-popover-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.email-pop-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 10px 18px !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--color-title) !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    font-family: inherit !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+}
+
+.email-pop-item:hover {
+    background-color: #f0f4f8 !important;
+    color: var(--color-primary) !important;
+}
+
+.email-pop-item i {
+    font-size: 1rem !important;
+    color: var(--color-secondary) !important;
+    width: 18px;
+    text-align: center;
+}
+

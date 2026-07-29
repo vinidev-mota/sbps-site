@@ -444,3 +444,158 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
+// --- Lógica de Copiar Número de Telefone no Header (Global) ---
+function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+    } else {
+        fallbackCopy(text);
+    }
+}
+
+function fallbackCopy(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-9999px';
+    textArea.style.top = '0';
+    textArea.setAttribute('readonly', '');
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        document.execCommand('copy');
+    } catch (err) {
+        console.error('Erro ao copiar número:', err);
+    }
+    document.body.removeChild(textArea);
+}
+
+function showToastMessage(message) {
+    let toast = document.getElementById('phone-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'phone-toast';
+        toast.className = 'toast-notification';
+        document.body.appendChild(toast);
+    }
+    toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${message}</span>`;
+
+    if (toast._timer) clearTimeout(toast._timer);
+
+    toast.classList.remove('show');
+    void toast.offsetWidth; // Trigger reflow for re-animation
+    toast.classList.add('show');
+
+    toast._timer = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// Event Delegation global para garantir que o clique no telefone e no email funcionem em todas as páginas
+document.addEventListener('click', (e) => {
+    const targetLink = e.target.closest('.top-bar-left a, .phone-copy-link, .email-action-link');
+    const emailMenu = document.getElementById('email-popover-menu');
+
+    if (targetLink) {
+        // 1. Clique no link de Telefone
+        const isPhone = targetLink.classList.contains('phone-copy-link') ||
+                        targetLink.querySelector('.fa-phone') !== null ||
+                        targetLink.textContent.includes('0000-0000');
+
+        if (isPhone) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (emailMenu) emailMenu.classList.remove('show');
+
+            let phoneVal = targetLink.dataset.phone;
+            if (!phoneVal) {
+                const match = targetLink.textContent.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/);
+                phoneVal = match ? match[0] : '(00) 0000-0000';
+            }
+
+            copyToClipboard(phoneVal);
+            showToastMessage('Número de telefone copiado');
+            return;
+        }
+
+        // 2. Clique no link de E-mail
+        const isEmail = targetLink.classList.contains('email-action-link') ||
+                        targetLink.querySelector('.fa-envelope') !== null ||
+                        (targetLink.getAttribute('href') && targetLink.getAttribute('href').startsWith('mailto:')) ||
+                        targetLink.textContent.includes('@');
+
+        if (isEmail) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let menu = emailMenu;
+            if (!menu) {
+                menu = document.createElement('div');
+                menu.id = 'email-popover-menu';
+                menu.className = 'email-popover-menu';
+                menu.innerHTML = `
+                    <button type="button" class="email-pop-item btn-copy-email">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>Copiar endereço de email</span>
+                    </button>
+                    <a href="mailto:contato@sbps.org.br" class="email-pop-item btn-send-email">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Enviar mensagem</span>
+                    </a>
+                `;
+                document.body.appendChild(menu);
+
+                menu.querySelector('.btn-copy-email').addEventListener('click', (evt) => {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    const emailVal = targetLink.dataset.email || 'contato@sbps.org.br';
+                    copyToClipboard(emailVal);
+                    showToastMessage('Endereço de email copiado');
+                    menu.classList.remove('show');
+                });
+
+                menu.querySelector('.btn-send-email').addEventListener('click', () => {
+                    menu.classList.remove('show');
+                });
+            }
+
+            if (menu.classList.contains('show') && menu._targetLink === targetLink) {
+                menu.classList.remove('show');
+                return;
+            }
+
+            menu._targetLink = targetLink;
+
+            const rect = targetLink.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+            menu.style.position = 'absolute';
+            menu.style.top = `${rect.bottom + scrollTop + 6}px`;
+            menu.style.left = `${rect.left + scrollLeft}px`;
+
+            requestAnimationFrame(() => {
+                menu.classList.add('show');
+            });
+            return;
+        }
+    }
+
+    // 3. Clique fora fecha o menu de e-mail
+    if (emailMenu && !e.target.closest('#email-popover-menu')) {
+        emailMenu.classList.remove('show');
+    }
+});
+
+// Tecla ESC fecha o menu de e-mail
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const emailMenu = document.getElementById('email-popover-menu');
+        if (emailMenu) emailMenu.classList.remove('show');
+    }
+});
+
+
+

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Associado - SBPS</title>
+    <link rel="icon" type="image/png" href="../images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/associado.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="associado-page">
+    <!-- Header Wrapper for Sticky Position -->
+    <div class="header-wrapper">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="container top-bar-inner">
+                <div class="top-bar-left">
+                    <a href="javascript:void(0)" class="email-action-link" title="Opções de e-mail" data-email="contato@sbps.org.br"><i class="fa-solid fa-envelope"></i> contato@sbps.org.br <i class="fa-solid fa-chevron-down email-chevron"></i></a>
+                    <a href="javascript:void(0)" class="phone-copy-link" title="Clique para copiar o número de telefone" data-phone="(00) 0000-0000"><i class="fa-solid fa-phone"></i> (00) 0000-0000</a>
+                    <a href="associado.html" style="color:var(--color-accent); font-weight:700;"><i class="fa-solid fa-user"></i> Área do Associado</a>
+                </div>
+                <div class="top-bar-right">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header / Nav -->
+        <header class="main-header">
+            <div class="container header-inner">
+                <div class="logo">
+                    <a href="../index.html">
+                        <img src="../images/image-header.png" alt="SBPS Logo" class="logo-img">
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li class="dropdown">
+                            <a href="../index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="sobre.html">SOBRE A SBPS</a></li>
+                                <li><a href="objetivos.html">OBJETIVOS</a></li>
+                                <li><a href="diretoria.html">DIRETORIA</a></li>
+                                <li><a href="descricaodiretorias.html">DESCRIÇÃO DE DIRETORIAS</a></li>
+                                <li><a href="resolucoes.html">RESOLUÇÕES</a></li>
+                                <li><a href="estatuto.html">ESTATUTO</a></li>
+                                <li><a href="convenios.html">CONVÊNIOS</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="noticias.html">PUBLICAÇÕES</a></li>
+                        <li><a href="eventos.html">EVENTOS</a></li>
+                        <li><a href="notas.html">NOTAS</a></li>
+                        <li><a href="contatos.html">CONTATOS</a></li>
+                        <li><a href="informacoes.html">INFORMAÇÕES</a></li>
+                    </ul>
+                    <a href="#" class="btn btn-associe">ASSOCIE-SE</a>
+                    <button class="search-btn"><i class="fa-solid fa-search"></i></button>
+                </nav>
+            </div>
+        </header>
+    </div>
+
+    <!-- ==========================================================================
+         SEÇÃO DE AUTENTICAÇÃO (LOGIN & CADASTRO PESSOA FÍSICA)
+         ========================================================================== -->
+    <div id="auth-container" class="container">
+        <div class="auth-wrapper">
+            <div class="auth-header-tabs">
+                <button type="button" id="tab-login-btn" class="auth-tab-btn active">Entrar na Área do Associado</button>
+                <button type="button" id="tab-register-btn" class="auth-tab-btn">Cadastrar-se (Pessoa Física)</button>
+            </div>
+
+            <div class="auth-body">
+                <!-- Form Login -->
+                <form id="form-login">
+                    <h2 class="auth-form-title">Acesse sua Conta</h2>
+                    <p class="auth-form-subtitle">Informe seu e-mail e senha para acessar o portal do associado SBPS.</p>
+                    
+                    <div class="form-group">
+                        <label>E-mail ou CPF <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="seu.email@exemplo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha <span class="required">*</span></label>
+                        <input type="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-auth-submit"><i class="fa-solid fa-right-to-bracket"></i> Acessar Portal</button>
+                </form>
+
+                <!-- Form Cadastro (Exclusivo Pessoa Física) -->
+                <form id="form-register" style="display: none;">
+                    <h2 class="auth-form-title">Cadastro de Associado (Pessoa Física)</h2>
+                    <p class="auth-form-subtitle">Preencha seus dados para se tornar um membro oficial da SBPS.</p>
+
+                    <div class="form-grid-2">
+                        <div class="form-group full-width">
+                            <label>Nome Completo <span class="required">*</span></label>
+                            <input type="text" id="reg-nome" class="form-control" placeholder="Digite seu nome completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Nascimento <span class="required">*</span></label>
+                            <input type="date" id="reg-nasc" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CPF <span class="required">*</span></label>
+                            <input type="text" id="reg-cpf" class="form-control" placeholder="000.000.000-00" required>
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail <span class="required">*</span></label>
+                            <input type="email" id="reg-email" class="form-control" placeholder="seu@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Celular (com DDD) <span class="required">*</span></label>
+                            <input type="tel" id="reg-celular" class="form-control" placeholder="(00) 90000-0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone Fixo (Se houver)</label>
+                            <input type="tel" id="reg-fixo" class="form-control" placeholder="(00) 0000-0000">
+                        </div>
+                        <div class="form-group">
+                            <label>Registro na OAB (Número/UF) <span class="required">*</span></label>
+                            <input type="text" id="reg-oab" class="form-control" placeholder="Ex: 123456/SP" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Registro em outro Conselho Profissional (Se houver)</label>
+                            <input type="text" id="reg-conselho" class="form-control" placeholder="Ex: CREA, CRA, CRM (número/sigla)">
+                        </div>
+
+                        <!-- Endereço Completo com ViaCEP -->
+                        <div class="form-group">
+                            <label>CEP <span class="required">*</span></label>
+                            <input type="text" id="reg-cep" class="form-control" placeholder="00000-000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Número <span class="required">*</span></label>
+                            <input type="text" id="reg-numero" class="form-control" placeholder="123" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Logradouro / Rua <span class="required">*</span></label>
+                            <input type="text" id="reg-rua" class="form-control" placeholder="Rua / Avenida" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bairro <span class="required">*</span></label>
+                            <input type="text" id="reg-bairro" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cidade / UF <span class="required">*</span></label>
+                            <div style="display:flex; gap:6px;">
+                                <input type="text" id="reg-cidade" class="form-control" style="flex:2;" placeholder="Cidade" required>
+                                <input type="text" id="reg-uf" class="form-control" style="flex:1;" placeholder="UF" maxlength="2" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Senha <span class="required">*</span></label>
+                            <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmar Senha <span class="required">*</span></label>
+                            <input type="password" id="reg-password-confirm" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-auth-submit" style="background:var(--assoc-secondary);"><i class="fa-solid fa-user-plus"></i> Concluir Cadastro de Associado</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         CONTEÚDO DA ÁREA DO ASSOCIADO (AUTENTICADO)
+         ========================================================================== -->
+    <div id="member-content" style="display: none;">
+        
+        <!-- Barra de Navegação Interna da Área do Associado -->
+        <nav class="member-top-nav">
+            <div class="container member-nav-inner">
+                <div class="member-nav-left">
+                    <button type="button" id="btn-back-dashboard" class="btn-nav-back" style="display: none;">
+                        <i class="fa-solid fa-arrow-left"></i> Voltar à Tela Inicial
+                    </button>
+
+                    <div class="member-breadcrumbs">
+                        <span><a href="javascript:void(0)" onclick="showDashboard()" style="color:#fff; text-decoration:underline;">Início</a></span>
+                        <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
+                        <span id="breadcrumb-current" class="current-page">Visão Geral</span>
+                    </div>
+                </div>
+
+                <!-- Menu de Troca Rápida de Abas -->
+                <div class="member-quick-menu">
+                    <button type="button" id="btn-quick-menu-toggle" class="btn-quick-menu-toggle">
+                        <i class="fa-solid fa-compass"></i> Navegar na Área do Associado <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    
+                    <div id="quick-menu-dropdown" class="quick-menu-dropdown">
+                        <button class="quick-menu-item" data-tab="dashboard"><i class="fa-solid fa-house"></i> 0. Tela Inicial (Cards)</button>
+                        <button class="quick-menu-item" data-tab="perfil"><i class="fa-solid fa-id-card"></i> 1. Perfil</button>
+                        <button class="quick-menu-item" data-tab="beneficios"><i class="fa-solid fa-gift"></i> 2. Benefícios</button>
+                        <button class="quick-menu-item" data-tab="atalhos"><i class="fa-solid fa-arrow-up-right-from-square"></i> 3. Atalhos</button>
+                        <button class="quick-menu-item" data-tab="cursos"><i class="fa-solid fa-graduation-cap"></i> 4. Cursos</button>
+                        <button class="quick-menu-item" data-tab="seminarios"><i class="fa-solid fa-users-rectangle"></i> 5. Seminários</button>
+                        <button class="quick-menu-item" data-tab="certificados"><i class="fa-solid fa-certificate"></i> 6. Certificados</button>
+                        <button class="quick-menu-item" data-tab="templates"><i class="fa-solid fa-table-cells-large"></i> 7. Templates (Canva)</button>
+                        <button class="quick-menu-item" data-tab="livraria"><i class="fa-solid fa-book"></i> 8. Livraria</button>
+                        <button class="quick-menu-item" data-tab="outros"><i class="fa-solid fa-gear"></i> 9. Outros & Ajuda</button>
+                    </div>
+                </div>
+
+                <div class="member-user-badge">
+                    <div class="user-avatar user-avatar-display">A</div>
+                    <div class="user-info">
+                        <span class="user-name user-name-display">Carregando...</span>
+                        <span class="user-oab user-oab-display">OAB SBPS</span>
+                    </div>
+                    <button class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container dashboard-container">
+
+            <!-- ------------------------------------------------------------------
+                 DASHBOARD PRINCIPAL (GRID 3x3 - 9 CARDS)
+                 ------------------------------------------------------------------ -->
+            <div id="dashboard-view">
+                <div class="dashboard-welcome">
+                    <h2>Bem-vindo(a) ao Portal do Associado SBPS</h2>
+                    <p>Selecione uma das 9 opções abaixo para acessar os recursos exclusivos da sua membresia:</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Card 1: Perfil -->
+                    <div class="dashboard-card" data-tab="perfil">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-id-card"></i></div>
+                        <div>
+                            <h3 class="card-title">1. Perfil</h3>
+                            <p class="card-desc">Gerencie seus dados cadastrais, altere informações e veja seus cursos, seminários e benefícios inscritos.</p>
+                        </div>
+                        <div class="card-footer-action">Acessar Perfil <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+
+                    <!-- Card 2: Benefícios -->
+                    <div class="dashboard-card" data-tab="beneficios">
+                        <span class="card-badge">Vantagens</span>
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-gift"></i></div>
+                        <div>
+                            <h3 class="card-title">2. Benefícios</h3>
+                            <p class="card-desc">Explore todos os benefícios exclusivos de associado SBPS e resgate cupons de utilização.</p>
+                        </div>
+                        <div class="card-footer-action">Ver Benefícios <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+
+                    <!-- Card 3: Atalhos -->
+                    <div class="dashboard-card" data-tab="atalhos">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                        <div>
+                            <h3 class="card-title">3. Atalhos</h3>
+                            <p class="card-desc">Crie atalhos personalizados para navegação rápida para qualquer página ou seção do portal.</p>
+                        </div>
+                        <div class="card-footer-action">Meus Atalhos <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+
+                    <!-- Card 4: Cursos -->
+                    <div class="dashboard-card" data-tab="cursos">
+                        <span class="card-badge">Desconto</span>
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div>
+                            <h3 class="card-title">4. Cursos</h3>
+                            <p class="card-desc">Capacitação continuada com descontos especiais, busca por matérias, professores e carga horária.</p>
+                        </div>
+                        <div class="card-footer-action">Ver Cursos <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+
+                    <!-- Card 5: Seminários -->
+                    <div class="dashboard-card" data-tab="seminarios">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-users-rectangle"></i></div>
+                        <div>
+                            <h3 class="card-title">5. Seminários</h3>
+                            <p class="card-desc">Inscreva-se em encontros de associados, congressos e simpósios previdenciários com preços reduzidos.</p>
+                        </div>
+                        <div class="card-footer-action">Ver Seminários <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+
+                    <!-- Card 6: Certificados -->
+                    <div class="dashboard-card" data-tab="certificados">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-certificate"></i></div>
+                        <div>
+                            <h3 class="card-title">6. Certificados</h3>
+                            <p class="card-desc">Emissão e download em PDF de certificados de participação em cursos e seminários.</p>
+                        </div>
+                        <div class="card-footer-action">Emitir Certificados <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+
+                    <!-- Card 7: Templates -->
+                    <div class="dashboard-card" data-tab="templates">
+                        <span class="card-badge">Estilo Canva</span>
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-table-cells-large"></i></div>
+                        <div>
+                            <h3 class="card-title">7. Templates</h3>
+                            <p class="card-desc">Hub de modelos advocatícios (petições, atas, procurações, contratos, planilhas) editáveis e prontos para uso.</p>
+                        </div>
+                        <div class="card-footer-action">Abrir Templates <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+
+                    <!-- Card 8: Livraria -->
+                    <div class="dashboard-card" data-tab="livraria">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-book"></i></div>
+                        <div>
+                            <h3 class="card-title">8. Livraria</h3>
+                            <p class="card-desc">Acervo de e-books, descontos em livros físicos e a Vitrine de Autores para divulgação de obras dos associados.</p>
+                        </div>
+                        <div class="card-footer-action">Acessar Livraria <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+
+                    <!-- Card 9: Outros -->
+                    <div class="dashboard-card" data-tab="outros">
+                        <div class="card-icon-wrapper"><i class="fa-solid fa-gear"></i></div>
+                        <div>
+                            <h3 class="card-title">9. Outros & Ajuda</h3>
+                            <p class="card-desc">Documentos institucionais, manuais de marca, parcerias e Central de Suporte com controle de limite de chamados.</p>
+                        </div>
+                        <div class="card-footer-action">Acessar Recursos <i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 ABAS DETALHADAS DE CONTEÚDO
+                 ------------------------------------------------------------------ -->
+
+            <!-- Aba 1: Perfil -->
+            <div id="tab-perfil" class="tab-panel">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-user-gear"></i> Meus Dados Cadastrais</h2>
+                    </div>
+                    <form id="form-edit-perfil">
+                        <div class="form-grid-2">
+                            <div class="form-group full-width">
+                                <label>Nome Completo</label>
+                                <input type="text" id="edit-nome" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Data de Nascimento</label>
+                                <input type="date" id="edit-nasc" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>CPF</label>
+                                <input type="text" id="edit-cpf" class="form-control" readonly style="background:#f1f5f9;">
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input type="email" id="edit-email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Celular</label>
+                                <input type="tel" id="edit-celular" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Telefone Fixo</label>
+                                <input type="tel" id="edit-fixo" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Registro OAB (Número/UF)</label>
+                                <input type="text" id="edit-oab" class="form-control" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Registro em outro Conselho Profissional</label>
+                                <input type="text" id="edit-conselho" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>CEP</label>
+                                <input type="text" id="edit-cep" class="form-control" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Endereço Completo</label>
+                                <input type="text" id="edit-endereco" class="form-control" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-enroll" style="width:auto; padding:12px 24px; margin-top:10px;"><i class="fa-solid fa-floppy-disk"></i> Salvar Alterações no Perfil</button>
+                    </form>
+                </div>
+
+                <div class="panel-card">
+                    <h3 style="color:var(--assoc-primary); margin-bottom:15px;"><i class="fa-solid fa-graduation-cap"></i> Meus Cursos Inscritos</h3>
+                    <div id="my-courses-list"></div>
+                </div>
+
+                <div class="panel-card">
+                    <h3 style="color:var(--assoc-primary); margin-bottom:15px;"><i class="fa-solid fa-users-rectangle"></i> Meus Seminários Inscritos</h3>
+                    <div id="my-seminars-list"></div>
+                </div>
+            </div>
+
+            <!-- Aba 2: Benefícios -->
+            <div id="tab-beneficios" class="tab-panel">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-gift"></i> Vantagens e Benefícios de Associado SBPS</h2>
+                    </div>
+
+                    <div class="items-grid">
+                        <div class="item-card" style="padding:25px;">
+                            <div style="font-size:2rem; color:var(--assoc-secondary); margin-bottom:10px;"><i class="fa-solid fa-percent"></i></div>
+                            <h3 class="item-title">Desconto em Congressos e Cursos</h3>
+                            <p style="font-size:0.88rem; color:#555; margin-bottom:15px;">Até 60% de desconto em todas as inscrições de eventos acadêmicos e treinamentos promovidos pela SBPS.</p>
+                            <button class="btn-enroll" onclick="showToastMessage('Cupom de Desconto ativado automaticamente na sua conta!')"><i class="fa-solid fa-ticket"></i> Gerar Cupom de Desconto</button>
+                        </div>
+
+                        <div class="item-card" style="padding:25px;">
+                            <div style="font-size:2rem; color:var(--assoc-secondary); margin-bottom:10px;"><i class="fa-solid fa-book-open-reader"></i></div>
+                            <h3 class="item-title">Acervo de Artigos Acadêmicos</h3>
+                            <p style="font-size:0.88rem; color:#555; margin-bottom:15px;">Acesso ilimitado ao banco de produções científicas e jurisprudência comentada de seguridade social.</p>
+                            <button class="btn-enroll" onclick="switchTab('livraria', 'Livraria')"><i class="fa-solid fa-folder-open"></i> Acessar Biblioteca Virtual</button>
+                        </div>
+
+                        <div class="item-card" style="padding:25px;">
+                            <div style="font-size:2rem; color:var(--assoc-secondary); margin-bottom:10px;"><i class="fa-solid fa-user-group"></i></div>
+                            <h3 class="item-title">Comunidade e Mentorias</h3>
+                            <p style="font-size:0.88rem; color:#555; margin-bottom:15px;">Participação em fóruns fechados de debates previdenciários e networking qualificado com juristas.</p>
+                            <button class="btn-enroll" onclick="showToastMessage('Link do Grupo de Networking enviado para o seu e-mail!')"><i class="fa-solid fa-comments"></i> Acessar Fórum</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba 3: Atalhos -->
+            <div id="tab-atalhos" class="tab-panel">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-arrow-up-right-from-square"></i> Meus Atalhos Personalizados</h2>
+                        <button id="btn-add-shortcut" class="btn-enroll" style="width:auto; padding:8px 16px;"><i class="fa-solid fa-plus"></i> Criar Novo Atalho</button>
+                    </div>
+                    <p style="font-size:0.9rem; color:var(--assoc-text-muted); margin-bottom:20px;">Adicione links diretos para seções frequentes do site ou da sua área do associado.</p>
+                    <div id="shortcuts-list"></div>
+                </div>
+            </div>
+
+            <!-- Aba 4: Cursos -->
+            <div id="tab-cursos" class="tab-panel">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-graduation-cap"></i> Cursos Previdenciários (Valores com Desconto)</h2>
+                    </div>
+
+                    <div class="filters-bar">
+                        <div class="search-box">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" placeholder="Buscar cursos por título ou professor...">
+                        </div>
+                        <select class="filter-select">
+                            <option>Todas as Matérias</option>
+                            <option>Previdenciário RGPS</option>
+                            <option>Cálculos</option>
+                            <option>Saúde & Biopsicossocial</option>
+                        </select>
+                        <select class="filter-select">
+                            <option>Qualquer Carga Horária</option>
+                            <option>Até 20h</option>
+                            <option>Mais de 20h</option>
+                        </select>
+                    </div>
+
+                    <div id="courses-grid" class="items-grid"></div>
+                </div>
+            </div>
+
+            <!-- Aba 5: Seminários -->
+            <div id="tab-seminarios" class="tab-panel">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-users-rectangle"></i> Seminários e Congressos da SBPS</h2>
+                    </div>
+
+                    <div class="filters-bar">
+                        <div class="search-box">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" placeholder="Buscar seminários e encontros...">
+                        </div>
+                        <select class="filter-select">
+                            <option>Todas as Áreas</option>
+                            <option>Geral</option>
+                            <option>Regimes Próprios (RPPS)</option>
+                        </select>
+                    </div>
+
+                    <div id="seminars-grid" class="items-grid"></div>
+                </div>
+            </div>
+
+            <!-- Aba 6: Certificados -->
+            <div id="tab-certificados" class="tab-panel">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-certificate"></i> Emissão de Certificados</h2>
+                    </div>
+                    <div id="certificates-list"></div>
+                </div>
+            </div>
+
+            <!-- Aba 7: Templates (Estilo Canva) -->
+            <div id="tab-templates" class="tab-panel">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-table-cells-large"></i> Hub de Templates Advocatícios (Estilo Canva)</h2>
+                    </div>
+
+                    <div class="templates-nav-bar">
+                        <button class="template-cat-btn active">Todos os Templates</button>
+                        <button class="template-cat-btn">Peças Advocatícias</button>
+                        <button class="template-cat-btn">Documentos & Atas</button>
+                        <button class="template-cat-btn">Planilhas & Relatórios</button>
+                        <button class="template-cat-btn">Identidade Visual & Logos</button>
+                    </div>
+
+                    <div id="templates-grid" class="items-grid"></div>
+                </div>
+            </div>
+
+            <!-- Aba 8: Livraria -->
+            <div id="tab-livraria" class="tab-panel">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-book"></i> Acervo de Leitura & Vitrine de Autores</h2>
+                        <button id="btn-publish-book" class="btn-enroll" style="width:auto; padding:8px 16px;"><i class="fa-solid fa-plus"></i> Publicar Minha Obra na Vitrine</button>
+                    </div>
+                    
+                    <h3 style="color:var(--assoc-primary); font-size:1.2rem; margin-bottom:15px;">Vitrine de Obras de Autores Associados</h3>
+                    <div id="author-books-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:20px;"></div>
+                </div>
+            </div>
+
+            <!-- Aba 9: Outros & Central de Ajuda -->
+            <div id="tab-outros" class="tab-panel">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-folder-open"></i> Documentos Institucionais & Apoio</h2>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:20px; margin-bottom:30px;">
+                        <div style="padding:15px; border:1px solid #ddd; border-radius:6px;">
+                            <h4 style="color:var(--assoc-primary);"><i class="fa-solid fa-file-pdf"></i> Atas de Assembleias Antigas</h4>
+                            <p style="font-size:0.85rem; color:#666; margin:6px 0;">Registros históricos oficiais.</p>
+                            <a href="../pages/estatuto.html" style="color:var(--assoc-secondary); font-weight:700; font-size:0.85rem;">Baixar Arquivo PDF</a>
+                        </div>
+                        <div style="padding:15px; border:1px solid #ddd; border-radius:6px;">
+                            <h4 style="color:var(--assoc-primary);"><i class="fa-solid fa-file-pdf"></i> Manual de Marca SBPS</h4>
+                            <p style="font-size:0.85rem; color:#666; margin:6px 0;">Logotipos em alta definição para sócios.</p>
+                            <a href="javascript:void(0)" onclick="showToastMessage('Download do Pacote de Logotipos iniciado!')" style="color:var(--assoc-secondary); font-weight:700; font-size:0.85rem;">Baixar Pacote de Mídias</a>
+                        </div>
+                    </div>
+
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fa-solid fa-headset"></i> Central de Ajuda & Suporte Técnico</h2>
+                    </div>
+
+                    <!-- Suporte Técnico com Limite de 3 Chamados -->
+                    <div class="panel-card" style="background:var(--assoc-bg-light);">
+                        <h3 style="color:var(--assoc-primary); font-size:1.1rem; margin-bottom:10px;">Abrir Chamado com Suporte Técnico</h3>
+                        <p style="font-size:0.85rem; color:var(--assoc-text-muted); margin-bottom:15px;">Limite máximo: até 3 chamados ativos simultâneos por associado.</p>
+
+                        <form id="form-new-ticket">
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label>Assunto do Chamado <span class="required">*</span></label>
+                                    <input type="text" id="ticket-assunto" class="form-control" placeholder="Escreva o assunto..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tema do Problema <span class="required">*</span></label>
+                                    <select id="ticket-tema" class="form-control" required>
+                                        <option value="Suporte Técnico">Suporte Técnico</option>
+                                        <option value="Acesso à Conta">Acesso à Conta</option>
+                                        <option value="Benefícios & Financeiro">Benefícios & Financeiro</option>
+                                        <option value="Emissão de Certificados">Emissão de Certificados</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Descrição Detalhada do Problema <span class="required">*</span></label>
+                                    <textarea id="ticket-desc" class="form-control" rows="3" placeholder="Descreva o problema com detalhes..." required></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>E-mail ou Telefone para Retorno do Suporte <span class="required">*</span></label>
+                                    <input type="text" id="ticket-contato" class="form-control" placeholder="Ex: (81) 99999-9999 ou email@exemplo.com" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-enroll" style="width:auto; padding:10px 20px;"><i class="fa-solid fa-paper-plane"></i> Enviar Chamado de Suporte</button>
+                        </form>
+
+                        <h4 style="margin-top:25px; color:var(--assoc-primary);">Meus Chamados de Suporte Abertos</h4>
+                        <div id="tickets-list" style="margin-top:10px;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>Onde estamos</h3>
+                <p><strong>Sociedade Brasileira de Previdência Social</strong></p>
+                <p>Endereço completo da sede da SBPS.</p>
+                <p>CEP: 00000-000</p>
+                <br>
+                <p><strong>Horário de atendimento:</strong></p>
+                <p>Segunda a sexta das 9h às 18h.</p>
+                <div class="social-links mt-3">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Acesso rápido</h3>
+                <ul>
+                    <li><a href="associado.html">Área do associado</a></li>
+                    <li><a href="noticias.html">Publicações</a></li>
+                    <li><a href="eventos.html">Cursos & Eventos</a></li>
+                    <li><a href="notas.html">Notas</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contatos</h3>
+                <p><strong>Atendimento:</strong></p>
+                <p>(00) 0000-0000</p>
+                <p>contato@sbps.org.br</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Sociedade Brasileira de Previdência Social. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/5500000000000" target="_blank" class="whatsapp-btn">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <script src="../scripts/script.js?v=5"></script>
+    <script src="../scripts/associado.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "cert-001",
+    "email": "ana.silveira@adv.com.br",
+    "type": "Curso",
+    "title": "Planejamento Previdenciário Integrado - Método 4x4",
+    "horas": "40h",
+    "data": "15/06/2026",
+    "pdfUrl": ""
+  },
+  {
+    "id": "cert-002",
+    "email": "ana.silveira@adv.com.br",
+    "type": "Seminário",
+    "title": "Congresso Brasileiro de Direito Previdenciário 2026",
+    "horas": "16h",
+    "data": "10/05/2026",
+    "pdfUrl": ""
+  }
+]
