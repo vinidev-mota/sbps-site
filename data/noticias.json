@@ -1,5 +1,13 @@
 [
   {
+    "id": "1fdd4721-7074-4d63-80c3-6377ff73a53c",
+    "title": "Desmistificando Rumores: Governo Federal Nega Proposta de Aumento da Idade Mínima para Aposentadoria",
+    "description": "Circulam nas redes sociais informações falsas sobre uma suposta proposta do governo federal para elevar a idade mínima de aposentadoria para 67 anos. O Ministério da Previdência Social desmentiu categoricamente esses rumores, afirmando que não há qualquer estudo ou iniciativa governamental nesse sentido. A notícia esclarece a origem da desinformação e as regras previdenciárias vigentes no Brasil.",
+    "date": "2026-07-23T13:07:00.000Z",
+    "link": "https://noticias.uol.com.br/confere/ultimas-noticias/2026/07/23/falso-governo-lula-proposta-aumentar-idade-minima-aposentadoria.ghtm",
+    "image": "[empty]"
+  },
+  {
     "id": "026ead8c-3b54-44c7-ad29-4e7da27fb3d6",
     "title": "Jundiaí Moderniza Previdência Municipal: Fim da Idade Mínima para Aposentadoria Especial e Cômputo de Licença Saúde",
     "description": "A Prefeitura de Jundiaí encaminhou um projeto de lei para consolidar a legislação do IPREJUN, modernizando as regras previdenciárias para servidores municipais. As principais mudanças incluem a eliminação da idade mínima para aposentadoria especial e o cômputo de licenças de saúde como tempo especial ou de magistério. A iniciativa visa trazer mais transparência e segurança jurídica aos beneficiários.",
@@ -24,19 +32,19 @@
     "image": "[empty]"
   },
   {
-    "id": "e454d104-2767-45ff-b155-6d770946095e",
-    "title": "Ex-Ministro da Previdência, Carlos Lupi, e as Sombras das Fraudes no INSS: Uma Análise Detalhada",
-    "description": "O ex-ministro da Previdência Social, Carlos Lupi, recentemente declarou apoio à reeleição do presidente Lula, reacendendo debates sobre sua gestão anterior. Lupi deixou o cargo em meio a investigações de fraudes e desvios de bilhões de reais em aposentadorias e pensões do INSS, levantando questões sobre a fiscalização e a integridade do sistema previdenciário brasileiro.",
-    "date": "2026-07-20T14:43:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60dcec52fe4292b35b1c412b17555b&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fpolitica%2fex-ministro-de-lula-demitido-apos-fraudes-no-inss-declara-apoio-ao-petista%2f&c=257713901077053514&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "87999fe2-8bac-43a7-8f0f-34f69ee2e025",
     "title": "Fraudes e Desvios no INSS: Relembrando as Acusações Contra o Ex-Ministro Carlos Lupi",
     "description": "A recente declaração de apoio do ex-ministro da Previdência, Carlos Lupi, ao presidente Lula, reacende o debate sobre as graves acusações de fraudes e desvios de bilhões no INSS durante sua gestão. As investigações da CGU e PF revelaram um esquema complexo que levou à sua demissão e à saída do então presidente do INSS, Alessandro Stefanutto.",
     "date": "2026-07-20T14:43:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a622e61ed6e432284fa8658224436a4&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fpolitica%2fex-ministro-de-lula-demitido-apos-fraudes-no-inss-declara-apoio-ao-petista%2f&c=257713901077053514&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "e454d104-2767-45ff-b155-6d770946095e",
+    "title": "Ex-Ministro da Previdência, Carlos Lupi, e as Sombras das Fraudes no INSS: Uma Análise Detalhada",
+    "description": "O ex-ministro da Previdência Social, Carlos Lupi, recentemente declarou apoio à reeleição do presidente Lula, reacendendo debates sobre sua gestão anterior. Lupi deixou o cargo em meio a investigações de fraudes e desvios de bilhões de reais em aposentadorias e pensões do INSS, levantando questões sobre a fiscalização e a integridade do sistema previdenciário brasileiro.",
+    "date": "2026-07-20T14:43:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60dcec52fe4292b35b1c412b17555b&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fpolitica%2fex-ministro-de-lula-demitido-apos-fraudes-no-inss-declara-apoio-ao-petista%2f&c=257713901077053514&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -53,6 +61,14 @@
     "description": "O salário mínimo é o pilar de grande parte dos pagamentos do INSS, impactando diretamente a vida de milhões de brasileiros. Dados recentes revelam que quase 70% dos benefícios previdenciários e assistenciais são vinculados a esse valor, evidenciando sua relevância para a economia e as contas públicas.",
     "date": "2026-07-19T23:26:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a622e61ed6e432284fa8658224436a4&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fblogs%2fgabriel-monteiro%2feconomia%2fmacroeconomia%2fsalario-minimo-define-quase-70-dos-beneficios-pagos-pelo-inss%2f&c=7461362678788752673&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "181cf7a0-0156-4800-abf2-2498a91fdfec",
+    "title": "Educação Financeira e Previdenciária nas Escolas: Senado Aprova Inclusão no Currículo Básico",
+    "description": "O Senado Federal aprovou um projeto de lei que insere a educação financeira, incluindo conceitos de previdência, tributos e seguros, nos currículos do ensino fundamental e médio. A proposta, que agora retorna à Câmara dos Deputados para reanálise de emendas, visa promover o consumo consciente e a prevenção do endividamento futuro, preparando os jovens para decisões financeiras e previdenciárias mais informadas.",
+    "date": "2026-07-15T20:00:00.000Z",
+    "link": "https://g1.globo.com/politica/noticia/2026/07/16/senado-aprova-inclusao-de-educacao-financeira-nos-curriculos-dos-ensinos-fundamental-e-medio.ghtml",
     "image": "[empty]"
   },
   {
@@ -128,19 +144,19 @@
     "image": "[empty]"
   },
   {
-    "id": "d24496de-b595-45cc-89de-08d48ba55c24",
-    "title": "Aposentadoria Especial para Agentes de Saúde: Senado Aprova PEC com Novas Regras e Impacto Bilionário",
-    "description": "O Senado Federal aprovou uma Proposta de Emenda à Constituição (PEC) que estabelece aposentadoria especial para agentes comunitários de saúde e de combate a endemias. A medida, considerada uma \"pauta-bomba\" pelo governo, fixa idades mínimas e reinstitui benefícios como integralidade e paridade, com um impacto fiscal estimado em R$ 27 bilhões em dez anos.",
-    "date": "2026-07-14T14:36:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a637e265f754f4ea1b5478a8f223a3e&url=https%3a%2f%2fg1.globo.com%2fpolitica%2fnoticia%2f2026%2f07%2f14%2fpauta-bomba-senado-aprova-aposentadoria-especial-para-agentes-comunitarios-de-saude.ghtml&c=2026248765612244400&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "7db9ae77-2829-43f9-af34-074f06579626",
     "title": "Aposentadoria Especial para Agentes de Saúde: Senado Aprova PEC com Impacto Bilionário na Previdência",
     "description": "O Senado Federal aprovou uma Proposta de Emenda à Constituição (PEC) que institui a aposentadoria especial para agentes comunitários de saúde e de combate a endemias, incluindo agentes indígenas. A medida, considerada uma 'pauta-bomba' pelo governo, prevê idades mínimas reduzidas e garantia de integralidade e paridade, gerando um impacto fiscal estimado em R$ 27 bilhões em dez anos.",
     "date": "2026-07-14T14:36:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a622c9ed22b4d92a9e6abc9161a569f&url=https%3a%2f%2fg1.globo.com%2fpolitica%2fnoticia%2f2026%2f07%2f14%2fpauta-bomba-senado-aprova-aposentadoria-especial-para-agentes-comunitarios-de-saude.ghtml&c=2026248765612244400&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "d24496de-b595-45cc-89de-08d48ba55c24",
+    "title": "Aposentadoria Especial para Agentes de Saúde: Senado Aprova PEC com Novas Regras e Impacto Bilionário",
+    "description": "O Senado Federal aprovou uma Proposta de Emenda à Constituição (PEC) que estabelece aposentadoria especial para agentes comunitários de saúde e de combate a endemias. A medida, considerada uma \"pauta-bomba\" pelo governo, fixa idades mínimas e reinstitui benefícios como integralidade e paridade, com um impacto fiscal estimado em R$ 27 bilhões em dez anos.",
+    "date": "2026-07-14T14:36:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a637e265f754f4ea1b5478a8f223a3e&url=https%3a%2f%2fg1.globo.com%2fpolitica%2fnoticia%2f2026%2f07%2f14%2fpauta-bomba-senado-aprova-aposentadoria-especial-para-agentes-comunitarios-de-saude.ghtml&c=2026248765612244400&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -168,19 +184,19 @@
     "image": "[empty]"
   },
   {
-    "id": "1eb2541d-391b-4e67-be38-514cf184098b",
-    "title": "Eleitorado Idoso em Ascensão: Previdência e Assistência Social no Centro do Debate Político Brasileiro",
-    "description": "O Brasil registra um eleitorado idoso recorde, tornando-o um grupo decisivo nas eleições. Temas como previdência, saúde e assistência social ganham destaque, refletindo as preocupações dessa parcela da população. No entanto, a abstenção entre os mais velhos ainda representa um desafio significativo.",
-    "date": "2026-07-14T10:42:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5d91f654354143b4aa2d29b8fd589e&url=https%3a%2f%2fagenciabrasil.ebc.com.br%2fpolitica%2fnoticia%2f2026-07%2faumento-do-eleitorado-idoso-pauta-campanhas-mas-abstencao-e-desafio&c=8827480870347601070&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "e3d1450c-e3e2-49d8-9369-e077334a895b",
     "title": "O Poder do Voto Idoso: Como o Crescimento do Eleitorado Sênior Molda as Políticas de Previdência e Assistência Social",
     "description": "O eleitorado idoso no Brasil atingiu um recorde, representando 23% dos votantes e tornando-se um grupo decisivo nas eleições. Este segmento crescente impulsiona a discussão de temas cruciais como previdência, saúde e assistência social, influenciando diretamente as plataformas políticas e o futuro das políticas públicas no país.",
     "date": "2026-07-14T10:42:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60dd6670d142e784ef2272155b2048&url=https%3a%2f%2fagenciabrasil.ebc.com.br%2fpolitica%2fnoticia%2f2026-07%2faumento-do-eleitorado-idoso-pauta-campanhas-mas-abstencao-e-desafio&c=8827480870347601070&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "1eb2541d-391b-4e67-be38-514cf184098b",
+    "title": "Eleitorado Idoso em Ascensão: Previdência e Assistência Social no Centro do Debate Político Brasileiro",
+    "description": "O Brasil registra um eleitorado idoso recorde, tornando-o um grupo decisivo nas eleições. Temas como previdência, saúde e assistência social ganham destaque, refletindo as preocupações dessa parcela da população. No entanto, a abstenção entre os mais velhos ainda representa um desafio significativo.",
+    "date": "2026-07-14T10:42:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5d91f654354143b4aa2d29b8fd589e&url=https%3a%2f%2fagenciabrasil.ebc.com.br%2fpolitica%2fnoticia%2f2026-07%2faumento-do-eleitorado-idoso-pauta-campanhas-mas-abstencao-e-desafio&c=8827480870347601070&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -200,19 +216,19 @@
     "image": "[empty]"
   },
   {
-    "id": "c817698b-74a8-4a39-b9c0-3be00fa5a019",
-    "title": "Senado Aprova Aposentadoria Especial para Agentes de Saúde e Endemias, Gerando Impacto Bilionário na Previdência",
-    "description": "O Senado Federal aprovou uma Proposta de Emenda à Constituição (PEC) que concede aposentadoria especial a agentes comunitários de saúde e de combate a endemias. A medida, vista como uma 'pauta-bomba' pelo governo devido ao seu impacto fiscal estimado em R$ 27,9 bilhões em dez anos, segue agora para promulgação.",
-    "date": "2026-07-13T17:00:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5d9118f9234c66a4dd87362d62af3a&url=https://noticias.uol.com.br/politica/ultimas-noticias/2026/07/14/senado-aprova-pauta-bomba-de-aposentadoria-para-agente-de-saude-em-1-turno.ghtm&c=8624505067470193759&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "7cba7ed2-b077-46b7-9959-77d374e9bf06",
     "title": "Senado Aprova Aposentadoria Especial para Agentes de Saúde e Endemias: Entenda as Novas Regras e o Impacto na Previdência",
     "description": "O Senado Federal aprovou a Proposta de Emenda à Constituição (PEC) 14/2021, que concede aposentadoria especial a agentes comunitários de saúde e de combate a endemias. A medida, vista como 'pauta-bomba' pelo governo devido ao impacto fiscal bilionário, estabelece novas regras e benefícios para a categoria.",
     "date": "2026-07-13T17:00:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60dc5e5ac9497e85a1171b9e6b7077&url=https%3a%2f%2fnoticias.uol.com.br%2fpolitica%2fultimas-noticias%2f2026%2f07%2f14%2fsenado-aprova-pauta-bomba-de-aposentadoria-para-agente-de-saude-em-1-turno.ghtm&c=8624505067470193759&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "c817698b-74a8-4a39-b9c0-3be00fa5a019",
+    "title": "Senado Aprova Aposentadoria Especial para Agentes de Saúde e Endemias, Gerando Impacto Bilionário na Previdência",
+    "description": "O Senado Federal aprovou uma Proposta de Emenda à Constituição (PEC) que concede aposentadoria especial a agentes comunitários de saúde e de combate a endemias. A medida, vista como uma 'pauta-bomba' pelo governo devido ao seu impacto fiscal estimado em R$ 27,9 bilhões em dez anos, segue agora para promulgação.",
+    "date": "2026-07-13T17:00:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5d9118f9234c66a4dd87362d62af3a&url=https://noticias.uol.com.br/politica/ultimas-noticias/2026/07/14/senado-aprova-pauta-bomba-de-aposentadoria-para-agente-de-saude-em-1-turno.ghtm&c=8624505067470193759&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -224,19 +240,19 @@
     "image": "[empty]"
   },
   {
-    "id": "aa66d5c2-a173-40cd-b59c-442570919b21",
-    "title": "Reforma da Previdência Municipal em Divinópolis: Entenda as Novas Regras para Servidores",
-    "description": "A greve dos servidores municipais de Divinópolis contra a reforma da Previdência foi encerrada, mas as novas regras do Diviprev já estão em vigor. As mudanças impactam a aposentadoria voluntária, o cálculo dos benefícios, as regras de transição, a pensão por morte e as alíquotas de contribuição, alinhando-se à Reforma da Previdência de 2019.",
-    "date": "2026-07-13T15:09:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6426de83124faaab7833ef1680e6ab&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f13%2fgreve-dos-servidores-contra-a-reforma-da-previdencia-municipal-e-encerrada-em-divinopolis.ghtml&c=18064992484615305831&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "6efeeeaa-9826-4c9c-ba79-d582f296bcbb",
     "title": "Reforma da Previdência Municipal em Divinópolis: Entenda as Novas Regras Após o Fim da Greve dos Servidores",
     "description": "Servidores municipais de Divinópolis encerraram a greve contra as alterações no Instituto de Previdência dos Servidores de Divinópolis (Diviprev). A paralisação, que impactou serviços essenciais, foi motivada por mudanças significativas nas regras de aposentadoria, pensão por morte e contribuições, alinhando a legislação municipal à Reforma da Previdência de 2019.",
     "date": "2026-07-13T15:09:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60325f0cc14c66b6cfe3713ce8dc3f&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f13%2fgreve-dos-servidores-contra-a-reforma-da-previdencia-municipal-e-encerrada-em-divinopolis.ghtml&c=18064992484615305831&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "aa66d5c2-a173-40cd-b59c-442570919b21",
+    "title": "Reforma da Previdência Municipal em Divinópolis: Entenda as Novas Regras para Servidores",
+    "description": "A greve dos servidores municipais de Divinópolis contra a reforma da Previdência foi encerrada, mas as novas regras do Diviprev já estão em vigor. As mudanças impactam a aposentadoria voluntária, o cálculo dos benefícios, as regras de transição, a pensão por morte e as alíquotas de contribuição, alinhando-se à Reforma da Previdência de 2019.",
+    "date": "2026-07-13T15:09:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6426de83124faaab7833ef1680e6ab&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f13%2fgreve-dos-servidores-contra-a-reforma-da-previdencia-municipal-e-encerrada-em-divinopolis.ghtml&c=18064992484615305831&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -320,14 +336,6 @@
     "image": "[empty]"
   },
   {
-    "id": "b3745858-a035-4e75-8f62-f19848ca78d3",
-    "title": "Justiça do RN Determina Plano de Recomposição para Equilíbrio da Previdência Estadual",
-    "description": "Uma decisão judicial da 4ª Vara da Fazenda Pública de Natal exige que o Governo do Rio Grande do Norte e o Ipern apresentem, em 90 dias, um plano detalhado para reequilibrar as finanças da previdência estadual. A medida visa corrigir um déficit de R$ 566 milhões, originado por resgates antecipados de aplicações financeiras, e inclui a obrigatoriedade de alienação de bens imóveis para recomposição do fundo.",
-    "date": "2026-07-07T05:37:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5d8f5843f54b45902d1ca858b68e4b&url=https%3a%2f%2fg1.globo.com%2frn%2frio-grande-do-norte%2fnoticia%2f2026%2f07%2f07%2fjustica-plano-resgate-equilibrio-financeiro-previdencia.ghtml&c=14810902434606170347&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "5f1c9223-7306-4c64-871a-5e240c98af79",
     "title": "Justiça do RN Exige Plano Urgente para Reequilíbrio Financeiro da Previdência Estadual",
     "description": "O governo do Rio Grande do Norte e o Ipern foram intimados pela 4ª Vara da Fazenda Pública de Natal a apresentar, em 90 dias, um plano detalhado para restaurar o equilíbrio financeiro da previdência estadual. A medida visa sanar um déficit de R$ 566,6 milhões, decorrente de resgates antecipados de aplicações financeiras entre 2014 e 2018. O descumprimento da decisão judicial implicará em multa diária e a necessidade de alienação de bens imóveis para recomposição do fundo.",
@@ -336,11 +344,11 @@
     "image": "[empty]"
   },
   {
-    "id": "d8254c4c-57e3-454c-890e-da8175744769",
-    "title": "Reforma da Previdência em Divinópolis: Câmara Aprova Novas Regras para Servidores Municipais",
-    "description": "A Câmara Municipal de Divinópolis aprovou a reforma da Previdência local, que modifica as regras de aposentadoria, pensão e transição para os servidores públicos. A medida, justificada pela Prefeitura para garantir o equilíbrio financeiro do Diviprev, enfrentou resistência dos sindicatos, que criticaram a falta de acolhimento de propostas que impactam diretamente os direitos dos trabalhadores.",
-    "date": "2026-07-06T17:00:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5ee0d792bd4690822e1f0522761282&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f07%2fcamara-de-divinopolis-aprova-reforma-da-previdencia-que-altera-regras-de-aposentadoria-pensao-e-transicao-para-servidores.ghtml&c=2857964867823453198&mkt=pt-br",
+    "id": "b3745858-a035-4e75-8f62-f19848ca78d3",
+    "title": "Justiça do RN Determina Plano de Recomposição para Equilíbrio da Previdência Estadual",
+    "description": "Uma decisão judicial da 4ª Vara da Fazenda Pública de Natal exige que o Governo do Rio Grande do Norte e o Ipern apresentem, em 90 dias, um plano detalhado para reequilibrar as finanças da previdência estadual. A medida visa corrigir um déficit de R$ 566 milhões, originado por resgates antecipados de aplicações financeiras, e inclui a obrigatoriedade de alienação de bens imóveis para recomposição do fundo.",
+    "date": "2026-07-07T05:37:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5d8f5843f54b45902d1ca858b68e4b&url=https%3a%2f%2fg1.globo.com%2frn%2frio-grande-do-norte%2fnoticia%2f2026%2f07%2f07%2fjustica-plano-resgate-equilibrio-financeiro-previdencia.ghtml&c=14810902434606170347&mkt=pt-br",
     "image": "[empty]"
   },
   {
