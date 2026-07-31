@@ -86,11 +86,11 @@
                     
                     <div class="form-group">
                         <label>E-mail ou CPF <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="seu.email@exemplo.com" required>
+                        <input type="text" id="login-user" class="form-control" placeholder="seu.email@exemplo.com" required>
                     </div>
                     <div class="form-group">
                         <label>Senha <span class="required">*</span></label>
-                        <input type="password" class="form-control" placeholder="••••••••" required>
+                        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
                     </div>
                     <button type="submit" class="btn-auth-submit"><i class="fa-solid fa-right-to-bracket"></i> Acessar Portal</button>
                 </form>
@@ -294,9 +294,9 @@
                         <div class="card-icon-wrapper"><i class="fa-solid fa-certificate"></i></div>
                         <div>
                             <h3 class="card-title">6. Certificados</h3>
-                            <p class="card-desc">Emissão e download em PDF de certificados de participação em cursos e seminários.</p>
+                            <p class="card-desc">Acesse e faça o download em PDF de todos os certificados emitidos para você em cursos e seminários.</p>
                         </div>
-                        <div class="card-footer-action">Emitir Certificados <i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="card-footer-action">Meus Certificados <i class="fa-solid fa-arrow-right"></i></div>
                     </div>
 
                     <!-- Card 7: Templates -->
@@ -500,8 +500,12 @@
             <div id="tab-certificados" class="tab-panel">
                 <div class="panel-card">
                     <div class="panel-header">
-                        <h2 class="panel-title"><i class="fa-solid fa-certificate"></i> Emissão de Certificados</h2>
+                        <h2 class="panel-title"><i class="fa-solid fa-certificate"></i> Meus Certificados Emitidos</h2>
                     </div>
+                    <p style="font-size:0.9rem; color:var(--assoc-text-muted); margin-bottom:20px;">
+                        Abaixo estão listados todos os certificados emitidos para o seu e-mail / registro de associado. Você pode visualizar o certificado em tela ou fazer o download seguro em PDF.
+                    </p>
+
                     <div id="certificates-list"></div>
                 </div>
             </div>
@@ -648,8 +652,11 @@
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
+    <!-- Supabase JS SDK & Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../scripts/supabase-client.js?v=1"></script>
     <script src="../scripts/script.js?v=5"></script>
-    <script src="../scripts/associado.js"></script>
+    <script src="../scripts/associado.js?v=999"></script>
 </body>
 
 </html>

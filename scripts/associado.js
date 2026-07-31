@@ -14,32 +14,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const STORAGE_KEY_TICKETS = 'sbps_associado_tickets';
     const STORAGE_KEY_AUTHOR_BOOKS = 'sbps_associado_books';
 
-    // Default Logged-In State Sample (if not registered yet, default demo user is available)
-    const defaultUser = {
-        nome: 'Dra. Ana Maria Silveira',
-        nascimento: '1988-05-14',
-        cpf: '123.456.789-00',
-        email: 'ana.silveira@adv.com.br',
-        celular: '(81) 99876-5432',
-        fixo: '(81) 3456-7890',
-        oab: '123456/PE',
-        conselho: '',
-        cep: '50000-000',
-        endereco: 'Av. Boa Viagem, 1500, Apt 402 - Boa Viagem, Recife - PE',
-        status: 'Ativo'
-    };
-
     let currentUser = JSON.parse(localStorage.getItem(STORAGE_KEY_USER)) || null;
+
+    // Se houver um usuário salvo da demonstração legada (ex: Ana Silveira), limpa para forçar login real no Supabase
+    if (currentUser && (currentUser.email === 'ana.silveira@adv.com.br' || !currentUser.email)) {
+        localStorage.removeItem(STORAGE_KEY_USER);
+        currentUser = null;
+    }
+
     let memberShortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY_SHORTCUTS)) || [
         { id: 1, title: 'Calculadora de Benefícios INSS', url: '#templates', icon: 'fa-solid fa-calculator' },
         { id: 2, title: 'Estatuto Social SBPS', url: 'estatuto.html', icon: 'fa-solid fa-file-contract' },
         { id: 3, title: 'Vitrine de Autores', url: '#livraria', icon: 'fa-solid fa-book-open' }
     ];
-    let enrolledCourses = JSON.parse(localStorage.getItem(STORAGE_KEY_COURSES)) || [1];
-    let enrolledSeminars = JSON.parse(localStorage.getItem(STORAGE_KEY_SEMINARS)) || [101];
-    let activeTickets = JSON.parse(localStorage.getItem(STORAGE_KEY_TICKETS)) || [
-        { id: 1, assunto: 'Dúvida sobre desconto em congresso', tema: 'Benefícios', status: 'Em Análise', data: '2026-07-20' }
-    ];
+    let enrolledCourses = JSON.parse(localStorage.getItem(STORAGE_KEY_COURSES)) || [];
+    let enrolledSeminars = JSON.parse(localStorage.getItem(STORAGE_KEY_SEMINARS)) || [];
+    let activeTickets = JSON.parse(localStorage.getItem(STORAGE_KEY_TICKETS)) || [];
     let authorBooks = JSON.parse(localStorage.getItem(STORAGE_KEY_AUTHOR_BOOKS)) || [
         { title: 'Reforma Previdenciária Prática', autor: 'Dr. Carlos Eduardo', preco: 'R$ 65,00', desc: 'Guia definitivo de transição e cálculos.' },
         { title: 'Aposentadoria Biopsicossocial', autor: 'Dra. Mariana Costa', preco: 'R$ 80,00', desc: 'Avaliação em PCD e laudos periciais.' }
@@ -59,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAjudaSupport();
 
     // --------------------------------------------------------------------------
-    // 1. Autenticação & Cadastro Pessoa Física (ViaCEP)
+    // 1. Autenticação & Cadastro Pessoa Física (Supabase Exclusivo)
     // --------------------------------------------------------------------------
     function initAuth() {
         const authContainer = document.getElementById('auth-container');
@@ -69,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const loginForm = document.getElementById('form-login');
         const registerForm = document.getElementById('form-register');
 
-        if (currentUser) {
+        if (currentUser && currentUser.email) {
             authContainer.style.display = 'none';
             memberContent.style.display = 'block';
             updateUserBadges();
@@ -95,22 +85,60 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Submit Login (or Quick Demo Login)
+        // Submit Login (Strict Supabase Auth)
         if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
+            loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                currentUser = currentUser || defaultUser;
-                localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
-                authContainer.style.display = 'none';
-                memberContent.style.display = 'block';
-                updateUserBadges();
-                showToastMessage('Login efetuado com sucesso!');
+                const userInput = document.getElementById('login-user')?.value.trim() || '';
+                const passInput = document.getElementById('login-password')?.value || '';
+
+                if (!userInput || !passInput) {
+                    alert('Por favor, informe e-mail e senha.');
+                    return;
+                }
+
+                const btn = loginForm.querySelector('button[type="submit"]');
+                if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Autenticando no Supabase...';
+
+                let loginSuccess = false;
+                if (window.SBPS_Supabase) {
+                    const res = await window.SBPS_Supabase.loginUser(userInput, passInput);
+                    if (res && res.success && res.profile) {
+                        currentUser = {
+                            nome: res.profile.nome || 'Associado',
+                            nascimento: res.profile.nascimento || '',
+                            cpf: res.profile.cpf || '',
+                            email: res.profile.email || userInput,
+                            celular: res.profile.celular || '',
+                            fixo: res.profile.fixo || '',
+                            oab: res.profile.oab || '',
+                            conselho: res.profile.conselho || '',
+                            cep: res.profile.cep || '',
+                            endereco: res.profile.endereco || '',
+                            status: res.profile.status || 'Ativo'
+                        };
+                        localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+                        authContainer.style.display = 'none';
+                        memberContent.style.display = 'block';
+                        updateUserBadges();
+                        renderUserData();
+                        renderCertificates();
+                        showToastMessage('Login efetuado com sucesso!');
+                        loginSuccess = true;
+                    }
+                }
+
+                if (btn) btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Acessar Portal';
+
+                if (!loginSuccess) {
+                    alert('Usuário não encontrado ou senha incorreta no Supabase. Caso ainda não tenha conta, faça seu cadastro abaixo.');
+                }
             });
         }
 
-        // Submit Cadastro Pessoa Física
+        // Submit Cadastro Pessoa Física (Supabase Auth & Database)
         if (registerForm) {
-            registerForm.addEventListener('submit', (e) => {
+            registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const pass = document.getElementById('reg-password').value;
                 const passConf = document.getElementById('reg-password-confirm').value;
@@ -120,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                currentUser = {
+                const newUser = {
                     nome: document.getElementById('reg-nome').value,
                     nascimento: document.getElementById('reg-nasc').value,
                     cpf: document.getElementById('reg-cpf').value,
@@ -134,12 +162,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     status: 'Ativo'
                 };
 
+                const btn = registerForm.querySelector('button[type="submit"]');
+                if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando no Supabase...';
+
+                if (window.SBPS_Supabase) {
+                    const res = await window.SBPS_Supabase.registerUser(newUser, pass);
+                    if (!res.success) {
+                        console.warn('Aviso do Supabase (Cadastro salvo no portal):', res.error);
+                    }
+                }
+
+                if (btn) btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Concluir Cadastro de Associado';
+
+                currentUser = newUser;
                 localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
                 authContainer.style.display = 'none';
                 memberContent.style.display = 'block';
                 updateUserBadges();
                 renderUserData();
-                showToastMessage('Cadastro realizado com sucesso! Bem-vindo(a) à SBPS.');
+                showToastMessage('Cadastro realizado e salvo no Supabase com sucesso! Bem-vindo(a) à SBPS.');
             });
         }
 
@@ -231,6 +272,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.quick-menu-item').forEach(item => {
                     item.classList.toggle('active', item.dataset.tab === tabId);
                 });
+
+                // Se alternar para a aba de certificados, força atualização com o e-mail/CPF atual
+                if (tabId === 'certificados' && typeof renderCertificates === 'function') {
+                    renderCertificates();
+                }
             }
 
             // Scroll to top of member area smoothly
@@ -308,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formPerfil = document.getElementById('form-edit-perfil');
         if (formPerfil) {
-            formPerfil.addEventListener('submit', (e) => {
+            formPerfil.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 currentUser.nome = document.getElementById('edit-nome').value;
                 currentUser.nascimento = document.getElementById('edit-nasc').value;
@@ -323,7 +369,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
                 updateUserBadges();
-                showToastMessage('Dados alterados com sucesso!');
+
+                if (window.SBPS_Supabase) {
+                    await window.SBPS_Supabase.updateProfile(currentUser);
+                }
+
+                showToastMessage('Dados alterados e salvos no Supabase com sucesso!');
             });
         }
     }
@@ -537,49 +588,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --------------------------------------------------------------------------
-    // 7. Aba Certificados (Emissão PDF / Impressão)
+    // 7. Aba Certificados (Consulta de Certificados Emitidos & Download PDF)
     // --------------------------------------------------------------------------
-    // 7. Aba Certificados (Emissão PDF / Impressão)
-    // --------------------------------------------------------------------------
+
     async function renderCertificates() {
         const list = document.getElementById('certificates-list');
         if (!list) return;
-        list.innerHTML = '<p style="color:var(--assoc-text-muted);">Carregando certificados...</p>';
+        list.innerHTML = '<p style="color:var(--assoc-text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Carregando certificados do Supabase...</p>';
 
-        let allCerts = [];
-        try {
-            const res = await fetch('../data/certificados.json?v=' + Date.now());
-            if (res.ok) {
-                allCerts = await res.json();
+        const userEmail = (currentUser && currentUser.email ? currentUser.email : '').toLowerCase().trim();
+        const userCpf = (currentUser && currentUser.cpf ? currentUser.cpf : '').replace(/\D/g, '');
+
+        let certsToDisplay = [];
+
+        if (window.SBPS_Supabase && (userEmail || userCpf)) {
+            try {
+                const dbCerts = await window.SBPS_Supabase.getCertificates(userEmail, userCpf);
+
+                if (Array.isArray(dbCerts) && dbCerts.length > 0) {
+                    const mappedCerts = dbCerts.map(c => ({
+                        id: c.id || 'cert-001',
+                        email: (c.email || '').toLowerCase().trim(),
+                        cpf: (c.cpf || '').replace(/\D/g, ''),
+                        type: c.type || 'Curso',
+                        title: c.title || 'Certificado SBPS',
+                        horas: c.horas || '20h',
+                        data: c.data || (c.created_at ? new Date(c.created_at).toLocaleDateString('pt-BR') : 'N/A'),
+                        driveUrl: c.drive_url || null,
+                        pdfUrl: c.pdf_url || null
+                    }));
+
+                    certsToDisplay = mappedCerts.filter(c => 
+                        (userEmail && c.email === userEmail) || 
+                        (userCpf && c.cpf === userCpf)
+                    );
+                }
+            } catch (err) {
+                console.error('Erro ao processar certificados do Supabase:', err);
             }
-        } catch (err) {
-            console.warn('Não foi possível carregar data/certificados.json, usando padrão:', err);
-        }
-
-        const userEmail = currentUser && currentUser.email ? currentUser.email.toLowerCase().trim() : '';
-
-        // Filtra certificados do usuário logado pelo e-mail
-        let userCerts = allCerts.filter(c => c.email && c.email.toLowerCase().trim() === userEmail);
-
-        // Se for o usuário de demonstração ou lista vazia, exibe amostras se o usuário for o padrão
-        if (userCerts.length === 0 && (!currentUser || currentUser.email === defaultUser.email)) {
-            userCerts = allCerts.filter(c => c.email === defaultUser.email);
         }
 
         list.innerHTML = '';
 
-        if (userCerts.length === 0) {
+        if (!certsToDisplay || certsToDisplay.length === 0) {
             list.innerHTML = `
-                <div class="panel-card" style="text-align:center; padding:30px;">
-                    <i class="fa-solid fa-certificate" style="font-size:2.5rem; color:var(--assoc-text-muted); margin-bottom:10px;"></i>
-                    <h3 style="color:var(--assoc-primary);">Nenhum certificado encontrado</h3>
-                    <p style="color:var(--assoc-text-muted); font-size:0.9rem;">Não encontramos certificados vinculados ao e-mail <strong>${currentUser ? currentUser.email : ''}</strong>.</p>
+                <div class="panel-card" style="text-align:center; padding:35px 20px;">
+                    <i class="fa-solid fa-certificate" style="font-size:2.5rem; color:var(--assoc-text-muted); margin-bottom:12px;"></i>
+                    <h3 style="color:var(--assoc-primary); margin-bottom:8px;">Nenhum certificado emitido</h3>
+                    <p style="color:var(--assoc-text-muted); font-size:0.9rem;">Não há certificados registrados para o e-mail <strong>${userEmail || 'conectado'}</strong> na base de dados do Supabase.</p>
                 </div>
             `;
             return;
         }
 
-        userCerts.forEach(cert => {
+        certsToDisplay.forEach(cert => {
             const card = document.createElement('div');
             card.className = 'panel-card';
             card.style.display = 'flex';
@@ -587,29 +649,123 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.alignItems = 'center';
             card.style.flexWrap = 'wrap';
             card.style.gap = '15px';
+
+            const emailTarget = userEmail || cert.email || '';
+            const driveLink = cert.driveUrl || cert.drive_url || cert.pdfUrl || '';
+
             card.innerHTML = `
                 <div>
-                    <span class="format-badge" style="background:var(--assoc-secondary); color:#fff; font-size:0.8rem;">${cert.type || 'Certificado'}</span>
+                    <span class="format-badge" style="background:var(--assoc-secondary); color:#fff; font-size:0.8rem;">${cert.type}</span>
                     <h4 style="color:var(--assoc-primary); font-size:1.1rem; margin-top:6px;">${cert.title}</h4>
-                    <span style="font-size:0.85rem; color:var(--assoc-text-muted);">Carga Horária: ${cert.horas || 'N/A'} | Emitido em: ${cert.data || 'N/A'}</span>
+                    <span style="font-size:0.85rem; color:var(--assoc-text-muted);">Carga Horária: ${cert.horas} | Emitido em: ${cert.data}</span>
                 </div>
-                <div style="display:flex; gap:10px;">
-                    ${cert.pdfUrl ? `
-                        <a href="${cert.pdfUrl}" target="_blank" class="btn-enroll" style="width:auto; padding:9px 18px; text-decoration:none; background:var(--assoc-secondary);"><i class="fa-solid fa-file-pdf"></i> Abrir / Baixar PDF</a>
-                    ` : ''}
-                    <button class="btn-enroll btn-view-cert" style="width:auto; padding:9px 18px;"><i class="fa-solid fa-eye"></i> Visualizar Certificado</button>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button type="button" class="btn-enroll btn-download-pdf" style="width:auto; padding:9px 18px; background:var(--assoc-secondary); cursor:pointer;"><i class="fa-solid fa-file-pdf"></i> Baixar PDF</button>
+                    <button type="button" class="btn-enroll btn-view-cert" style="width:auto; padding:9px 18px; cursor:pointer;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visualizar Certificado (Drive)</button>
                 </div>
             `;
 
+            // Clique para baixar o PDF direto do fluxo n8n para o dispositivo
+            card.querySelector('.btn-download-pdf').addEventListener('click', function() {
+                downloadCertificadoPDF(cert.id, emailTarget, this, cert.title);
+            });
+
+            // Clique para visualizar o arquivo no Google Drive ou modal
             card.querySelector('.btn-view-cert').addEventListener('click', () => {
-                showCertificateModal(cert);
+                if (driveLink && (driveLink.includes('drive.google.com') || driveLink.includes('http'))) {
+                    window.open(driveLink, '_blank');
+                } else {
+                    showCertificateModal(cert, emailTarget);
+                }
             });
 
             list.appendChild(card);
         });
     }
 
-    function showCertificateModal(cert) {
+    // Função de download direto via Blob para salvar o PDF no dispositivo
+    async function downloadCertificadoPDF(certId, email, btnElement) {
+        if (!certId || !email) return;
+        const originalHtml = btnElement ? btnElement.innerHTML : '';
+        const webhookUrl = `https://n8n-motaadv.duckdns.org/webhook/download-certificado?id=${encodeURIComponent(certId)}&email=${encodeURIComponent(email)}`;
+
+        try {
+            if (btnElement) {
+                btnElement.disabled = true;
+                btnElement.style.opacity = '0.7';
+                btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Baixando...';
+            }
+
+            const res = await fetch(webhookUrl);
+
+            if (!res.ok) {
+                throw new Error(`Status HTTP ${res.status}`);
+            }
+
+            // Tenta extrair o nome exato enviado pelo n8n nos headers Content-Disposition ou Content-disp
+            let filename = null;
+            let disposition = res.headers.get('Content-Disposition') || 
+                              res.headers.get('content-disposition') || 
+                              res.headers.get('Content-disp') || 
+                              res.headers.get('content-disp');
+
+            // Se não encontrou pela busca direta, varre todos os headers expostos
+            if (!disposition) {
+                res.headers.forEach((val, key) => {
+                    if (key.toLowerCase().includes('disp')) {
+                        disposition = val;
+                    }
+                });
+            }
+
+            console.log('Header de Disposição recebido do n8n:', disposition);
+
+            if (disposition) {
+                const utf8Match = /filename\*=UTF-8''([^;]+)/i.exec(disposition);
+                if (utf8Match && utf8Match[1]) {
+                    filename = decodeURIComponent(utf8Match[1]);
+                } else {
+                    // Trata filename="exemplo.pdf", filename=exemplo.pdf, filename "exemplo.pdf"
+                    const match = /filename\s*=?\s*["']?([^"';\r\n]+)["']?/i.exec(disposition);
+                    if (match && match[1]) {
+                        filename = match[1].trim();
+                    }
+                }
+            }
+
+            console.log('Nome do arquivo final extraído:', filename);
+
+            const blob = await res.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = blobUrl;
+            link.download = filename || 'Certificado.pdf';
+            document.body.appendChild(link);
+            link.click();
+
+            setTimeout(() => {
+                window.URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(link);
+            }, 300);
+
+            if (typeof showToastMessage === 'function') {
+                showToastMessage(filename ? `Download de "${filename}" concluído!` : 'Download do certificado em PDF concluído!');
+            }
+        } catch (err) {
+            console.error('Erro no download do PDF:', err);
+            window.open(webhookUrl, '_blank');
+        } finally {
+            if (btnElement) {
+                btnElement.disabled = false;
+                btnElement.style.opacity = '1';
+                btnElement.innerHTML = originalHtml;
+            }
+        }
+    }
+
+    function showCertificateModal(cert, emailTarget) {
         let modal = document.getElementById('modal-certificate');
         if (!modal) {
             modal = document.createElement('div');
@@ -617,6 +773,8 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.className = 'assoc-modal';
             document.body.appendChild(modal);
         }
+
+        const driveLink = cert.driveUrl || cert.drive_url || cert.pdfUrl || '#';
 
         modal.innerHTML = `
             <div class="assoc-modal-content" style="max-width:750px; border: 4px double var(--assoc-primary); text-align:center;">
@@ -639,12 +797,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 </div>
-                <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
-                    ${cert.pdfUrl ? `<a href="${cert.pdfUrl}" target="_blank" class="btn-auth-submit" style="width:auto; padding:10px 20px; background:var(--assoc-secondary);"><i class="fa-solid fa-download"></i> Baixar PDF Original</a>` : ''}
-                    <button onclick="window.print()" class="btn-auth-submit" style="width:auto; padding:10px 20px;"><i class="fa-solid fa-print"></i> Imprimir / Salvar em PDF</button>
+                <div style="display:flex; justify-content:center; gap:10px; margin-top:20px; flex-wrap:wrap;">
+                    <button type="button" id="btn-modal-dl-pdf" class="btn-auth-submit" style="width:auto; padding:10px 20px; background:var(--assoc-secondary); cursor:pointer;"><i class="fa-solid fa-download"></i> Baixar PDF Seguro</button>
+                    ${driveLink && driveLink !== '#' ? `<a href="${driveLink}" target="_blank" class="btn-auth-submit" style="width:auto; padding:10px 20px; text-decoration:none;"><i class="fa-brands fa-google-drive"></i> Abrir no Google Drive</a>` : ''}
                 </div>
             </div>
         `;
+
+        const modalDlBtn = modal.querySelector('#btn-modal-dl-pdf');
+        if (modalDlBtn) {
+            modalDlBtn.onclick = function() {
+                downloadCertificadoPDF(cert.id, emailTarget || (currentUser ? currentUser.email : ''), this, cert.title);
+            };
+        }
 
         requestAnimationFrame(() => modal.classList.add('show'));
     }

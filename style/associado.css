@@ -18,11 +18,18 @@
     --assoc-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Page Layout Container */
-.associado-page {
+/* Page Layout Container & Sticky Footer */
+body.associado-page {
     background-color: var(--assoc-bg-light);
     min-height: 100vh;
-    padding-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+body.associado-page .main-footer {
+    margin-top: auto;
 }
 
 /* --------------------------------------------------------------------------
