@@ -1,5 +1,13 @@
 [
   {
+    "id": "7ee2042e-c422-4dba-abcb-cc073ebffb65",
+    "title": "Fraude no INSS: Um Ano Depois, Ações Judiciais Buscam R$ 6 Bilhões e Novas Regras Protegem Aposentados",
+    "description": "Mais de um ano após a revelação de um esquema bilionário de descontos indevidos em benefícios do INSS, a União avança na recuperação dos valores e na proteção dos aposentados. Milhões de beneficiários já foram ressarcidos, enquanto ações judiciais buscam reaver mais de R$ 6 bilhões das entidades fraudulentas.",
+    "date": "2026-07-31T23:25:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a70055c17f44257b1ee15cd5e82cd63&url=https%3a%2f%2fwww.cnnbrasil.com.br%2feconomia%2fmacroeconomia%2ffraude-do-inss-apos-1-ano-acoes-contra-entidades-seguem-em-fase-inicial%2f&c=1153963532796634754&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
     "id": "71b32006-9b73-4b3d-bbf4-13963f4fc954",
     "title": "Fraude Bilionária no INSS: Entenda o Andamento das Ações e o Impacto nos Aposentados",
     "description": "Mais de um ano após a revelação de um esquema de descontos indevidos em benefícios do INSS, a União avança com ações judiciais para reaver os R$ 6 bilhões bloqueados e ressarcir milhões de aposentados. O caso gerou novas leis e investigações que buscam responsabilizar os envolvidos e proteger os segurados.",
@@ -24,6 +32,14 @@
     "image": "[empty]"
   },
   {
+    "id": "d81fb64a-da87-4085-83bd-24d3337b0a86",
+    "title": "Aposentadoria Especial: STF Afasta Idade Mínima e Restaura Direitos para Trabalhadores Expostos a Agentes Nocivos",
+    "description": "Uma recente decisão do Supremo Tribunal Federal (STF) eliminou a exigência de idade mínima para a aposentadoria especial, beneficiando trabalhadores expostos a condições insalubres ou perigosas. A medida representa um retorno à lógica preventiva do benefício, impactando diretamente segurados do INSS e, em certos casos, servidores públicos.",
+    "date": "2026-07-31T11:22:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a7004b74dfb42b89b5aa836b7bba8aa&url=https%3a%2f%2fg1.globo.com%2fsp%2fvale-do-paraiba-regiao%2fespecial-publicitario%2fnunes-rachid-advocacia%2fnoticia%2f2026%2f07%2f31%2fidade-minima-para-aposentadoria-especial-entenda-quem-e-afetado.ghtml&c=14568502858072187540&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
     "id": "fd50bc99-ab0c-4732-bae7-cfb05f54f651",
     "title": "Déficit do Governo Central em Junho: Previdência Social é o Principal Fator de Desequilíbrio",
     "description": "O Governo Central registrou um déficit primário de R$ 48,2 bilhões em junho, impulsionado principalmente pelos gastos com saúde e Previdência Social. Este resultado eleva o saldo negativo acumulado no primeiro semestre para R$ 92,2 bilhões, superando significativamente o período anterior.",
@@ -32,19 +48,19 @@
     "image": "[empty]"
   },
   {
-    "id": "2f547945-62a7-4b3c-8b9b-7761fecf0564",
-    "title": "Prefeitura de João Pessoa Renova Certificado de Regularidade Previdenciária (CRP) e Garante Acesso a Verbas Federais",
-    "description": "A Prefeitura de João Pessoa anunciou a renovação de seu Certificado de Regularidade Previdenciária (CRP), um documento crucial que atesta a conformidade do município com suas obrigações junto ao sistema de seguridade social. Essa medida estratégica assegura a continuidade do acesso a convênios, empréstimos e repasses de verbas federais, essenciais para o desenvolvimento e a manutenção dos serviços públicos locais.",
-    "date": "2026-07-30T11:30:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6f5bac861b488690d77be06239a71e&url=https%3a%2f%2fwww.joaopessoa.pb.gov.br%2fnoticias%2fprefeitura-renova-crp-e-segue-apta-a-receber-convenios-emprestimos-e-verbas-federais%2f&c=12080920380650348484&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "b81b1c17-26e7-4f8b-bd76-19f8755f17bb",
     "title": "Prefeitura de João Pessoa Renova CRP e Garante Acesso a Verbas Federais Essenciais",
     "description": "A Prefeitura de João Pessoa anunciou a renovação de seu Certificado de Regularidade Previdenciária (CRP), um documento crucial que atesta a conformidade do município com suas obrigações previdenciárias. Esta medida assegura a capacidade da cidade de firmar convênios, obter empréstimos e receber repasses de verbas federais, fundamentais para o desenvolvimento e a manutenção de serviços públicos.",
     "date": "2026-07-30T11:30:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6eb2eb4f6a46ebb811a57be8e05dcc&url=https%3a%2f%2fwww.joaopessoa.pb.gov.br%2fnoticias%2fprefeitura-renova-crp-e-segue-apta-a-receber-convenios-emprestimos-e-verbas-federais%2f&c=12080920380650348484&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "2f547945-62a7-4b3c-8b9b-7761fecf0564",
+    "title": "Prefeitura de João Pessoa Renova Certificado de Regularidade Previdenciária (CRP) e Garante Acesso a Verbas Federais",
+    "description": "A Prefeitura de João Pessoa anunciou a renovação de seu Certificado de Regularidade Previdenciária (CRP), um documento crucial que atesta a conformidade do município com suas obrigações junto ao sistema de seguridade social. Essa medida estratégica assegura a continuidade do acesso a convênios, empréstimos e repasses de verbas federais, essenciais para o desenvolvimento e a manutenção dos serviços públicos locais.",
+    "date": "2026-07-30T11:30:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6f5bac861b488690d77be06239a71e&url=https%3a%2f%2fwww.joaopessoa.pb.gov.br%2fnoticias%2fprefeitura-renova-crp-e-segue-apta-a-receber-convenios-emprestimos-e-verbas-federais%2f&c=12080920380650348484&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -72,11 +88,27 @@
     "image": "[empty]"
   },
   {
+    "id": "4941b92d-9228-47d8-99ef-821c1694e22f",
+    "title": "Déficit do Governo Central Atinge R$ 48,2 Bilhões em Junho, com Previdência Social como Principal Fator de Desequilíbrio",
+    "description": "As contas do governo central, que incluem a Previdência Social, registraram um déficit de R$ 48,2 bilhões em junho, superando as projeções e indicando uma piora fiscal. O Regime Geral de Previdência Social (RGPS) foi o principal contribuinte para esse rombo, com um déficit de R$ 50,5 bilhões no mês.",
+    "date": "2026-07-30T11:04:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a70055c17f44257b1ee15cd5e82cd63&url=https%3a%2f%2fwww.cnnbrasil.com.br%2feconomia%2fmacroeconomia%2fcontas-do-governo-central-tem-deficit-de-r-482-bilhoes-em-junho%2f&c=9317872430295972185&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
     "id": "c6a618a8-6872-4a3a-83b3-9b4568113512",
     "title": "Justiça do Trabalho Determina Análise Individual de Benefícios do INSS para Entregadores por Aplicativo",
     "description": "Uma decisão liminar da Justiça do Trabalho estabeleceu que o INSS deve analisar individualmente os pedidos de benefícios previdenciários de entregadores por aplicativo do iFood que sofrerem acidentes ou adoecerem em serviço. A medida impede a recusa automática por falta de carteira assinada ou CAT, exigindo que o instituto considere todas as provas apresentadas. Essa determinação tem alcance nacional e busca garantir a proteção social a esses trabalhadores.",
     "date": "2026-07-29T23:00:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6e0a8243fd49dfb084698f0f56ba76&url=https%3a%2f%2fg1.globo.com%2ftrabalho-e-carreira%2fnoticia%2f2026%2f07%2f30%2fjustica-impede-inss-de-recusar-beneficios-a-entregadores-do-ifood-por-falta-de-carteira-assinada.ghtml&c=18248369164203622990&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "33dc8cd1-8139-45a5-9981-5804f53fb553",
+    "title": "Justiça do Trabalho Impede INSS de Recusar Benefícios a Entregadores por Aplicativo Sem Análise Individual",
+    "description": "Uma decisão liminar da Justiça do Trabalho determina que o INSS analise, caso a caso, os pedidos de benefícios previdenciários de entregadores por aplicativo do iFood que sofrerem acidentes ou adoecerem. A medida, de alcance nacional, impede a recusa automática por ausência de carteira assinada ou Comunicação de Acidente de Trabalho (CAT), exigindo do instituto a criação de um fluxo administrativo específico para esses casos.",
+    "date": "2026-07-29T23:00:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a7004b74dfb42b89b5aa836b7bba8aa&url=https%3a%2f%2fg1.globo.com%2ftrabalho-e-carreira%2fnoticia%2f2026%2f07%2f30%2fjustica-impede-inss-de-recusar-beneficios-a-entregadores-do-ifood-por-falta-de-carteira-assinada.ghtml&c=18248369164203622990&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -96,6 +128,22 @@
     "image": "[empty]"
   },
   {
+    "id": "68213731-205d-44ef-9997-a7ef52defc18",
+    "title": "Aposentadoria no Brasil: A Importância Crucial do Planejamento Financeiro Diante dos Desafios da Previdência",
+    "description": "O aumento da expectativa de vida e a diminuição da população em idade ativa impõem desafios crescentes à sustentabilidade da Previdência Social brasileira. Especialistas destacam que o planejamento financeiro de longo prazo, que vai além do INSS, é essencial para que os futuros aposentados consigam manter seu padrão de vida e garantir segurança financeira.",
+    "date": "2026-07-26T10:55:00.000Z",
+    "link": "https://www.cnnbrasil.com.br/economia/negocios/como-se-preparar-para-uma-aposentadoria-com-mais-seguranca-financeira/",
+    "image": "[empty]"
+  },
+  {
+    "id": "d8602cd9-390b-4a80-8c59-17827af6e136",
+    "title": "Desvendando a Desinformação: Governo Lula Não Propôs Aumento da Idade Mínima para Aposentadoria para 67 Anos",
+    "description": "Uma onda de desinformação tem circulado nas redes sociais, alegando que o governo federal teria proposto elevar a idade mínima para aposentadoria para 67 anos. O Ministério da Previdência Social desmentiu categoricamente essa informação, afirmando que não há qualquer estudo ou proposição oficial nesse sentido. Os levantamentos que originaram a notícia falsa foram conduzidos por instituições independentes, sem vínculo com o governo.",
+    "date": "2026-07-23T13:07:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a70053808a947dd925cc25817bc8ed1&url=https%3a%2f%2fnoticias.uol.com.br%2fconfere%2fultimas-noticias%2f2026%2f07%2f23%2ffalso-governo-lula-proposta-aumentar-idade-minima-aposentadoria.ghtm&c=2500393901634813825&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
     "id": "1fdd4721-7074-4d63-80c3-6377ff73a53c",
     "title": "Desmistificando Rumores: Governo Federal Nega Proposta de Aumento da Idade Mínima para Aposentadoria",
     "description": "Circulam nas redes sociais informações falsas sobre uma suposta proposta do governo federal para elevar a idade mínima de aposentadoria para 67 anos. O Ministério da Previdência Social desmentiu categoricamente esses rumores, afirmando que não há qualquer estudo ou iniciativa governamental nesse sentido. A notícia esclarece a origem da desinformação e as regras previdenciárias vigentes no Brasil.",
@@ -112,11 +160,27 @@
     "image": "[empty]"
   },
   {
+    "id": "d71d9f56-8ed9-41ee-850a-8d6afa331e58",
+    "title": "Futuro do Ministério da Previdência: PDT Enfrenta Desafios Após Escândalos de Fraudes no INSS",
+    "description": "O Partido Democrático Trabalhista (PDT) pode ter dificuldades em manter o comando do Ministério da Previdência em um eventual novo governo Lula. A pasta foi marcada por desgastes significativos devido à revelação de fraudes bilionárias no INSS, impactando a percepção pública e a negociação política.",
+    "date": "2026-07-22T08:17:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a70055c17f44257b1ee15cd5e82cd63&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fblogs%2fisabel-mega%2feleicoes%2fpdt-ve-dificuldade-em-ter-ministerio-em-eventual-novo-governo-lula%2f&c=523192909124790682&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
     "id": "bf1df6cd-8940-4602-80e2-f721260fac87",
     "title": "Futuro do Ministério da Previdência: PDT Enfrenta Desafios Após Fraudes no INSS",
     "description": "O Partido Democrático Trabalhista (PDT) expressa preocupação em manter o comando do Ministério da Previdência em um possível novo governo Lula, devido ao desgaste gerado pelas recentes fraudes bilionárias no INSS. A sigla, que tem laços históricos com a pasta, aguarda reconhecimento pelo apoio antecipado à reeleição do presidente.",
     "date": "2026-07-22T08:17:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6e0b37c84e497fa5e899a72b34b9d6&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fblogs%2fisabel-mega%2feleicoes%2fpdt-ve-dificuldade-em-ter-ministerio-em-eventual-novo-governo-lula%2f&c=523192909124790682&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "81499f8e-9669-4287-abb1-03b269ac60f7",
+    "title": "Crédito com Garantia de Previdência Privada: Uma Nova Fronteira para Juros Baixos no Brasil",
+    "description": "A Núclea, empresa de infraestrutura de transações financeiras digitais, tem se destacado na oferta de crédito com garantia de previdência privada. Essa modalidade inovadora permite que os consumidores acessem empréstimos com taxas de juros reduzidas, sem a necessidade de resgatar seus planos de previdência, preservando os benefícios acumulados.",
+    "date": "2026-07-22T07:49:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a70055c17f44257b1ee15cd5e82cd63&url=https%3a%2f%2fwww.cnnbrasil.com.br%2feconomia%2fnegocios%2fnuclea-expande-servicos-financieiros-digitais-com-baixo-custo-unitario%2f&c=8081877193722149931&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -128,19 +192,19 @@
     "image": "[empty]"
   },
   {
+    "id": "a1a30592-4522-4249-baa9-3e570fb47235",
+    "title": "Agência do INSS em Suzano Suspende Atendimento Após Furto de Fiação: Orientações aos Segurados",
+    "description": "A agência do INSS em Suzano, São Paulo, teve seus atendimentos suspensos por tempo indeterminado após um furto de fiação e equipamentos. Segurados com agendamento devem buscar canais alternativos como o telefone 135 ou o aplicativo Meu INSS para reagendar seus serviços e evitar prejuízos.",
+    "date": "2026-07-21T08:06:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a7004b74dfb42b89b5aa836b7bba8aa&url=https%3a%2f%2fg1.globo.com%2fsp%2fmogi-das-cruzes-suzano%2fnoticia%2f2026%2f07%2f21%2fagencia-do-inss-de-suzano-e-furtada-e-fica-sem-atendimento.ghtml&c=16676855644869388024&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
     "id": "0003aeb0-5031-4e4f-81d8-d0c815e71115",
     "title": "Agência do INSS em Suzano Suspende Atendimento Após Furto: Orientações para Beneficiários",
     "description": "A agência do INSS em Suzano (SP) teve suas atividades suspensas por tempo indeterminado após um furto de fiação e equipamentos. Beneficiários com agendamentos devem buscar os canais digitais ou o telefone 135 para reagendar seus serviços e evitar interrupções.",
     "date": "2026-07-21T08:06:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6cde427f48411f95d50d168bd75494&url=https%3a%2f%2fg1.globo.com%2fsp%2fmogi-das-cruzes-suzano%2fnoticia%2f2026%2f07%2f21%2fagencia-do-inss-de-suzano-e-fica-sem-atendimento.ghtml&c=16676855644869388024&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
-    "id": "f75d8475-58bc-49dd-9839-87747fa20aa3",
-    "title": "Agência do INSS em Suzano Suspende Atendimento Após Furto de Fiação: Saiba Como Reagendar",
-    "description": "A agência do INSS em Suzano (SP) teve o atendimento suspenso por tempo indeterminado após um furto de fiação e equipamentos. Segurados com agendamento devem utilizar os canais remotos do INSS para reagendar seus serviços e evitar prejuízos. A polícia investiga o ocorrido.",
-    "date": "2026-07-21T08:06:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6e0a8243fd49dfb084698f0f56ba76&url=https%3a%2f%2fg1.globo.com%2fsp%2fmogi-das-cruzes-suzano%2fnoticia%2f2026%2f07%2f21%2fagencia-do-inss-de-suzano-e-furtada-e-fica-sem-atendimento.ghtml&c=16676855644869388024&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -152,11 +216,11 @@
     "image": "[empty]"
   },
   {
-    "id": "87999fe2-8bac-43a7-8f0f-34f69ee2e025",
-    "title": "Fraudes e Desvios no INSS: Relembrando as Acusações Contra o Ex-Ministro Carlos Lupi",
-    "description": "A recente declaração de apoio do ex-ministro da Previdência, Carlos Lupi, ao presidente Lula, reacende o debate sobre as graves acusações de fraudes e desvios de bilhões no INSS durante sua gestão. As investigações da CGU e PF revelaram um esquema complexo que levou à sua demissão e à saída do então presidente do INSS, Alessandro Stefanutto.",
-    "date": "2026-07-20T14:43:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a622e61ed6e432284fa8658224436a4&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fpolitica%2fex-ministro-de-lula-demitido-apos-fraudes-no-inss-declara-apoio-ao-petista%2f&c=257713901077053514&mkt=pt-br",
+    "id": "f75d8475-58bc-49dd-9839-87747fa20aa3",
+    "title": "Agência do INSS em Suzano Suspende Atendimento Após Furto de Fiação: Saiba Como Reagendar",
+    "description": "A agência do INSS em Suzano (SP) teve o atendimento suspenso por tempo indeterminado após um furto de fiação e equipamentos. Segurados com agendamento devem utilizar os canais remotos do INSS para reagendar seus serviços e evitar prejuízos. A polícia investiga o ocorrido.",
+    "date": "2026-07-21T08:06:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6e0a8243fd49dfb084698f0f56ba76&url=https%3a%2f%2fg1.globo.com%2fsp%2fmogi-das-cruzes-suzano%2fnoticia%2f2026%2f07%2f21%2fagencia-do-inss-de-suzano-e-furtada-e-fica-sem-atendimento.ghtml&c=16676855644869388024&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -165,6 +229,14 @@
     "description": "O ex-ministro da Previdência Social, Carlos Lupi, recentemente declarou apoio à reeleição do presidente Lula, reacendendo debates sobre sua gestão anterior. Lupi deixou o cargo em meio a investigações de fraudes e desvios de bilhões de reais em aposentadorias e pensões do INSS, levantando questões sobre a fiscalização e a integridade do sistema previdenciário brasileiro.",
     "date": "2026-07-20T14:43:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60dcec52fe4292b35b1c412b17555b&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fpolitica%2fex-ministro-de-lula-demitido-apos-fraudes-no-inss-declara-apoio-ao-petista%2f&c=257713901077053514&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "87999fe2-8bac-43a7-8f0f-34f69ee2e025",
+    "title": "Fraudes e Desvios no INSS: Relembrando as Acusações Contra o Ex-Ministro Carlos Lupi",
+    "description": "A recente declaração de apoio do ex-ministro da Previdência, Carlos Lupi, ao presidente Lula, reacende o debate sobre as graves acusações de fraudes e desvios de bilhões no INSS durante sua gestão. As investigações da CGU e PF revelaram um esquema complexo que levou à sua demissão e à saída do então presidente do INSS, Alessandro Stefanutto.",
+    "date": "2026-07-20T14:43:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a622e61ed6e432284fa8658224436a4&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fpolitica%2fex-ministro-de-lula-demitido-apos-fraudes-no-inss-declara-apoio-ao-petista%2f&c=257713901077053514&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -197,6 +269,14 @@
     "description": "O ex-ministro da Previdência, Carlos Lupi, está no centro de investigações sobre um esquema de fraudes e desvios de bilhões de reais em aposentadorias e pensões do INSS. As apurações da CGU e PF revelam indícios de irregularidades e a demora na adoção de medidas de combate, levantando sérias questões sobre a integridade do sistema previdenciário brasileiro.",
     "date": "2026-07-19T16:59:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6e0b37c84e497fa5e899a72b34b9d6&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fpolitica%2fex-ministro-de-lula-demitido-apos-fraudes-no-inss-declara-apoio-ao-petista%2f&c=257713901077053514&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "7921626f-522a-4b75-80df-2e4ba97e3b62",
+    "title": "Investigações de Fraude no INSS e o Cenário Político: O Caso do Ex-Ministro Carlos Lupi",
+    "description": "O ex-ministro da Previdência, Carlos Lupi, atual presidente do PDT, anunciou apoio à reeleição do presidente Lula, marcando uma aliança política significativa. A notícia, contudo, reacende discussões sobre as investigações de fraudes e desvios de bilhões no INSS que levaram à sua demissão do Ministério da Previdência.",
+    "date": "2026-07-19T16:59:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a70055c17f44257b1ee15cd5e82cd63&url=https%3a%2f%2fwww.cnnbrasil.com.br%2fpolitica%2fex-ministro-de-lula-demitido-apos-fraudes-no-inss-declara-apoio-ao-petista%2f&c=257713901077053514&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -272,19 +352,19 @@
     "image": "[empty]"
   },
   {
-    "id": "0ee4e52e-519b-47c1-a157-fd14b7b0ce63",
-    "title": "Aposentadoria Especial para Agentes de Saúde: Senado Aprova PEC com Impacto Bilionário",
-    "description": "O Senado Federal aprovou uma Proposta de Emenda à Constituição (PEC) que concede aposentadoria especial a agentes comunitários de saúde e de combate a endemias. A medida, considerada uma 'pauta-bomba' pelo governo, estabelece novas regras de idade, tempo de contribuição e garante paridade e integralidade nos benefícios, com um impacto fiscal estimado em R$ 27 bilhões em dez anos.",
-    "date": "2026-07-14T14:36:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6426de83124faaab7833ef1680e6ab&url=https%3a%2f%2fg1.globo.com%2fpolitica%2fnoticia%2f2026%2f07%2f14%2fpauta-bomba-senado-aprova-aposentadoria-especial-para-agentes-comunitarios-de-saude.ghtml&c=2026248765612244400&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "d24496de-b595-45cc-89de-08d48ba55c24",
     "title": "Aposentadoria Especial para Agentes de Saúde: Senado Aprova PEC com Novas Regras e Impacto Bilionário",
     "description": "O Senado Federal aprovou uma Proposta de Emenda à Constituição (PEC) que estabelece aposentadoria especial para agentes comunitários de saúde e de combate a endemias. A medida, considerada uma \"pauta-bomba\" pelo governo, fixa idades mínimas e reinstitui benefícios como integralidade e paridade, com um impacto fiscal estimado em R$ 27 bilhões em dez anos.",
     "date": "2026-07-14T14:36:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a637e265f754f4ea1b5478a8f223a3e&url=https%3a%2f%2fg1.globo.com%2fpolitica%2fnoticia%2f2026%2f07%2f14%2fpauta-bomba-senado-aprova-aposentadoria-especial-para-agentes-comunitarios-de-saude.ghtml&c=2026248765612244400&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "0ee4e52e-519b-47c1-a157-fd14b7b0ce63",
+    "title": "Aposentadoria Especial para Agentes de Saúde: Senado Aprova PEC com Impacto Bilionário",
+    "description": "O Senado Federal aprovou uma Proposta de Emenda à Constituição (PEC) que concede aposentadoria especial a agentes comunitários de saúde e de combate a endemias. A medida, considerada uma 'pauta-bomba' pelo governo, estabelece novas regras de idade, tempo de contribuição e garante paridade e integralidade nos benefícios, com um impacto fiscal estimado em R$ 27 bilhões em dez anos.",
+    "date": "2026-07-14T14:36:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6426de83124faaab7833ef1680e6ab&url=https%3a%2f%2fg1.globo.com%2fpolitica%2fnoticia%2f2026%2f07%2f14%2fpauta-bomba-senado-aprova-aposentadoria-especial-para-agentes-comunitarios-de-saude.ghtml&c=2026248765612244400&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -344,14 +424,6 @@
     "image": "[empty]"
   },
   {
-    "id": "7cba7ed2-b077-46b7-9959-77d374e9bf06",
-    "title": "Senado Aprova Aposentadoria Especial para Agentes de Saúde e Endemias: Entenda as Novas Regras e o Impacto na Previdência",
-    "description": "O Senado Federal aprovou a Proposta de Emenda à Constituição (PEC) 14/2021, que concede aposentadoria especial a agentes comunitários de saúde e de combate a endemias. A medida, vista como 'pauta-bomba' pelo governo devido ao impacto fiscal bilionário, estabelece novas regras e benefícios para a categoria.",
-    "date": "2026-07-13T17:00:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60dc5e5ac9497e85a1171b9e6b7077&url=https%3a%2f%2fnoticias.uol.com.br%2fpolitica%2fultimas-noticias%2f2026%2f07%2f14%2fsenado-aprova-pauta-bomba-de-aposentadoria-para-agente-de-saude-em-1-turno.ghtm&c=8624505067470193759&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "c817698b-74a8-4a39-b9c0-3be00fa5a019",
     "title": "Senado Aprova Aposentadoria Especial para Agentes de Saúde e Endemias, Gerando Impacto Bilionário na Previdência",
     "description": "O Senado Federal aprovou uma Proposta de Emenda à Constituição (PEC) que concede aposentadoria especial a agentes comunitários de saúde e de combate a endemias. A medida, vista como uma 'pauta-bomba' pelo governo devido ao seu impacto fiscal estimado em R$ 27,9 bilhões em dez anos, segue agora para promulgação.",
@@ -360,11 +432,27 @@
     "image": "[empty]"
   },
   {
+    "id": "7cba7ed2-b077-46b7-9959-77d374e9bf06",
+    "title": "Senado Aprova Aposentadoria Especial para Agentes de Saúde e Endemias: Entenda as Novas Regras e o Impacto na Previdência",
+    "description": "O Senado Federal aprovou a Proposta de Emenda à Constituição (PEC) 14/2021, que concede aposentadoria especial a agentes comunitários de saúde e de combate a endemias. A medida, vista como 'pauta-bomba' pelo governo devido ao impacto fiscal bilionário, estabelece novas regras e benefícios para a categoria.",
+    "date": "2026-07-13T17:00:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60dc5e5ac9497e85a1171b9e6b7077&url=https%3a%2f%2fnoticias.uol.com.br%2fpolitica%2fultimas-noticias%2f2026%2f07%2f14%2fsenado-aprova-pauta-bomba-de-aposentadoria-para-agente-de-saude-em-1-turno.ghtm&c=8624505067470193759&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
     "id": "771e2585-5375-4949-8cd5-55f544874253",
     "title": "Reforma da Previdência Municipal: Greve de Servidores em Divinópolis é Encerrada com Novas Regras em Vigor",
     "description": "Após dias de paralisação, os servidores municipais de Divinópolis encerraram a greve contra as alterações no Instituto de Previdência (Diviprev). A reforma traz mudanças significativas nas regras de aposentadoria, cálculo de benefícios, pensão por morte e alíquotas de contribuição, alinhando-se à legislação previdenciária nacional.",
     "date": "2026-07-13T15:09:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60db1b485a4eb880bc46b54fa025ca&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f13%2fgreve-dos-servidores-contra-a-reforma-da-previdencia-municipal-e-encerrada-em-divinopolis.ghtml&c=18064992484615305831&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "aa66d5c2-a173-40cd-b59c-442570919b21",
+    "title": "Reforma da Previdência Municipal em Divinópolis: Entenda as Novas Regras para Servidores",
+    "description": "A greve dos servidores municipais de Divinópolis contra a reforma da Previdência foi encerrada, mas as novas regras do Diviprev já estão em vigor. As mudanças impactam a aposentadoria voluntária, o cálculo dos benefícios, as regras de transição, a pensão por morte e as alíquotas de contribuição, alinhando-se à Reforma da Previdência de 2019.",
+    "date": "2026-07-13T15:09:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6426de83124faaab7833ef1680e6ab&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f13%2fgreve-dos-servidores-contra-a-reforma-da-previdencia-municipal-e-encerrada-em-divinopolis.ghtml&c=18064992484615305831&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -384,11 +472,11 @@
     "image": "[empty]"
   },
   {
-    "id": "aa66d5c2-a173-40cd-b59c-442570919b21",
-    "title": "Reforma da Previdência Municipal em Divinópolis: Entenda as Novas Regras para Servidores",
-    "description": "A greve dos servidores municipais de Divinópolis contra a reforma da Previdência foi encerrada, mas as novas regras do Diviprev já estão em vigor. As mudanças impactam a aposentadoria voluntária, o cálculo dos benefícios, as regras de transição, a pensão por morte e as alíquotas de contribuição, alinhando-se à Reforma da Previdência de 2019.",
-    "date": "2026-07-13T15:09:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6426de83124faaab7833ef1680e6ab&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f13%2fgreve-dos-servidores-contra-a-reforma-da-previdencia-municipal-e-encerrada-em-divinopolis.ghtml&c=18064992484615305831&mkt=pt-br",
+    "id": "f505d2a2-d8de-425b-b779-287bff64beb4",
+    "title": "Reforma da Previdência Municipal: Médicos de Divinópolis Param em Protesto Contra Novas Regras do Diviprev",
+    "description": "Médicos de Divinópolis paralisaram suas atividades em protesto contra a nova lei que reestrutura a previdência dos servidores municipais, o Diviprev. A medida, que alinha as regras locais à Reforma da Previdência de 2019, impactou o atendimento em 15 dos 47 centros de saúde da cidade, alterando significativamente as condições de aposentadoria, cálculo de benefícios e alíquotas de contribuição para os funcionários públicos.",
+    "date": "2026-07-13T08:27:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6426de83124faaab7833ef1680e6ab&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f13%2fdos-47-centros-de-saude-de-divinopolis-15-estao-sem-atendimento-medico-nesta-segunda-feira.ghtml&c=1537989448051996168&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -400,19 +488,19 @@
     "image": "[empty]"
   },
   {
-    "id": "f505d2a2-d8de-425b-b779-287bff64beb4",
-    "title": "Reforma da Previdência Municipal: Médicos de Divinópolis Param em Protesto Contra Novas Regras do Diviprev",
-    "description": "Médicos de Divinópolis paralisaram suas atividades em protesto contra a nova lei que reestrutura a previdência dos servidores municipais, o Diviprev. A medida, que alinha as regras locais à Reforma da Previdência de 2019, impactou o atendimento em 15 dos 47 centros de saúde da cidade, alterando significativamente as condições de aposentadoria, cálculo de benefícios e alíquotas de contribuição para os funcionários públicos.",
-    "date": "2026-07-13T08:27:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a6426de83124faaab7833ef1680e6ab&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f13%2fdos-47-centros-de-saude-de-divinopolis-15-estao-sem-atendimento-medico-nesta-segunda-feira.ghtml&c=1537989448051996168&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "2059ad85-1a03-448e-ae43-44f942dc82fe",
     "title": "Reforma da Previdência Municipal em Divinópolis: Entenda as Novas Regras e o Impacto nos Servidores",
     "description": "A cidade de Divinópolis enfrenta paralisação de médicos em protesto contra a reforma da previdência municipal, que altera significativamente as regras para aposentadoria, cálculo de benefícios e contribuições dos servidores. As mudanças visam adequar o Diviprev à Reforma da Previdência de 2019, impactando diretamente a vida funcional e financeira dos trabalhadores públicos.",
     "date": "2026-07-13T08:27:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a60db1b485a4eb880bc46b54fa025ca&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f13%2fdos-47-centros-de-saude-de-divinopolis-15-estao-sem-atendimento-medico-nesta-segunda-feira.ghtml&c=1537989448051996168&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "799ed28c-c236-4aae-9e6d-529f71c3b784",
+    "title": "Reforma da Previdência em Divinópolis: O Guia Completo para Servidores Municipais",
+    "description": "A Câmara de Divinópolis aprovou o Projeto de Lei Complementar nº 008/2026, que reestrutura a previdência dos servidores municipais, alinhando-a às regras nacionais. Este artigo detalha as principais mudanças na aposentadoria, cálculo de benefícios, regras de transição, pensão por morte e alíquotas de contribuição, essenciais para os funcionários públicos da cidade.",
+    "date": "2026-07-11T03:00:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5d8f5843f54b45902d1ca858b68e4b&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f11%2freforma-da-previdencia-de-divinopolis-veja-o-que-muda-para-os-servidores-municipais-apos-aprovacao-do-novo-regime.ghtml&c=10311961421159504597&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -432,27 +520,11 @@
     "image": "[empty]"
   },
   {
-    "id": "799ed28c-c236-4aae-9e6d-529f71c3b784",
-    "title": "Reforma da Previdência em Divinópolis: O Guia Completo para Servidores Municipais",
-    "description": "A Câmara de Divinópolis aprovou o Projeto de Lei Complementar nº 008/2026, que reestrutura a previdência dos servidores municipais, alinhando-a às regras nacionais. Este artigo detalha as principais mudanças na aposentadoria, cálculo de benefícios, regras de transição, pensão por morte e alíquotas de contribuição, essenciais para os funcionários públicos da cidade.",
-    "date": "2026-07-11T03:00:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5d8f5843f54b45902d1ca858b68e4b&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f11%2freforma-da-previdencia-de-divinopolis-veja-o-que-muda-para-os-servidores-municipais-apos-aprovacao-do-novo-regime.ghtml&c=10311961421159504597&mkt=pt-br",
-    "image": "[empty]"
-  },
-  {
     "id": "5ee12f30-fef9-4d25-8e32-fed0a7da260c",
     "title": "Reforma da Previdência em Divinópolis: Prefeitura Notifica Sindicatos para Encerrar Greve Após Aprovação de Novas Regras",
     "description": "A Prefeitura de Divinópolis notificou os sindicatos dos servidores municipais para encerrar a greve em 24 horas, após a aprovação da reforma do Diviprev. A medida altera regras de aposentadoria e pensão, visando adequar o sistema à Emenda Constitucional 103 e reduzir o déficit previdenciário. Os sindicatos, contudo, mantêm a paralisação, alegando falta de diálogo efetivo.",
     "date": "2026-07-08T05:51:00.000Z",
     "link": "https://g1.globo.com/mg/centro-oeste/noticia/2026/07/08/prefeitura-de-divinopolis-notifica-sindicatos-para-encerrar-greve-apos-aprovacao-de-reforma-da-previdencia.ghtml",
-    "image": "[empty]"
-  },
-  {
-    "id": "e0ac1e8d-f0d6-46ea-aa4a-cdeddeba2916",
-    "title": "Reforma da Previdência em Divinópolis: Novas Regras para Servidores Municipais Aprovadas",
-    "description": "A Câmara Municipal de Divinópolis aprovou a reforma do Regime Próprio de Previdência Social (RPPS) dos servidores, alterando regras de aposentadoria, pensão e transição. A medida visa o equilíbrio financeiro do Diviprev e a adequação à Emenda Constitucional 103/2019. Sindicatos criticaram a proposta, alegando que direitos dos servidores foram negligenciados, e a categoria manteve a greve.",
-    "date": "2026-07-07T18:07:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5ce6932bec4f139dda731482bddb33&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f07%2fcamara-de-divinopolis-aprova-reforma-da-previdencia-que-altera-regras-de-aposentadoria-pensao-e-transicao-para-servidores.ghtml&c=2857964867823453198&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -464,11 +536,11 @@
     "image": "[empty]"
   },
   {
-    "id": "5f1c9223-7306-4c64-871a-5e240c98af79",
-    "title": "Justiça do RN Exige Plano Urgente para Reequilíbrio Financeiro da Previdência Estadual",
-    "description": "O governo do Rio Grande do Norte e o Ipern foram intimados pela 4ª Vara da Fazenda Pública de Natal a apresentar, em 90 dias, um plano detalhado para restaurar o equilíbrio financeiro da previdência estadual. A medida visa sanar um déficit de R$ 566,6 milhões, decorrente de resgates antecipados de aplicações financeiras entre 2014 e 2018. O descumprimento da decisão judicial implicará em multa diária e a necessidade de alienação de bens imóveis para recomposição do fundo.",
-    "date": "2026-07-07T05:37:00.000Z",
-    "link": "https://g1.globo.com/rn/rio-grande-do-norte/noticia/2026/07/07/justica-plano-resgate-equilibrio-financeiro-previdencia.ghtml",
+    "id": "e0ac1e8d-f0d6-46ea-aa4a-cdeddeba2916",
+    "title": "Reforma da Previdência em Divinópolis: Novas Regras para Servidores Municipais Aprovadas",
+    "description": "A Câmara Municipal de Divinópolis aprovou a reforma do Regime Próprio de Previdência Social (RPPS) dos servidores, alterando regras de aposentadoria, pensão e transição. A medida visa o equilíbrio financeiro do Diviprev e a adequação à Emenda Constitucional 103/2019. Sindicatos criticaram a proposta, alegando que direitos dos servidores foram negligenciados, e a categoria manteve a greve.",
+    "date": "2026-07-07T18:07:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5ce6932bec4f139dda731482bddb33&url=https%3a%2f%2fg1.globo.com%2fmg%2fcentro-oeste%2fnoticia%2f2026%2f07%2f07%2fcamara-de-divinopolis-aprova-reforma-da-previdencia-que-altera-regras-de-aposentadoria-pensao-e-transicao-para-servidores.ghtml&c=2857964867823453198&mkt=pt-br",
     "image": "[empty]"
   },
   {
@@ -477,6 +549,14 @@
     "description": "Uma decisão judicial da 4ª Vara da Fazenda Pública de Natal exige que o Governo do Rio Grande do Norte e o Ipern apresentem, em 90 dias, um plano detalhado para reequilibrar as finanças da previdência estadual. A medida visa corrigir um déficit de R$ 566 milhões, originado por resgates antecipados de aplicações financeiras, e inclui a obrigatoriedade de alienação de bens imóveis para recomposição do fundo.",
     "date": "2026-07-07T05:37:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6a5d8f5843f54b45902d1ca858b68e4b&url=https%3a%2f%2fg1.globo.com%2frn%2frio-grande-do-norte%2fnoticia%2f2026%2f07%2f07%2fjustica-plano-resgate-equilibrio-financeiro-previdencia.ghtml&c=14810902434606170347&mkt=pt-br",
+    "image": "[empty]"
+  },
+  {
+    "id": "5f1c9223-7306-4c64-871a-5e240c98af79",
+    "title": "Justiça do RN Exige Plano Urgente para Reequilíbrio Financeiro da Previdência Estadual",
+    "description": "O governo do Rio Grande do Norte e o Ipern foram intimados pela 4ª Vara da Fazenda Pública de Natal a apresentar, em 90 dias, um plano detalhado para restaurar o equilíbrio financeiro da previdência estadual. A medida visa sanar um déficit de R$ 566,6 milhões, decorrente de resgates antecipados de aplicações financeiras entre 2014 e 2018. O descumprimento da decisão judicial implicará em multa diária e a necessidade de alienação de bens imóveis para recomposição do fundo.",
+    "date": "2026-07-07T05:37:00.000Z",
+    "link": "https://g1.globo.com/rn/rio-grande-do-norte/noticia/2026/07/07/justica-plano-resgate-equilibrio-financeiro-previdencia.ghtml",
     "image": "[empty]"
   },
   {
