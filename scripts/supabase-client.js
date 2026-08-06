@@ -246,6 +246,67 @@
             } catch (err) {
                 console.warn('Erro ao sincronizar usuário do localStorage:', err);
             }
+        },
+
+        /**
+         * Verifica se um e-mail já existe na tabela de associados
+         */
+        checkAssociadoByEmail: async function (email) {
+            const client = getSupabaseClient();
+            if (!client || !email) return null;
+            try {
+                const { data } = await client.from('associados').select('*').eq('email', email.trim()).maybeSingle();
+                return data || null;
+            } catch (e) {
+                console.warn('Erro ao verificar e-mail em associados:', e);
+                return null;
+            }
+        },
+
+        /**
+         * Registra um participante ou atualiza dados no Supabase e LocalStorage
+         */
+        registerParticipante: async function (userData, password) {
+            const client = getSupabaseClient();
+            const payload = { ...userData, updated_at: new Date().toISOString() };
+            if (client) {
+                try {
+                    await client.from('participantes').upsert(payload, { onConflict: 'email' });
+                    if (password) {
+                        await client.auth.signUp({
+                            email: userData.email,
+                            password: password,
+                            options: { data: { nome: userData.nome, role: 'participante' } }
+                        }).catch(() => {});
+                    }
+                } catch (e) {
+                    console.warn('Erro ao salvar participante no Supabase:', e);
+                }
+            }
+            return { success: true, profile: payload };
+        },
+
+        /**
+         * Registra um palestrante com seus dados acadêmicos e bancários no Supabase e LocalStorage
+         */
+        registerPalestrante: async function (userData, password) {
+            const client = getSupabaseClient();
+            const payload = { ...userData, updated_at: new Date().toISOString() };
+            if (client) {
+                try {
+                    await client.from('palestrantes').upsert(payload, { onConflict: 'email' });
+                    if (password) {
+                        await client.auth.signUp({
+                            email: userData.email,
+                            password: password,
+                            options: { data: { nome: userData.nome, role: 'palestrante' } }
+                        }).catch(() => {});
+                    }
+                } catch (e) {
+                    console.warn('Erro ao salvar palestrante no Supabase:', e);
+                }
+            }
+            return { success: true, profile: payload };
         }
     };
 })();

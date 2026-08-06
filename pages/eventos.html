@@ -1,128 +1,478 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-     <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eventos e Cursos - Sociedade Brasileira de Previdência Social</title>
+    <title>Área de Eventos - Sociedade Brasileira de Previdência Social</title>
     <link rel="icon" type="image/png" href="../images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/eventos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-     <!-- Header Wrapper for Sticky Position -->
+<body class="eventos-portal-page">
+
+    <!-- Header Wrapper for Sticky Position -->
     <div class="header-wrapper">
-        <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="container top-bar-inner">
-            <div class="top-bar-left">
-                <a href="javascript:void(0)" class="email-action-link" title="Opções de e-mail" data-email="contato@sbps.org.br"><i class="fa-solid fa-envelope"></i> contato@sbps.org.br <i class="fa-solid fa-chevron-down email-chevron"></i></a>
-                <a href="javascript:void(0)" class="phone-copy-link" title="Clique para copiar o número de telefone" data-phone="(00) 0000-0000"><i class="fa-solid fa-phone"></i> (00) 0000-0000</a>
-                <a href="associado.html"><i class="fa-solid fa-user"></i> Área do Associado</a>
+        <!-- Top Bar do Site Principal -->
+        <div class="top-bar">
+            <div class="container top-bar-inner">
+                <div class="top-bar-left">
+                    <a href="javascript:void(0)" class="email-action-link" title="Opções de e-mail" data-email="contato@sbps.org.br"><i class="fa-solid fa-envelope"></i> contato@sbps.org.br <i class="fa-solid fa-chevron-down email-chevron"></i></a>
+                    <a href="javascript:void(0)" class="phone-copy-link" title="Clique para copiar o número de telefone" data-phone="(00) 0000-0000"><i class="fa-solid fa-phone"></i> (00) 0000-0000</a>
+                    <a href="associado.html"><i class="fa-solid fa-user"></i> Área do Associado</a>
+                </div>
+                <div class="top-bar-right">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                </div>
             </div>
-            <div class="top-bar-right">
-                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        </div>
+
+        <!-- Header / Nav -->
+        <header class="main-header">
+            <div class="container header-inner">
+                <div class="logo">
+                    <a href="../index.html">
+                        <img src="../images/image-header.png" alt="SBPS Logo" class="logo-img">
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li class="dropdown">
+                            <a href="../index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="sobre.html">SOBRE A SBPS</a></li>
+                                <li><a href="objetivos.html">OBJETIVOS</a></li>
+                                <li><a href="diretoria.html">DIRETORIA</a></li>
+                                <li><a href="descricaodiretorias.html">DESCRIÇÃO DE DIRETORIAS</a></li>
+                                <li><a href="resolucoes.html">RESOLUÇÕES</a></li>
+                                <li><a href="estatuto.html">ESTATUTO</a></li>
+                                <li><a href="convenios.html">CONVÊNIOS</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="noticias.html">PUBLICAÇÕES</a></li>
+                        <li><a href="eventos.html" class="active">EVENTOS</a></li>
+                        <li><a href="notas.html">NOTAS</a></li>
+                        <li><a href="contatos.html">CONTATOS</a></li>
+                        <li><a href="informacoes.html">INFORMAÇÕES</a></li>
+                    </ul>
+                    <a href="#" class="btn btn-associe">ASSOCIE-SE</a>
+                    <button class="search-btn"><i class="fa-solid fa-search"></i></button>
+                </nav>
+            </div>
+        </header>
+    </div>
+
+    <!-- ==========================================================================
+         SEÇÃO DE AUTENTICAÇÃO DUAL (PARTICIPANTE E PALESTRANTE)
+         ========================================================================== -->
+    <div id="evt-auth-container" class="evt-auth-container">
+        <div class="evt-auth-card">
+            <!-- Seletor Principal de Tipo de Perfil -->
+            <div class="evt-type-selector">
+                <button type="button" id="btn-select-participante" class="evt-type-btn active">
+                    <i class="fa-solid fa-user-graduate"></i> Sou Participante
+                </button>
+                <button type="button" id="btn-select-palestrante" class="evt-type-btn">
+                    <i class="fa-solid fa-chalkboard-user"></i> Sou Palestrante
+                </button>
+            </div>
+
+            <!-- BOX AUTENTICAÇÃO - PARTICIPANTE -->
+            <div id="auth-box-participante">
+                <div class="evt-subtabs-nav">
+                    <button type="button" id="tab-part-login-btn" class="evt-subtab-btn active">Acessar Área do Participante</button>
+                    <button type="button" id="tab-part-reg-btn" class="evt-subtab-btn">Cadastrar-se como Participante</button>
+                </div>
+
+                <div class="evt-auth-form-body">
+                    <!-- Form Login Participante -->
+                    <form id="form-login-participante">
+                        <h2 class="evt-form-title">Login do Participante</h2>
+                        <p class="evt-form-desc">Informe suas credenciais para gerenciar suas inscrições e certificados.</p>
+                        
+                        <div class="evt-notice-box">
+                            <i class="fa-solid fa-circle-info"></i> <strong>Atenção Associados SBPS:</strong> Se você já possui cadastro como associado, utilize o mesmo e-mail e senha cadastrados para acessar a Área de Participante.
+                        </div>
+
+                        <div class="evt-form-group" style="margin-bottom: 15px;">
+                            <label>E-mail ou CPF <span style="color:red;">*</span></label>
+                            <input type="text" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
+                        </div>
+                        <div class="evt-form-group" style="margin-bottom: 15px;">
+                            <label>Senha <span style="color:red;">*</span></label>
+                            <input type="password" class="evt-form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="evt-btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Entrar na Área de Eventos</button>
+                    </form>
+
+                    <!-- Form Cadastro Participante -->
+                    <form id="form-register-participante" style="display: none;">
+                        <h2 class="evt-form-title">Cadastro de Participante</h2>
+                        <p class="evt-form-desc">Preencha seus dados para se inscrever nos eventos e cursos SBPS.</p>
+                        
+                        <div class="evt-notice-box" style="background:#FFFBEB; border-color:#F59E0B; color:#B45309;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> O participante cadastrado nesta área terá acesso exclusivo aos eventos, não possuindo acesso à Área de Associados a menos que efetue a associação oficial.
+                        </div>
+
+                        <div class="evt-grid-2">
+                            <div class="evt-form-group evt-full-width">
+                                <label>Nome Completo <span style="color:red;">*</span></label>
+                                <input type="text" id="reg-part-nome" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Data de Nascimento <span style="color:red;">*</span></label>
+                                <input type="date" id="reg-part-nasc" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>CPF <span style="color:red;">*</span></label>
+                                <input type="text" id="reg-part-cpf" class="evt-form-control" placeholder="000.000.000-00" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>E-mail <span style="color:red;">*</span></label>
+                                <input type="email" id="reg-part-email" class="evt-form-control" placeholder="seu@email.com" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Celular (com DDD) <span style="color:red;">*</span></label>
+                                <input type="tel" id="reg-part-celular" class="evt-form-control" placeholder="(00) 90000-0000" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Telefone Fixo (Opcional)</label>
+                                <input type="tel" id="reg-part-fixo" class="evt-form-control" placeholder="(00) 0000-0000">
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Registro OAB (Se houver)</label>
+                                <input type="text" id="reg-part-oab" class="evt-form-control" placeholder="Ex: 123456/SP">
+                            </div>
+                            <div class="evt-form-group evt-full-width">
+                                <label>Registro em outro Conselho Profissional</label>
+                                <input type="text" id="reg-part-conselho" class="evt-form-control" placeholder="Ex: CREA, CRA, CRM">
+                            </div>
+                            <div class="evt-form-group">
+                                <label>CEP <span style="color:red;">*</span></label>
+                                <input type="text" id="reg-part-cep" class="evt-form-control" placeholder="00000-000" required>
+                            </div>
+                            <div class="evt-form-group evt-full-width">
+                                <label>Endereço Completo <span style="color:red;">*</span></label>
+                                <input type="text" id="reg-part-endereco" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Senha <span style="color:red;">*</span></label>
+                                <input type="password" id="reg-part-password" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Confirmar Senha <span style="color:red;">*</span></label>
+                                <input type="password" id="reg-part-password-confirm" class="evt-form-control" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="evt-btn-primary"><i class="fa-solid fa-user-plus"></i> Concluir Cadastro de Participante</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- BOX AUTENTICAÇÃO - PALESTRANTE -->
+            <div id="auth-box-palestrante" style="display: none;">
+                <div class="evt-subtabs-nav">
+                    <button type="button" id="tab-pal-login-btn" class="evt-subtab-btn active">Acessar Área do Palestrante</button>
+                    <button type="button" id="tab-pal-reg-btn" class="evt-subtab-btn">Cadastrar-se como Palestrante</button>
+                </div>
+
+                <div class="evt-auth-form-body">
+                    <!-- Form Login Palestrante -->
+                    <form id="form-login-palestrante">
+                        <h2 class="evt-form-title">Login do Palestrante</h2>
+                        <p class="evt-form-desc">Acesse para gerenciar seus eventos criados, palestras e conferências.</p>
+                        
+                        <div class="evt-form-group" style="margin-bottom: 15px;">
+                            <label>E-mail ou CPF <span style="color:red;">*</span></label>
+                            <input type="text" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
+                        </div>
+                        <div class="evt-form-group" style="margin-bottom: 15px;">
+                            <label>Senha <span style="color:red;">*</span></label>
+                            <input type="password" class="evt-form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="evt-btn-primary" style="background:linear-gradient(135deg, #0F3B5F, #8B5CF6);"><i class="fa-solid fa-right-to-bracket"></i> Acessar Portal do Palestrante</button>
+                    </form>
+
+                    <!-- Form Cadastro Palestrante -->
+                    <form id="form-register-palestrante" style="display: none;">
+                        <h2 class="evt-form-title">Cadastro Completo de Palestrante</h2>
+                        <p class="evt-form-desc">Preencha seus dados acadêmicos, profissionais e bancários para ministrar eventos na SBPS.</p>
+
+                        <div class="evt-grid-2">
+                            <div class="evt-form-group evt-full-width">
+                                <label>Nome Completo <span style="color:red;">*</span></label>
+                                <input type="text" id="reg-pal-nome" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Data de Nascimento <span style="color:red;">*</span></label>
+                                <input type="date" id="reg-pal-nasc" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>CPF <span style="color:red;">*</span></label>
+                                <input type="text" id="reg-pal-cpf" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>E-mail <span style="color:red;">*</span></label>
+                                <input type="email" id="reg-pal-email" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Celular (com DDD) <span style="color:red;">*</span></label>
+                                <input type="tel" id="reg-pal-celular" class="evt-form-control" required>
+                            </div>
+
+                            <div class="evt-form-group evt-full-width" style="border-top:1px solid #E2E8F0; padding-top:15px; margin-top:10px;">
+                                <h4 style="color:var(--evt-primary); margin:0 0 10px 0;"><i class="fa-solid fa-graduation-cap"></i> 1. Formação Acadêmica & Qualificação</h4>
+                            </div>
+
+                            <div class="evt-form-group">
+                                <label>Nível de Escolaridade <span style="color:red;">*</span></label>
+                                <select id="reg-pal-escolaridade" class="evt-form-control" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Graduação">Graduação</option>
+                                    <option value="Pós-Graduação">Pós-Graduação</option>
+                                    <option value="Mestrado">Mestrado</option>
+                                    <option value="Doutorado">Doutorado</option>
+                                    <option value="Pós-Doutorado">Pós-Doutorado</option>
+                                </select>
+                            </div>
+
+                            <div class="evt-form-group evt-full-width">
+                                <label>Cursos de Formação (com Ano de Início e Conclusão) <span style="color:red;">*</span></label>
+                                <div id="edu-courses-container">
+                                    <div class="evt-edu-row">
+                                        <input type="text" class="evt-form-control edu-nome" placeholder="Ex: Direito Previdenciário - USP" required>
+                                        <input type="number" class="evt-form-control edu-inicio" placeholder="Ano Início" style="width:110px;" required>
+                                        <input type="number" class="evt-form-control edu-fim" placeholder="Ano Fim" style="width:110px;" required>
+                                    </div>
+                                </div>
+                                <button type="button" id="btn-add-edu-item" class="evt-btn-add-item"><i class="fa-solid fa-plus"></i> Adicionar Mais um Curso</button>
+                            </div>
+
+                            <div class="evt-form-group">
+                                <label>Área de Atuação Principal <span style="color:red;">*</span></label>
+                                <input type="text" id="reg-pal-area" class="evt-form-control" placeholder="Ex: Direito Previdenciário RGPS / RPPS" required>
+                            </div>
+
+                            <div class="evt-form-group">
+                                <label>Profissão Atual & Anos de Experiência <span style="color:red;">*</span></label>
+                                <input type="text" id="reg-pal-profissao" class="evt-form-control" placeholder="Ex: Advogado e Professor (12 anos de experiência)" required>
+                            </div>
+
+                            <div class="evt-form-group evt-full-width">
+                                <label>Experiências Profissionais Relevantes (Opcional)</label>
+                                <textarea id="reg-pal-experiencia" class="evt-form-control" rows="2" placeholder="Descreva brevemente suas principais atuações..."></textarea>
+                            </div>
+
+                            <div class="evt-form-group evt-full-width">
+                                <label>Resumo "Sobre Mim" <span style="color:red;">*</span></label>
+                                <textarea id="reg-pal-sobre" class="evt-form-control" rows="3" placeholder="Apresentação curta para os participantes do evento..." required></textarea>
+                            </div>
+
+                            <div class="evt-form-group evt-full-width" style="border-top:1px solid #E2E8F0; padding-top:15px; margin-top:10px;">
+                                <h4 style="color:var(--evt-primary); margin:0 0 10px 0;"><i class="fa-solid fa-building-columns"></i> 2. Dados Bancários para Honorários</h4>
+                            </div>
+
+                            <div class="evt-form-group evt-full-width">
+                                <label>Chave PIX / Dados Bancários (Agência, Conta, Banco) <span style="color:red;">*</span></label>
+                                <input type="text" id="reg-pal-pix" class="evt-form-control" placeholder="Ex: Chave PIX E-mail ou Ag: 0001 C/C: 12345-6 Banco do Brasil" required>
+                            </div>
+
+                            <div class="evt-form-group">
+                                <label>Senha <span style="color:red;">*</span></label>
+                                <input type="password" id="reg-pal-password" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Confirmar Senha <span style="color:red;">*</span></label>
+                                <input type="password" id="reg-pal-password-confirm" class="evt-form-control" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="evt-btn-primary" style="background:linear-gradient(135deg, #0F3B5F, #8B5CF6);"><i class="fa-solid fa-user-check"></i> Finalizar Cadastro de Palestrante</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Header / Nav -->
-    <header class="main-header">
-        <div class="container header-inner">
-            <div class="logo">
-                <a href="../index.html">
-                    <img src="../images/image-header.png" alt="SBPS Logo" class="logo-img">
-                </a>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li class="dropdown">
-                        <a href="../index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
-                        <ul class="dropdown-menu">
-                                <li><a href="sobre.html">SOBRE A SBPS</a></li>
-                            <li><a href="objetivos.html">OBJETIVOS</a></li>
-                            <li><a href="diretoria.html">DIRETORIA</a></li>
-                            <li><a href="descricaodiretorias.html">DESCRIÇÃO DE DIRETORIAS</a></li>
-                            <li><a href="resolucoes.html">RESOLUÇÕES</a></li>
-                            <li><a href="estatuto.html">ESTATUTO</a></li>
-                            <li><a href="convenios.html">CONVÊNIOS</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="noticias.html">PUBLICAÇÕES</a></li>
-                    <li><a href="eventos.html" class="active">EVENTOS</a></li>
-                    <li><a href="notas.html">NOTAS</a></li>
-                    <li><a href="contatos.html">CONTATOS</a></li>
-                    <li><a href="informacoes.html">INFORMAÇÕES</a></li>
+    <!-- ==========================================================================
+         HEADER MOBILE LIMPO (APENAS 3 TRAÇOS E FOTINHA DO PERFIL)
+         ========================================================================== -->
+    <div id="evt-mobile-header" class="evt-mobile-header">
+        <button type="button" id="btn-mobile-menu-toggle" class="evt-mobile-menu-btn" title="Abrir Menu Lateral">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div id="btn-mobile-profile-shortcut" class="evt-mobile-profile-btn" title="Ir para Meu Perfil">
+            U
+        </div>
+    </div>
+
+    <!-- BACKDROP DO MENU MOBILE GAVETA -->
+    <div id="evt-sidebar-backdrop" class="evt-sidebar-backdrop"></div>
+
+    <!-- ==========================================================================
+         WORKSPACE AUTENTICADO DA ÁREA DE EVENTOS
+         ========================================================================== -->
+    <div id="evt-workspace-container" class="evt-workspace" style="display: none;">
+        <!-- Sidebar Menu Lateral (Estrutura Flex Limpa Sem Colisões) -->
+        <aside id="evt-sidebar" class="evt-sidebar">
+            <div class="evt-sidebar-main-content">
+                <div class="evt-user-profile-summary">
+                    <div id="workspace-user-avatar" class="evt-user-avatar" onclick="window.switchTab('perfil', true)" title="Ir para Meu Perfil">U</div>
+                    <div class="evt-user-info-text">
+                        <h4 id="workspace-user-name">Usuário SBPS</h4>
+                        <span id="workspace-user-badge" class="evt-role-badge participante">Participante</span>
+                    </div>
+                </div>
+
+                <!-- Navegação Lateral -->
+                <ul id="workspace-sidebar-nav" class="evt-sidebar-nav">
+                    <!-- Injetado dinamicamente via eventos.js -->
                 </ul>
-                <a href="#" class="btn btn-associe">ASSOCIE-SE</a>
-                <button class="search-btn"><i class="fa-solid fa-search"></i></button>
-            </nav>
-        </div>
-    </header>
-    
-    <section class="section" style="padding-top: 60px;">
-        <div class="container">
-            <h2 class="title eventos-page-title">Eventos e Cursos</h2>
-            
-            <div class="filter-menu">
-                <button class="filter-btn active">Todos</button>
-                <button class="filter-btn">Assembleia Geral Ordinária</button>
-                <button class="filter-btn">Congresso</button>
-                <button class="filter-btn">Curso online</button>
-                <button class="filter-btn">Curso Presencial</button>
-                <button class="filter-btn">Encontro de Associados</button>
-                <button class="filter-btn">Eventos YouTube</button>
-                <button class="filter-btn">Jornada</button>
-                <button class="filter-btn">Seminário</button>
-                <button class="filter-btn">Seminário Online</button>
-                <button class="filter-btn">Seminário Presencial</button>
-                <button class="filter-btn">Simpósio</button>
             </div>
+
+            <div class="evt-sidebar-footer">
+                <button type="button" id="btn-logout-workspace" class="evt-btn-logout-sidebar" title="Sair da Conta">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sair da Conta
+                </button>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal do Dashboard e Abas -->
+        <main class="evt-content-area">
             
-            <div class="news-grid">
-                <!-- Course 1 -->
-                <div class="news-card">
-                    <div class="news-img">
-                        <img src="../images/ref2.jpg" alt="Curso 1">
-                        <span class="badge" style="background-color: var(--color-primary); color: #fff;">curso presencial</span>
-                    </div>
-                    <div class="news-content">
-                        <p class="news-date">INSCRIÇÕES: 13/06/2026 à 01/08/2026</p>
-                        <h3 class="news-title">Planejamento Previdenciário Integrado - Método 4x4 - Presencial em Recife/PE</h3>
-                        <a href="#" class="read-more">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
+            <!-- ABA DASHBOARD -->
+            <div id="panel-dashboard" class="evt-tab-panel"></div>
+
+            <!-- ABA PERFIL -->
+            <div id="panel-perfil" class="evt-tab-panel" style="display:none;"></div>
+
+            <!-- ABA EVENTOS (DISPONÍVEIS PARA INSCRIÇÃO) -->
+            <div id="panel-eventos" class="evt-tab-panel" style="display:none;"></div>
+
+            <!-- ABA INSCRIÇÕES -->
+            <div id="panel-inscricoes" class="evt-tab-panel" style="display:none;"></div>
+
+            <!-- ABA PARTICIPAÇÕES -->
+            <div id="panel-participacoes" class="evt-tab-panel" style="display:none;"></div>
+
+            <!-- ABA CRIAR EVENTOS (EXCLUSIVO PALESTRANTE) -->
+            <div id="panel-criar-eventos" class="evt-tab-panel" style="display:none;">
+                <div class="evt-page-header">
+                    <h1 class="evt-page-title"><i class="fa-solid fa-calendar-plus"></i> Criar Novo Evento / Capacitação</h1>
                 </div>
-                <!-- Course 2 -->
-                <div class="news-card">
-                    <div class="news-img">
-                        <img src="../images/ref1.jpg" alt="Curso 2">
-                        <span class="badge" style="background-color: var(--color-primary); color: #fff;">encontro de associados</span>
-                    </div>
-                    <div class="news-content">
-                        <p class="news-date">INSCRIÇÕES: 17/06/2026 à 09/07/2026</p>
-                        <h3 class="news-title">Encontro de Associados: Aposentadoria da Pessoa com Deficiência: Avaliação Biopsicossocial</h3>
-                        <a href="#" class="read-more">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <!-- Course 3 -->
-                <div class="news-card">
-                    <div class="news-img">
-                        <img src="../images/ref3.png" alt="Curso 3">
-                        <span class="badge" style="background-color: var(--color-primary); color: #fff;">encontro de associados</span>
-                    </div>
-                    <div class="news-content">
-                        <p class="news-date">INSCRIÇÕES: 15/06/2026 à 16/07/2026</p>
-                        <h3 class="news-title">Encontro de Associados: Reformas Previdenciárias Estaduais</h3>
-                        <a href="#" class="read-more">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
+
+                <div class="evt-auth-card" style="padding:25px;">
+                    <form id="form-criar-evento-palestrante">
+                        <h3 style="color:var(--evt-primary); margin-bottom:15px;"><i class="fa-solid fa-network-wired"></i> 1. Dados para Webhook / Integração</h3>
+                        <div class="evt-grid-2">
+                            <div class="evt-form-group evt-full-width">
+                                <label>Nome do Evento <span style="color:red;">*</span></label>
+                                <input type="text" id="create-evt-titulo" class="evt-form-control" placeholder="Ex: Curso Prático de Recursos Previdenciários" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Carga Horária <span style="color:red;">*</span></label>
+                                <input type="number" id="create-evt-carga" class="evt-form-control" placeholder="Ex: 20" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Data <span style="color:red;">*</span></label>
+                                <input type="date" id="create-evt-data" class="evt-form-control" required>
+                            </div>
+                            <div class="evt-form-group evt-full-width">
+                                <label>Palavra-Chave / Tag Identificadora <span style="color:red;">*</span></label>
+                                <input type="text" id="create-evt-palavra" class="evt-form-control" placeholder="Ex: CURSO_RECURSOS_2026" required>
+                            </div>
+                        </div>
+
+                        <h3 style="color:var(--evt-primary); margin:25px 0 15px 0;"><i class="fa-solid fa-layer-group"></i> 2. Detalhes da Plataforma</h3>
+                        <div class="evt-grid-2">
+                            <div class="evt-form-group">
+                                <label>Local ou Link de Transmissão <span style="color:red;">*</span></label>
+                                <input type="text" id="create-evt-local" class="evt-form-control" placeholder="Ex: Online via Zoom ou Endereço Presencial" required>
+                            </div>
+                            <div class="evt-form-group">
+                                <label>Taxas de Inscrição / Valor <span style="color:red;">*</span></label>
+                                <input type="number" step="0.01" id="create-evt-taxas" class="evt-form-control" placeholder="Ex: 150.00 (deixe 0 para Gratuito)" required>
+                            </div>
+                            <div class="evt-form-group evt-full-width">
+                                <label>Programação do Evento <span style="color:red;">*</span></label>
+                                <textarea id="create-evt-programacao" class="evt-form-control" rows="2" placeholder="Cronograma das aulas ou palestras..." required></textarea>
+                            </div>
+                            <div class="evt-form-group evt-full-width">
+                                <label>Resumo do Evento (O que é e para que serve) <span style="color:red;">*</span></label>
+                                <textarea id="create-evt-resumo" class="evt-form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Informações Estáticas da Plataforma -->
+                        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:18px; margin-top:22px;">
+                            <h4 style="color:var(--evt-primary); margin:0 0 10px 0;"><i class="fa-solid fa-shield-halved"></i> Informações Regulamentares da Plataforma SBPS</h4>
+                            <p style="font-size:0.82rem; color:#475569; margin-bottom:6px;">• <strong>Política de Cancelamento:</strong> Cancelamentos pelo palestrante devem ser solicitados com no mínimo 30 dias de antecedência.</p>
+                            <p style="font-size:0.82rem; color:#475569; margin-bottom:6px;">• <strong>Política de Reagendamento:</strong> Solicitada com no mínimo 7 dias de antecedência. Caso extrapole, o palestrante poderá propor um Substituto para avaliação.</p>
+                            <p style="font-size:0.82rem; color:#475569;">• <strong>Métodos de Pagamento:</strong> Cartão de Crédito, PIX e Boleto Bancário via gateway integrado SBPS.</p>
+                        </div>
+
+                        <button type="submit" class="evt-btn-primary" style="margin-top:20px;"><i class="fa-solid fa-paper-plane"></i> Publicar Evento na Plataforma</button>
+                    </form>
                 </div>
             </div>
+
+            <!-- ABA MEUS EVENTOS -->
+            <div id="panel-meus-eventos" class="evt-tab-panel" style="display:none;"></div>
+
+            <!-- ABA REALIZADOS -->
+            <div id="panel-realizados" class="evt-tab-panel" style="display:none;"></div>
+
+            <!-- ABA COMUNIDADE -->
+            <div id="panel-comunidade" class="evt-tab-panel" style="display:none;"></div>
+
+            <!-- ABA SUGESTÕES -->
+            <div id="panel-sugestoes" class="evt-tab-panel" style="display:none;"></div>
+
+            <!-- ABA AJUDA -->
+            <div id="panel-ajuda" class="evt-tab-panel" style="display:none;"></div>
+
+        </main>
+    </div>
+
+    <!-- CHAT PRIVADO OVERLAY DA COMUNIDADE -->
+    <div id="chat-private-drawer" class="evt-chat-drawer">
+        <div class="evt-chat-header">
+            <span style="font-weight:700;"><i class="fa-solid fa-comments"></i> Mensagens Privadas</span>
+            <button style="background:transparent; border:none; color:#fff; cursor:pointer;" onclick="document.getElementById('chat-private-drawer').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
         </div>
-    </section>
+        <div id="chat-privado-box" class="evt-chat-messages">
+            <div class="evt-chat-msg received">Olá! Bem-vindo ao chat da comunidade SBPS.</div>
+        </div>
+        <form id="form-chat-privado" class="evt-chat-input-bar">
+            <input type="text" id="chat-privado-input" class="evt-form-control" placeholder="Escreva uma mensagem..." required>
+            <button type="submit" class="evt-btn-primary" style="width:auto; margin:0; padding:8px 14px;"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+    </div>
+
+    <!-- FLOATING AI CHATBOT -->
+    <button id="btn-ai-fab" class="evt-ai-fab-btn" title="Assistente Virtual SBPS">
+        <i class="fa-solid fa-robot"></i>
+    </button>
+
+    <div id="ai-chat-window" class="evt-ai-chat-window">
+        <div class="evt-chat-header">
+            <span><i class="fa-solid fa-robot"></i> IA Suporte SBPS</span>
+            <button style="background:transparent; border:none; color:#fff; cursor:pointer;" onclick="document.getElementById('ai-chat-window').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="ai-messages-list" class="evt-chat-messages">
+            <div class="evt-chat-msg received">Olá! Sou o assistente virtual com Inteligência Artificial da SBPS. Como posso te ajudar hoje?</div>
+        </div>
+        <form id="form-ai-chat" class="evt-chat-input-bar">
+            <input type="text" id="ai-input-text" class="evt-form-control" placeholder="Tire sua dúvida..." required>
+            <button type="submit" class="evt-btn-primary" style="width:auto; margin:0; padding:8px 14px;"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+    </div>
 
     <!-- Footer -->
     <footer class="main-footer">
@@ -132,33 +482,19 @@
                 <p><strong>Sociedade Brasileira de Previdência Social</strong></p>
                 <p>Endereço completo da sede da SBPS.</p>
                 <p>CEP: 00000-000</p>
-                <br>
-                <p><strong>Horário de atendimento:</strong></p>
-                <p>Segunda a sexta das 9h às 18h.</p>
-                <div class="social-links mt-3">
-                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                </div>
             </div>
             <div class="footer-col">
                 <h3>Acesso rápido</h3>
                 <ul>
                     <li><a href="associado.html">Área do associado</a></li>
+                    <li><a href="eventos.html">Área de Eventos</a></li>
                     <li><a href="noticias.html">Publicações</a></li>
-                    <li><a href="eventos.html">Cursos & Eventos</a></li>
-                    <li><a href="notas.html">Notas</a></li>
-                    <li><a href="#">Blog</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h3>Contatos</h3>
-                <p><strong>Atendimento:</strong></p>
                 <p>(00) 0000-0000</p>
                 <p>contato@sbps.org.br</p>
-                <br>
-                <p><strong>Administrativo:</strong></p>
-                <p>adm@sbps.org.br</p>
             </div>
         </div>
         <div class="footer-bottom">
@@ -168,13 +504,35 @@
         </div>
     </footer>
 
-    <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/5500000000000" target="_blank" class="whatsapp-btn">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
-    
+    <!-- MODAL DE CONFIRMAÇÃO DE EVENTO -->
+    <div id="evt-modal-confirmar-evento" class="evt-modal" style="display: none;">
+        <div class="evt-modal-content">
+            <div class="evt-modal-header">
+                <h2>Revisar Publicação do Evento</h2>
+                <button type="button" class="btn-fechar-modal" onclick="document.getElementById('evt-modal-confirmar-evento').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="evt-modal-body">
+                <p>Revise os dados antes de publicar o evento para a comunidade.</p>
+                <div class="evt-resumo-evento">
+                    <p><strong>Nome do Evento:</strong> <span id="resumo-evt-titulo"></span></p>
+                    <p><strong>Carga Horária:</strong> <span id="resumo-evt-carga"></span>h</p>
+                    <p><strong>Data:</strong> <span id="resumo-evt-data"></span></p>
+                    <p><strong>Palavra-Chave:</strong> <span id="resumo-evt-palavra"></span></p>
+                    <p><strong>Local:</strong> <span id="resumo-evt-local"></span></p>
+                    <p><strong>Taxa/Valor:</strong> R$ <span id="resumo-evt-taxas"></span></p>
+                </div>
+                <div class="evt-modal-footer">
+                    <button type="button" class="evt-btn-card-secondary" onclick="document.getElementById('evt-modal-confirmar-evento').style.display='none'"><i class="fa-solid fa-pen"></i> Voltar e Editar</button>
+                    <button type="button" id="btn-confirmar-publicacao" class="evt-btn-primary" style="width: auto; margin: 0;"><i class="fa-solid fa-check"></i> Confirmar e Publicar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts da Aplicação -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../scripts/supabase-client.js?v=2"></script>
     <script src="../scripts/script.js?v=5"></script>
+    <script src="../scripts/eventos.js?v=6"></script>
 </body>
 </html>
-
-
