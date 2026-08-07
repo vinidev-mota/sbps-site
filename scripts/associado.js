@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAjudaSupport();
 
     // --------------------------------------------------------------------------
-    // 1. Autenticação & Cadastro Pessoa Física (Supabase Exclusivo)
+    // 1. Autenticação, Validações Estritas & Cadastro Pessoa Física (Supabase)
     // --------------------------------------------------------------------------
     function initAuth() {
         const authContainer = document.getElementById('auth-container');
@@ -68,13 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
             memberContent.style.display = 'none';
         }
 
-        // Tab Switching in Auth
+        // Tab Switching in Auth (Expande o formulário para a tela toda do desktop no cadastro)
+        const authWrapper = authContainer.querySelector('.auth-wrapper');
         if (loginTabBtn && registerTabBtn) {
             loginTabBtn.addEventListener('click', () => {
                 loginTabBtn.classList.add('active');
                 registerTabBtn.classList.remove('active');
                 loginForm.style.display = 'block';
                 registerForm.style.display = 'none';
+                if (authWrapper) authWrapper.classList.remove('register-expanded');
             });
 
             registerTabBtn.addEventListener('click', () => {
@@ -82,10 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginTabBtn.classList.remove('active');
                 registerForm.style.display = 'block';
                 loginForm.style.display = 'none';
+                if (authWrapper) authWrapper.classList.add('register-expanded');
             });
         }
 
-        // Submit Login (Strict Supabase Auth)
+        // ----------------------------------------------------------------------
+        // Listeners e Validações Dinâmicas do Formulário de Cadastro
+        // ----------------------------------------------------------------------
+        setupRegistrationFormInteractions();
+
+        // Submit Login (Supabase Auth com suporte a E-mail, Login ou CPF)
         if (loginForm) {
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -93,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const passInput = document.getElementById('login-password')?.value || '';
 
                 if (!userInput || !passInput) {
-                    alert('Por favor, informe e-mail e senha.');
+                    alert('Por favor, informe seu e-mail, login ou CPF e a senha.');
                     return;
                 }
 
@@ -106,15 +114,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (res && res.success && res.profile) {
                         currentUser = {
                             nome: res.profile.nome || 'Associado',
-                            nascimento: res.profile.nascimento || '',
                             cpf: res.profile.cpf || '',
-                            email: res.profile.email || userInput,
+                            rg: res.profile.rg || '',
+                            nascimento: res.profile.nascimento || '',
+                            genero: res.profile.genero || '',
+                            profissao: res.profile.profissao || '',
+                            origem_sbps: res.profile.origem_sbps || '',
+                            origem_outro_desc: res.profile.origem_outro_desc || '',
                             celular: res.profile.celular || '',
                             fixo: res.profile.fixo || '',
-                            oab: res.profile.oab || '',
-                            conselho: res.profile.conselho || '',
+                            recado: res.profile.recado || '',
+                            email: res.profile.email || userInput,
+                            email_secundario: res.profile.email_secundario || '',
                             cep: res.profile.cep || '',
-                            endereco: res.profile.endereco || '',
+                            logradouro: res.profile.logradouro || '',
+                            numero: res.profile.numero || '',
+                            complemento: res.profile.complemento || '',
+                            bairro: res.profile.bairro || '',
+                            cidade: res.profile.cidade || '',
+                            uf: res.profile.uf || '',
+                            login_usuario: res.profile.login_usuario || userInput,
+                            foto_url: res.profile.foto_url || '',
                             status: res.profile.status || 'Ativo'
                         };
                         localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
@@ -131,34 +151,210 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (btn) btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Acessar Portal';
 
                 if (!loginSuccess) {
-                    alert('Usuário não encontrado ou senha incorreta no Supabase. Caso ainda não tenha conta, faça seu cadastro abaixo.');
+                    alert('Usuário não encontrado ou senha incorreta no Supabase. Caso ainda não tenha conta, faça seu cadastro na aba ao lado.');
                 }
             });
         }
 
-        // Submit Cadastro Pessoa Física (Supabase Auth & Database)
+        // Submit Cadastro Pessoa Física com Validações Estritas
         if (registerForm) {
             registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const pass = document.getElementById('reg-password').value;
-                const passConf = document.getElementById('reg-password-confirm').value;
 
-                if (pass !== passConf) {
-                    alert('As senhas não coincidem!');
+                // 1. Informações Pessoais
+                const nomeInput = document.getElementById('reg-nome');
+                const nome = nomeInput.value.trim();
+                const nomeWords = nome.split(/\s+/).filter(w => w.length > 0);
+                if (nomeWords.length < 2) {
+                    alert('Por favor, informe seu Nome Completo (nome e sobrenome).');
+                    nomeInput.focus();
                     return;
                 }
 
+                const cpfInput = document.getElementById('reg-cpf');
+                const rawCpf = cpfInput.value.replace(/\D/g, '');
+                if (!isValidCPF(rawCpf)) {
+                    alert('CPF inválido! Por favor, confira os números digitados.');
+                    cpfInput.focus();
+                    return;
+                }
+
+                const rgInput = document.getElementById('reg-rg');
+                const rawRg = rgInput.value.replace(/\D/g, '');
+                if (rawRg.length < 4) {
+                    alert('RG inválido! O campo de RG deve conter apenas números e ao menos 4 dígitos.');
+                    rgInput.focus();
+                    return;
+                }
+
+                const nascInput = document.getElementById('reg-nasc');
+                const birthDate = nascInput.value;
+                if (!birthDate || !isAdult(birthDate)) {
+                    alert('O cadastro na SBPS é permitido apenas para maiores de 18 anos. Verifique a data de nascimento.');
+                    nascInput.focus();
+                    return;
+                }
+
+                const generoInput = document.getElementById('reg-genero');
+                if (!generoInput.value) {
+                    alert('Por favor, selecione seu Gênero.');
+                    generoInput.focus();
+                    return;
+                }
+
+                const origemInput = document.getElementById('reg-origem');
+                if (!origemInput.value) {
+                    alert('Por favor, informe como você conheceu a SBPS.');
+                    origemInput.focus();
+                    return;
+                }
+
+                let origemOutroDesc = '';
+                if (origemInput.value === 'Outro') {
+                    const origemOutroInput = document.getElementById('reg-origem-outro');
+                    origemOutroDesc = origemOutroInput.value.trim();
+                    if (!origemOutroDesc) {
+                        alert('Como você selecionou "Outro", por favor descreva como conheceu a SBPS.');
+                        origemOutroInput.focus();
+                        return;
+                    }
+                }
+
+                // 2. Informações de Contato
+                const celularInput = document.getElementById('reg-celular');
+                const rawCelular = celularInput.value.replace(/\D/g, '');
+                if (rawCelular.length < 10) {
+                    alert('Por favor, informe um número de celular válido com DDD (10 ou 11 dígitos).');
+                    celularInput.focus();
+                    return;
+                }
+
+                const emailInput = document.getElementById('reg-email');
+                const emailConfirmInput = document.getElementById('reg-email-confirm');
+                const email = emailInput.value.trim().toLowerCase();
+                const emailConfirm = emailConfirmInput.value.trim().toLowerCase();
+
+                if (!isValidEmail(email)) {
+                    alert('Por favor, informe um E-mail Principal válido.');
+                    emailInput.focus();
+                    return;
+                }
+
+                if (email !== emailConfirm) {
+                    alert('A confirmação do e-mail não confere com o E-mail Principal!');
+                    emailConfirmInput.focus();
+                    return;
+                }
+
+                const emailSecundario = document.getElementById('reg-email-secundario').value.trim().toLowerCase();
+                if (emailSecundario && !isValidEmail(emailSecundario)) {
+                    alert('O E-mail Secundário informado possui formato inválido.');
+                    document.getElementById('reg-email-secundario').focus();
+                    return;
+                }
+
+                // 3. Endereço
+                const cepInput = document.getElementById('reg-cep');
+                const rawCep = cepInput.value.replace(/\D/g, '');
+                if (rawCep.length !== 8) {
+                    alert('Por favor, informe um CEP válido com 8 dígitos.');
+                    cepInput.focus();
+                    return;
+                }
+
+                const numeroInput = document.getElementById('reg-numero');
+                if (!numeroInput.value.trim()) {
+                    alert('Por favor, informe o Número do endereço.');
+                    numeroInput.focus();
+                    return;
+                }
+
+                const ruaInput = document.getElementById('reg-rua');
+                if (!ruaInput.value.trim()) {
+                    alert('Por favor, informe o Logradouro / Rua.');
+                    ruaInput.focus();
+                    return;
+                }
+
+                const complementoInput = document.getElementById('reg-complemento');
+                const semComplementoChecked = document.getElementById('check-sem-complemento')?.checked;
+                const complemento = semComplementoChecked ? 'Sem complemento' : complementoInput.value.trim();
+                if (!complemento) {
+                    alert('Por favor, informe o Complemento ou marque a opção "Sem complemento".');
+                    complementoInput.focus();
+                    return;
+                }
+
+                const bairroInput = document.getElementById('reg-bairro');
+                if (!bairroInput.value.trim()) {
+                    alert('Por favor, informe o Bairro.');
+                    bairroInput.focus();
+                    return;
+                }
+
+                const cidadeInput = document.getElementById('reg-cidade');
+                const ufInput = document.getElementById('reg-uf');
+                if (!cidadeInput.value.trim() || !ufInput.value.trim()) {
+                    alert('Por favor, informe um CEP válido para preencher Cidade e UF automaticamente.');
+                    cepInput.focus();
+                    return;
+                }
+
+                // 4. Informações de Acesso e Senha Forte
+                const loginUserInput = document.getElementById('reg-login-user');
+                const loginUser = loginUserInput.value.trim();
+                if (loginUser.length < 3) {
+                    alert('O Login/Usuário deve conter no mínimo 3 caracteres.');
+                    loginUserInput.focus();
+                    return;
+                }
+
+                const passInput = document.getElementById('reg-password');
+                const passConfirmInput = document.getElementById('reg-password-confirm');
+                const pass = passInput.value;
+                const passConf = passConfirmInput.value;
+
+                const passValidation = validateStrongPassword(pass);
+                if (!passValidation.isValid) {
+                    alert('A senha informada não atende a todos os requisitos de segurança:\n' + passValidation.errors.join('\n'));
+                    passInput.focus();
+                    return;
+                }
+
+                if (pass !== passConf) {
+                    alert('A confirmação de senha não coincide com a senha digitada!');
+                    passConfirmInput.focus();
+                    return;
+                }
+
+                // Foto de perfil
+                const fotoPreviewEl = document.getElementById('photo-preview');
+                const fotoUrl = fotoPreviewEl ? (fotoPreviewEl.dataset.photoUrl || '') : '';
+
+                // Objeto do Novo Associado
                 const newUser = {
-                    nome: document.getElementById('reg-nome').value,
-                    nascimento: document.getElementById('reg-nasc').value,
-                    cpf: document.getElementById('reg-cpf').value,
-                    email: document.getElementById('reg-email').value,
-                    celular: document.getElementById('reg-celular').value,
-                    fixo: document.getElementById('reg-fixo').value,
-                    oab: document.getElementById('reg-oab').value,
-                    conselho: document.getElementById('reg-conselho').value,
-                    cep: document.getElementById('reg-cep').value,
-                    endereco: `${document.getElementById('reg-rua').value}, ${document.getElementById('reg-numero').value} - ${document.getElementById('reg-bairro').value}, ${document.getElementById('reg-cidade').value}/${document.getElementById('reg-uf').value}`,
+                    nome: nome,
+                    cpf: formatCPF(rawCpf),
+                    rg: rawRg,
+                    nascimento: birthDate,
+                    genero: generoInput.value,
+                    profissao: document.getElementById('reg-profissao').value.trim(),
+                    origem_sbps: origemInput.value,
+                    origem_outro_desc: origemOutroDesc,
+                    celular: formatPhone(rawCelular),
+                    fixo: document.getElementById('reg-fixo').value.trim(),
+                    recado: document.getElementById('reg-recado').value.trim(),
+                    email: email,
+                    email_secundario: emailSecundario,
+                    cep: formatCEP(rawCep),
+                    logradouro: ruaInput.value.trim(),
+                    numero: numeroInput.value.trim(),
+                    complemento: complemento,
+                    bairro: bairroInput.value.trim(),
+                    cidade: cidadeInput.value.trim(),
+                    uf: ufInput.value.trim().toUpperCase(),
+                    login_usuario: loginUser,
+                    foto_url: fotoUrl,
                     status: 'Ativo'
                 };
 
@@ -168,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (window.SBPS_Supabase) {
                     const res = await window.SBPS_Supabase.registerUser(newUser, pass);
                     if (!res.success) {
-                        console.warn('Aviso do Supabase (Cadastro salvo no portal):', res.error);
+                        console.warn('Aviso do Supabase:', res.error);
                     }
                 }
 
@@ -180,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 memberContent.style.display = 'block';
                 updateUserBadges();
                 renderUserData();
-                showToastMessage('Cadastro realizado e salvo no Supabase com sucesso! Bem-vindo(a) à SBPS.');
+                showToastMessage('Cadastro de Associado realizado e salvo com sucesso no Supabase! Bem-vindo(a) à SBPS.');
             });
         }
 
@@ -197,36 +393,284 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Auto-complete Address via ViaCEP API
+    // --------------------------------------------------------------------------
+    // 1.1 Helpers de Validação, Máscaras e Interações do Cadastro
+    // --------------------------------------------------------------------------
+    function setupRegistrationFormInteractions() {
+        // CPF: Máscara e validação em tempo real
+        const cpfInput = document.getElementById('reg-cpf');
+        if (cpfInput) {
+            cpfInput.addEventListener('input', (e) => {
+                let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+                if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+                else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                e.target.value = v;
+            });
+        }
+
+        // RG: Apenas números
+        const rgInput = document.getElementById('reg-rg');
+        if (rgInput) {
+            rgInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 15);
+            });
+        }
+
+        // Celular e Telefone Fixo: Máscaras
+        const celularInput = document.getElementById('reg-celular');
+        if (celularInput) {
+            celularInput.addEventListener('input', (e) => {
+                let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+                if (v.length > 10) v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+                else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+                e.target.value = v;
+            });
+        }
+
+        const fixoInput = document.getElementById('reg-fixo');
+        if (fixoInput) {
+            fixoInput.addEventListener('input', (e) => {
+                let v = e.target.value.replace(/\D/g, '').slice(0, 10);
+                if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,4})/, '($1) $2');
+                e.target.value = v;
+            });
+        }
+
+        // Origem SBPS: Toggle para campo "Outro"
+        const origemSelect = document.getElementById('reg-origem');
+        const boxOrigemOutro = document.getElementById('box-origem-outro');
+        const origemOutroInput = document.getElementById('reg-origem-outro');
+        if (origemSelect && boxOrigemOutro) {
+            origemSelect.addEventListener('change', () => {
+                if (origemSelect.value === 'Outro') {
+                    boxOrigemOutro.style.display = 'block';
+                    if (origemOutroInput) origemOutroInput.required = true;
+                } else {
+                    boxOrigemOutro.style.display = 'none';
+                    if (origemOutroInput) {
+                        origemOutroInput.required = false;
+                        origemOutroInput.value = '';
+                    }
+                }
+            });
+        }
+
+        // Checkbox "Sem complemento"
+        const checkSemComplemento = document.getElementById('check-sem-complemento');
+        const complementoInput = document.getElementById('reg-complemento');
+        if (checkSemComplemento && complementoInput) {
+            checkSemComplemento.addEventListener('change', () => {
+                if (checkSemComplemento.checked) {
+                    complementoInput.value = 'Sem complemento';
+                    complementoInput.readOnly = true;
+                    complementoInput.style.backgroundColor = '#f1f5f9';
+                } else {
+                    complementoInput.value = '';
+                    complementoInput.readOnly = false;
+                    complementoInput.style.backgroundColor = '#ffffff';
+                    complementoInput.focus();
+                }
+            });
+        }
+
+        // Checklist Dinâmico de Segurança da Senha
+        const passInput = document.getElementById('reg-password');
+        if (passInput) {
+            passInput.addEventListener('input', () => {
+                const val = passInput.value;
+                updatePasswordChecklist(val);
+            });
+        }
+
+        // Upload e Preview de Foto de Perfil
+        const fotoInput = document.getElementById('reg-foto');
+        const fotoPreview = document.getElementById('photo-preview');
+        if (fotoInput && fotoPreview) {
+            fotoInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('A foto deve ter no máximo 2MB.');
+                        fotoInput.value = '';
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const base64 = event.target.result;
+                        fotoPreview.innerHTML = `<img src="${base64}" alt="Foto de Perfil">`;
+                        fotoPreview.dataset.photoUrl = base64;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    }
+
+    // Validação de CPF (Módulo 11 real)
+    function isValidCPF(cpf) {
+        if (!cpf || cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+        let sum = 0, rest;
+        for (let i = 1; i <= 9; i++) sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+        rest = (sum * 10) % 11;
+        if (rest === 10 || rest === 11) rest = 0;
+        if (rest !== parseInt(cpf.substring(9, 10))) return false;
+
+        sum = 0;
+        for (let i = 1; i <= 10; i++) sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+        rest = (sum * 10) % 11;
+        if (rest === 10 || rest === 11) rest = 0;
+        return rest === parseInt(cpf.substring(10, 11));
+    }
+
+    // Validação de Maioridade (18+ Anos)
+    function isAdult(birthDateString) {
+        if (!birthDateString) return false;
+        const birth = new Date(birthDateString + 'T00:00:00');
+        const today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+            age--;
+        }
+        return age >= 18;
+    }
+
+    // Validação de E-mail
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Validação e Checklist de Senha Forte
+    function validateStrongPassword(pass) {
+        const errors = [];
+        const hasLen = pass.length >= 8;
+        const hasUpper = /[A-Z]/.test(pass);
+        const hasNum = /[0-9]/.test(pass);
+        const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/.test(pass);
+
+        if (!hasLen) errors.push('• Mínimo de 8 caracteres');
+        if (!hasUpper) errors.push('• Pelo menos 1 letra maiúscula (A-Z)');
+        if (!hasNum) errors.push('• Pelo menos 1 número (0-9)');
+        if (!hasSpecial) errors.push('• Pelo menos 1 caractere especial (!@#$%...)');
+
+        return {
+            isValid: hasLen && hasUpper && hasNum && hasSpecial,
+            hasLen,
+            hasUpper,
+            hasNum,
+            hasSpecial,
+            errors
+        };
+    }
+
+    function updatePasswordChecklist(pass) {
+        const v = validateStrongPassword(pass);
+        const setItem = (id, valid) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (valid) {
+                el.className = 'valid';
+                el.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${el.textContent.replace(/^[^a-zA-Z0-9(]+/, '')}`;
+            } else {
+                el.className = 'invalid';
+                el.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${el.textContent.replace(/^[^a-zA-Z0-9(]+/, '')}`;
+            }
+        };
+
+        setItem('req-len', v.hasLen);
+        setItem('req-upper', v.hasUpper);
+        setItem('req-num', v.hasNum);
+        setItem('req-special', v.hasSpecial);
+    }
+
+    // Formatadores Auxiliares
+    function formatCPF(cpf) {
+        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    }
+
+    function formatCEP(cep) {
+        return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+    }
+
+    function formatPhone(phone) {
+        if (phone.length === 11) return phone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        return phone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    }
+
+    // --------------------------------------------------------------------------
+    // 1.2 Fluxo Inteligente de Endereço via CEP (ViaCEP API)
+    // --------------------------------------------------------------------------
     function initViaCEP() {
         const cepInput = document.getElementById('reg-cep');
         if (!cepInput) return;
 
-        cepInput.addEventListener('blur', () => {
-            const cep = cepInput.value.replace(/\D/g, '');
-            if (cep.length === 8) {
-                fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (!data.erro) {
-                            document.getElementById('reg-rua').value = data.logradouro || '';
-                            document.getElementById('reg-bairro').value = data.bairro || '';
-                            document.getElementById('reg-cidade').value = data.localidade || '';
-                            document.getElementById('reg-uf').value = data.uf || '';
-                            document.getElementById('reg-numero').focus();
-                        }
-                    })
-                    .catch(err => console.error('Erro ao consultar CEP:', err));
+        // Máscara no CEP
+        cepInput.addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+            if (v.length > 5) v = v.replace(/(\d{5})(\d{1,3})/, '$1-$2');
+            e.target.value = v;
+
+            // Se completou 8 números, dispara a consulta automática imediatamente
+            const clean = v.replace(/\D/g, '');
+            if (clean.length === 8) {
+                fetchAddressByCEP(clean);
             }
         });
+
+        cepInput.addEventListener('blur', () => {
+            const clean = cepInput.value.replace(/\D/g, '');
+            if (clean.length === 8) {
+                fetchAddressByCEP(clean);
+            }
+        });
+    }
+
+    function fetchAddressByCEP(cep) {
+        const ruaInput = document.getElementById('reg-rua');
+        const bairroInput = document.getElementById('reg-bairro');
+        const cidadeInput = document.getElementById('reg-cidade');
+        const ufInput = document.getElementById('reg-uf');
+        const numeroInput = document.getElementById('reg-numero');
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.erro) {
+                    if (ruaInput) ruaInput.value = data.logradouro || '';
+                    if (bairroInput) bairroInput.value = data.bairro || '';
+                    if (cidadeInput) cidadeInput.value = data.localidade || '';
+                    if (ufInput) ufInput.value = data.uf || '';
+
+                    // Mantém Cidade e UF bloqueadas para edição conforme especificado
+                    if (cidadeInput) cidadeInput.readOnly = true;
+                    if (ufInput) ufInput.readOnly = true;
+
+                    if (numeroInput) numeroInput.focus();
+                } else {
+                    alert('CEP não encontrado na base dos Correios. Por favor, verifique o número digitado.');
+                }
+            })
+            .catch(err => console.error('Erro ao consultar CEP:', err));
     }
 
     function updateUserBadges() {
         if (!currentUser) return;
         document.querySelectorAll('.user-name-display').forEach(el => el.textContent = currentUser.nome);
-        document.querySelectorAll('.user-oab-display').forEach(el => el.textContent = currentUser.oab ? `OAB: ${currentUser.oab}` : 'Associado SBPS');
-        document.querySelectorAll('.user-avatar-display').forEach(el => el.textContent = currentUser.nome ? currentUser.nome.charAt(0).toUpperCase() : 'A');
+        document.querySelectorAll('.user-oab-display').forEach(el => {
+            el.textContent = currentUser.login_usuario ? `@${currentUser.login_usuario}` : (currentUser.cpf ? `CPF: ${currentUser.cpf}` : 'Associado SBPS');
+        });
+        document.querySelectorAll('.user-avatar-display').forEach(el => {
+            if (currentUser.foto_url && currentUser.foto_url.startsWith('data:image')) {
+                el.innerHTML = `<img src="${currentUser.foto_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            } else {
+                el.textContent = currentUser.nome ? currentUser.nome.charAt(0).toUpperCase() : 'A';
+            }
+        });
     }
+
 
     // --------------------------------------------------------------------------
     // 2. Navegação da Área do Associado (Dashboard + 9 Abas + Quick Dropdown Menu)
@@ -337,35 +781,113 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --------------------------------------------------------------------------
-    // 3. Aba Perfil (Edição + Listas Inscritas)
+    // 3. Aba Perfil (Edição Completa de Dados Cadastrais & Supabase Sync)
     // --------------------------------------------------------------------------
     function renderUserData() {
         if (!currentUser) return;
-        document.getElementById('edit-nome').value = currentUser.nome || '';
-        document.getElementById('edit-nasc').value = currentUser.nascimento || '';
-        document.getElementById('edit-cpf').value = currentUser.cpf || '';
-        document.getElementById('edit-email').value = currentUser.email || '';
-        document.getElementById('edit-celular').value = currentUser.celular || '';
-        document.getElementById('edit-fixo').value = currentUser.fixo || '';
-        document.getElementById('edit-oab').value = currentUser.oab || '';
-        document.getElementById('edit-conselho').value = currentUser.conselho || '';
-        document.getElementById('edit-cep').value = currentUser.cep || '';
-        document.getElementById('edit-endereco').value = currentUser.endereco || '';
 
+        // 1. Informações Pessoais
+        const elNome = document.getElementById('edit-nome');
+        const elCpf = document.getElementById('edit-cpf');
+        const elRg = document.getElementById('edit-rg');
+        const elNasc = document.getElementById('edit-nasc');
+        const elGenero = document.getElementById('edit-genero');
+        const elProfissao = document.getElementById('edit-profissao');
+        const elOrigem = document.getElementById('edit-origem');
+
+        if (elNome) elNome.value = currentUser.nome || '';
+        if (elCpf) elCpf.value = currentUser.cpf || '';
+        if (elRg) elRg.value = currentUser.rg || '';
+        if (elNasc) elNasc.value = currentUser.nascimento || '';
+        if (elGenero) elGenero.value = currentUser.genero || '';
+        if (elProfissao) elProfissao.value = currentUser.profissao || '';
+        if (elOrigem) elOrigem.value = currentUser.origem_outro_desc ? `${currentUser.origem_sbps || ''} (${currentUser.origem_outro_desc})` : (currentUser.origem_sbps || '');
+
+        // 2. Informações de Contato
+        const elCelular = document.getElementById('edit-celular');
+        const elRecado = document.getElementById('edit-recado');
+        const elFixo = document.getElementById('edit-fixo');
+        const elEmail = document.getElementById('edit-email');
+        const elEmailSec = document.getElementById('edit-email-secundario');
+
+        if (elCelular) elCelular.value = currentUser.celular || '';
+        if (elRecado) elRecado.value = currentUser.recado || '';
+        if (elFixo) elFixo.value = currentUser.fixo || '';
+        if (elEmail) elEmail.value = currentUser.email || '';
+        if (elEmailSec) elEmailSec.value = currentUser.email_secundario || '';
+
+        // 3. Endereço Residencial
+        const elCep = document.getElementById('edit-cep');
+        const elRua = document.getElementById('edit-rua');
+        const elNumero = document.getElementById('edit-numero');
+        const elBairro = document.getElementById('edit-bairro');
+        const elUf = document.getElementById('edit-uf');
+        const elCidade = document.getElementById('edit-cidade');
+        const elComplemento = document.getElementById('edit-complemento');
+
+        if (elCep) elCep.value = currentUser.cep || '';
+        if (elRua) elRua.value = currentUser.logradouro || '';
+        if (elNumero) elNumero.value = currentUser.numero || '';
+        if (elBairro) elBairro.value = currentUser.bairro || '';
+        if (elUf) elUf.value = currentUser.uf || '';
+        if (elCidade) elCidade.value = currentUser.cidade || '';
+        if (elComplemento) elComplemento.value = currentUser.complemento || '';
+
+        // 4. Acesso & Membresia
+        const elLoginUser = document.getElementById('edit-login-user');
+        const elStatus = document.getElementById('edit-status');
+        if (elLoginUser) elLoginUser.value = currentUser.login_usuario || currentUser.email || '';
+        if (elStatus) elStatus.value = currentUser.status || 'Ativo';
+
+        // ViaCEP na Aba Perfil
+        if (elCep && !elCep.dataset.cepBound) {
+            elCep.dataset.cepBound = 'true';
+            elCep.addEventListener('blur', () => {
+                const clean = elCep.value.replace(/\D/g, '');
+                if (clean.length === 8) {
+                    fetch(`https://viacep.com.br/ws/${clean}/json/`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (!data.erro) {
+                                if (elRua) elRua.value = data.logradouro || '';
+                                if (elBairro) elBairro.value = data.bairro || '';
+                                if (elCidade) elCidade.value = data.localidade || '';
+                                if (elUf) elUf.value = data.uf || '';
+                                if (elNumero) elNumero.focus();
+                            }
+                        })
+                        .catch(err => console.error('Erro ao consultar CEP no perfil:', err));
+                }
+            });
+        }
+
+        // Submissão do Formulário de Edição de Perfil
         const formPerfil = document.getElementById('form-edit-perfil');
-        if (formPerfil) {
+        if (formPerfil && !formPerfil.dataset.submitBound) {
+            formPerfil.dataset.submitBound = 'true';
             formPerfil.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                currentUser.nome = document.getElementById('edit-nome').value;
-                currentUser.nascimento = document.getElementById('edit-nasc').value;
-                currentUser.cpf = document.getElementById('edit-cpf').value;
-                currentUser.email = document.getElementById('edit-email').value;
-                currentUser.celular = document.getElementById('edit-celular').value;
-                currentUser.fixo = document.getElementById('edit-fixo').value;
-                currentUser.oab = document.getElementById('edit-oab').value;
-                currentUser.conselho = document.getElementById('edit-conselho').value;
-                currentUser.cep = document.getElementById('edit-cep').value;
-                currentUser.endereco = document.getElementById('edit-endereco').value;
+
+                currentUser.nome = elNome ? elNome.value.trim() : currentUser.nome;
+                currentUser.rg = elRg ? elRg.value.trim() : currentUser.rg;
+                currentUser.nascimento = elNasc ? elNasc.value : currentUser.nascimento;
+                currentUser.genero = elGenero ? elGenero.value : currentUser.genero;
+                currentUser.profissao = elProfissao ? elProfissao.value.trim() : currentUser.profissao;
+                currentUser.origem_sbps = elOrigem ? elOrigem.value.trim() : currentUser.origem_sbps;
+
+                currentUser.celular = elCelular ? elCelular.value.trim() : currentUser.celular;
+                currentUser.recado = elRecado ? elRecado.value.trim() : currentUser.recado;
+                currentUser.fixo = elFixo ? elFixo.value.trim() : currentUser.fixo;
+                currentUser.email = elEmail ? elEmail.value.trim().toLowerCase() : currentUser.email;
+                currentUser.email_secundario = elEmailSec ? elEmailSec.value.trim().toLowerCase() : currentUser.email_secundario;
+
+                currentUser.cep = elCep ? elCep.value.trim() : currentUser.cep;
+                currentUser.logradouro = elRua ? elRua.value.trim() : currentUser.logradouro;
+                currentUser.numero = elNumero ? elNumero.value.trim() : currentUser.numero;
+                currentUser.bairro = elBairro ? elBairro.value.trim() : currentUser.bairro;
+                currentUser.uf = elUf ? elUf.value.trim().toUpperCase() : currentUser.uf;
+                currentUser.cidade = elCidade ? elCidade.value.trim() : currentUser.cidade;
+                currentUser.complemento = elComplemento ? elComplemento.value.trim() : currentUser.complemento;
 
                 localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
                 updateUserBadges();
@@ -374,7 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await window.SBPS_Supabase.updateProfile(currentUser);
                 }
 
-                showToastMessage('Dados alterados e salvos no Supabase com sucesso!');
+                showToastMessage('Dados cadastrais atualizados e salvos no Supabase com sucesso!');
             });
         }
     }

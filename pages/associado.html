@@ -97,78 +97,238 @@
 
                 <!-- Form Cadastro (Exclusivo Pessoa Física) -->
                 <form id="form-register" style="display: none;">
-                    <h2 class="auth-form-title">Cadastro de Associado (Pessoa Física)</h2>
-                    <p class="auth-form-subtitle">Preencha seus dados para se tornar um membro oficial da SBPS.</p>
+                    <div class="associe-header-banner">
+                        <h2 class="associe-main-title">Associe-se à SBPS</h2>
+                        <p class="associe-subtitle">Preencha o formulário cadastral abaixo com seus dados para concluir seu registro de associado.</p>
+                    </div>
 
-                    <div class="form-grid-2">
-                        <div class="form-group full-width">
-                            <label>Nome Completo <span class="required">*</span></label>
-                            <input type="text" id="reg-nome" class="form-control" placeholder="Digite seu nome completo" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Data de Nascimento <span class="required">*</span></label>
-                            <input type="date" id="reg-nasc" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>CPF <span class="required">*</span></label>
-                            <input type="text" id="reg-cpf" class="form-control" placeholder="000.000.000-00" required>
-                        </div>
-                        <div class="form-group">
-                            <label>E-mail <span class="required">*</span></label>
-                            <input type="email" id="reg-email" class="form-control" placeholder="seu@email.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Celular (com DDD) <span class="required">*</span></label>
-                            <input type="tel" id="reg-celular" class="form-control" placeholder="(00) 90000-0000" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Telefone Fixo (Se houver)</label>
-                            <input type="tel" id="reg-fixo" class="form-control" placeholder="(00) 0000-0000">
-                        </div>
-                        <div class="form-group">
-                            <label>Registro na OAB (Número/UF) <span class="required">*</span></label>
-                            <input type="text" id="reg-oab" class="form-control" placeholder="Ex: 123456/SP" required>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Registro em outro Conselho Profissional (Se houver)</label>
-                            <input type="text" id="reg-conselho" class="form-control" placeholder="Ex: CREA, CRA, CRM (número/sigla)">
+                    <!-- SEÇÃO 1: Informações Pessoais -->
+                    <div class="assoc-section-container">
+                        <div class="assoc-section-heading">
+                            <h3>INFORMAÇÕES PESSOAIS</h3>
                         </div>
 
-                        <!-- Endereço Completo com ViaCEP -->
-                        <div class="form-group">
-                            <label>CEP <span class="required">*</span></label>
-                            <input type="text" id="reg-cep" class="form-control" placeholder="00000-000" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Número <span class="required">*</span></label>
-                            <input type="text" id="reg-numero" class="form-control" placeholder="123" required>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Logradouro / Rua <span class="required">*</span></label>
-                            <input type="text" id="reg-rua" class="form-control" placeholder="Rua / Avenida" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Bairro <span class="required">*</span></label>
-                            <input type="text" id="reg-bairro" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Cidade / UF <span class="required">*</span></label>
-                            <div style="display:flex; gap:6px;">
-                                <input type="text" id="reg-cidade" class="form-control" style="flex:2;" placeholder="Cidade" required>
-                                <input type="text" id="reg-uf" class="form-control" style="flex:1;" placeholder="UF" maxlength="2" required>
+                        <div class="assoc-form-grid">
+                            <!-- Tipo de Associado e Modalidade -->
+                            <div class="form-group col-span-2">
+                                <label><span class="req-star">*</span> Tipo de Associado</label>
+                                <select id="reg-tipo-assoc" class="form-control">
+                                    <option value="SBPS Pessoa Física">SBPS Pessoa Física</option>
+                                    <option value="Estudante de Graduação / Pós">Estudante de Graduação / Pós</option>
+                                    <option value="Docente / Pesquisador">Docente / Pesquisador</option>
+                                </select>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Senha <span class="required">*</span></label>
-                            <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Confirmar Senha <span class="required">*</span></label>
-                            <input type="password" id="reg-password-confirm" class="form-control" placeholder="••••••••" required>
+
+                            <div class="form-group col-span-2">
+                                <label><span class="req-star">*</span> Pessoa Jurídica ou Física?</label>
+                                <select id="reg-juridica-fisica" class="form-control">
+                                    <option value="Pessoa Física">Pessoa Física</option>
+                                    <option value="Pessoa Jurídica">Pessoa Jurídica (Escritório / Empresa)</option>
+                                </select>
+                            </div>
+
+                            <!-- Nome, CPF, RG, Data de Nascimento -->
+                            <div class="form-group col-span-3">
+                                <label><span class="req-star">*</span> Nome Completo</label>
+                                <input type="text" id="reg-nome" class="form-control" placeholder="Digite seu nome completo" required>
+                                <small class="field-help-hint"><i class="fa-solid fa-circle-exclamation"></i> Informe nome e sobrenome completo</small>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> CPF</label>
+                                <input type="text" id="reg-cpf" class="form-control" placeholder="000.000.000-00" maxlength="14" required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> RG</label>
+                                <input type="text" id="reg-rg" class="form-control" placeholder="Número do RG" required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> Data de Nascimento</label>
+                                <input type="date" id="reg-nasc" class="form-control" required>
+                                <small class="field-help-hint"><i class="fa-solid fa-circle-exclamation"></i> Permitido a partir de 18 anos</small>
+                            </div>
+
+                            <!-- Gênero, Profissão, Quem Indicou -->
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> Gênero</label>
+                                <select id="reg-genero" class="form-control" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                    <option value="Não-binário">Não-binário</option>
+                                    <option value="Prefiro não informar">Prefiro não informar</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-span-2">
+                                <label>Profissão / Atuação</label>
+                                <input type="text" id="reg-profissao" class="form-control" placeholder="Ex: Advogado(a), Perito(a), Servidor(a)">
+                            </div>
+
+                            <div class="form-group col-span-2">
+                                <label><span class="req-star">*</span> Quem Indicou / Como conheceu a SBPS?</label>
+                                <select id="reg-origem" class="form-control" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Indicação">Indicação de colega / amigo</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="Google">Google / Pesquisa Web</option>
+                                    <option value="Outro">Outro (Descrever ao lado)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-span-2" id="box-origem-outro" style="display: none;">
+                                <label><span class="req-star">*</span> Descreva como conheceu a SBPS</label>
+                                <input type="text" id="reg-origem-outro" class="form-control" placeholder="Descreva como conheceu...">
+                            </div>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-auth-submit" style="background:var(--assoc-secondary);"><i class="fa-solid fa-user-plus"></i> Concluir Cadastro de Associado</button>
+                    <!-- SEÇÃO 2: Informações de Contato -->
+                    <div class="assoc-section-container">
+                        <div class="assoc-section-heading">
+                            <h3>INFORMAÇÕES DE CONTATO</h3>
+                        </div>
+
+                        <div class="assoc-form-grid">
+                            <div class="form-group col-span-2">
+                                <label><span class="req-star">*</span> Tel. Celular / WhatsApp</label>
+                                <input type="tel" id="reg-celular" class="form-control" placeholder="(00) 90000-0000" maxlength="15" required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label>Tel. Recado</label>
+                                <input type="tel" id="reg-recado" class="form-control" placeholder="(00) 00000-0000" maxlength="20">
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label>Tel. Fixo</label>
+                                <input type="tel" id="reg-fixo" class="form-control" placeholder="(00) 0000-0000" maxlength="14">
+                            </div>
+
+                            <div class="form-group col-span-2">
+                                <label><span class="req-star">*</span> E-mail Principal</label>
+                                <input type="email" id="reg-email" class="form-control" placeholder="seu.email@exemplo.com" required>
+                                <small class="field-help-hint"><i class="fa-solid fa-circle-exclamation"></i> E-mail para cobrança, notificações e acesso</small>
+                            </div>
+
+                            <div class="form-group col-span-2">
+                                <label><span class="req-star">*</span> Confirmação do E-mail Principal</label>
+                                <input type="email" id="reg-email-confirm" class="form-control" placeholder="Repita seu e-mail principal" required>
+                            </div>
+
+                            <div class="form-group col-span-4">
+                                <label>E-mail Secundário (Opcional)</label>
+                                <input type="email" id="reg-email-secundario" class="form-control" placeholder="outro.email@exemplo.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 3: Endereço Residencial -->
+                    <div class="assoc-section-container">
+                        <div class="assoc-section-heading">
+                            <h3>ENDEREÇO RESIDENCIAL</h3>
+                        </div>
+
+                        <div class="assoc-form-grid">
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> CEP</label>
+                                <input type="text" id="reg-cep" class="form-control" placeholder="00000-000" maxlength="9" required>
+                                <small class="field-help-hint"><i class="fa-solid fa-bolt"></i> Preenche endereço automático</small>
+                            </div>
+
+                            <div class="form-group col-span-2">
+                                <label><span class="req-star">*</span> Logradouro</label>
+                                <input type="text" id="reg-rua" class="form-control" placeholder="Rua / Avenida / Travessa" required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> Número</label>
+                                <input type="text" id="reg-numero" class="form-control" placeholder="123 ou S/N" required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> Bairro</label>
+                                <input type="text" id="reg-bairro" class="form-control" required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> UF</label>
+                                <input type="text" id="reg-uf" class="form-control readonly-input" placeholder="UF" maxlength="2" readonly required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> Cidade</label>
+                                <input type="text" id="reg-cidade" class="form-control readonly-input" placeholder="Cidade" readonly required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <div class="label-with-checkbox">
+                                    <label for="reg-complemento"><span class="req-star">*</span> Complemento</label>
+                                    <label for="check-sem-complemento" class="check-inline-label">
+                                        <input type="checkbox" id="check-sem-complemento"> Sem complemento
+                                    </label>
+                                </div>
+                                <input type="text" id="reg-complemento" class="form-control" placeholder="Apto, Sala, Bloco..." required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 4: Acesso Área Restrita -->
+                    <div class="assoc-section-container">
+                        <div class="assoc-section-heading">
+                            <h3>ACESSO ÁREA RESTRITA</h3>
+                        </div>
+
+                        <div class="assoc-form-grid">
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> Login</label>
+                                <input type="text" id="reg-login-user" class="form-control" placeholder="Nome de usuário" required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> Senha</label>
+                                <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label><span class="req-star">*</span> Confirmar Senha</label>
+                                <input type="password" id="reg-password-confirm" class="form-control" placeholder="••••••••" required>
+                            </div>
+
+                            <div class="form-group col-span-1">
+                                <label>Foto de Perfil</label>
+                                <div class="photo-upload-container">
+                                    <div class="photo-avatar-preview" id="photo-preview">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <input type="file" id="reg-foto" class="form-control" accept="image/*" style="font-size:0.78rem; padding:6px;">
+                                </div>
+                            </div>
+
+                            <!-- Checklist de Segurança da Senha -->
+                            <div class="form-group col-span-4">
+                                <div class="password-checklist-box" id="password-checklist">
+                                    <span class="checklist-title"><i class="fa-solid fa-shield-halved"></i> Requisitos de Segurança da Senha:</span>
+                                    <ul class="checklist-items">
+                                        <li id="req-len" class="invalid"><i class="fa-solid fa-circle-xmark"></i> Mínimo de 8 caracteres</li>
+                                        <li id="req-upper" class="invalid"><i class="fa-solid fa-circle-xmark"></i> Pelo menos 1 letra maiúscula (A-Z)</li>
+                                        <li id="req-num" class="invalid"><i class="fa-solid fa-circle-xmark"></i> Pelo menos 1 número (0-9)</li>
+                                        <li id="req-special" class="invalid"><i class="fa-solid fa-circle-xmark"></i> Pelo menos 1 caractere especial (!@#$%...)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="assoc-form-footer">
+                        <button type="submit" class="btn-assoc-submit">
+                            <i class="fa-solid fa-user-plus"></i> Concluir Cadastro de Associado
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -339,53 +499,144 @@
             <!-- Aba 1: Perfil -->
             <div id="tab-perfil" class="tab-panel">
                 <div class="panel-card">
-                    <div class="panel-header">
-                        <h2 class="panel-title"><i class="fa-solid fa-user-gear"></i> Meus Dados Cadastrais</h2>
+                    <div class="associe-header-banner" style="margin-bottom:20px; padding-bottom:12px;">
+                        <h2 class="associe-main-title"><i class="fa-solid fa-user-gear"></i> Meus Dados Cadastrais</h2>
+                        <p class="associe-subtitle">Consulte e gerencie seus dados de associado(a) da Sociedade Brasileira de Previdência Social.</p>
                     </div>
+
                     <form id="form-edit-perfil">
-                        <div class="form-grid-2">
-                            <div class="form-group full-width">
-                                <label>Nome Completo</label>
-                                <input type="text" id="edit-nome" class="form-control" required>
+                        <!-- SEÇÃO 1: Informações Pessoais -->
+                        <div class="assoc-section-container">
+                            <div class="assoc-section-heading">
+                                <h3>INFORMAÇÕES PESSOAIS</h3>
                             </div>
-                            <div class="form-group">
-                                <label>Data de Nascimento</label>
-                                <input type="date" id="edit-nasc" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>CPF</label>
-                                <input type="text" id="edit-cpf" class="form-control" readonly style="background:#f1f5f9;">
-                            </div>
-                            <div class="form-group">
-                                <label>E-mail</label>
-                                <input type="email" id="edit-email" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Celular</label>
-                                <input type="tel" id="edit-celular" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Telefone Fixo</label>
-                                <input type="tel" id="edit-fixo" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>Registro OAB (Número/UF)</label>
-                                <input type="text" id="edit-oab" class="form-control" required>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>Registro em outro Conselho Profissional</label>
-                                <input type="text" id="edit-conselho" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>CEP</label>
-                                <input type="text" id="edit-cep" class="form-control" required>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>Endereço Completo</label>
-                                <input type="text" id="edit-endereco" class="form-control" required>
+                            <div class="assoc-form-grid">
+                                <div class="form-group col-span-2">
+                                    <label><span class="req-star">*</span> Nome Completo</label>
+                                    <input type="text" id="edit-nome" class="form-control" required>
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> CPF</label>
+                                    <input type="text" id="edit-cpf" class="form-control readonly-input" readonly style="background:#f1f5f9;">
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> RG</label>
+                                    <input type="text" id="edit-rg" class="form-control" required>
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> Data de Nascimento</label>
+                                    <input type="date" id="edit-nasc" class="form-control" required>
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> Gênero</label>
+                                    <select id="edit-genero" class="form-control" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Feminino">Feminino</option>
+                                        <option value="Não-binário">Não-binário</option>
+                                        <option value="Prefiro não informar">Prefiro não informar</option>
+                                        <option value="Outro">Outro</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label>Profissão / Atuação</label>
+                                    <input type="text" id="edit-profissao" class="form-control">
+                                </div>
+                                <div class="form-group col-span-4">
+                                    <label>Como conheceu a SBPS?</label>
+                                    <input type="text" id="edit-origem" class="form-control">
+                                </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn-enroll" style="width:auto; padding:12px 24px; margin-top:10px;"><i class="fa-solid fa-floppy-disk"></i> Salvar Alterações no Perfil</button>
+
+                        <!-- SEÇÃO 2: Informações de Contato -->
+                        <div class="assoc-section-container">
+                            <div class="assoc-section-heading">
+                                <h3>INFORMAÇÕES DE CONTATO</h3>
+                            </div>
+                            <div class="assoc-form-grid">
+                                <div class="form-group col-span-2">
+                                    <label><span class="req-star">*</span> Tel. Celular / WhatsApp</label>
+                                    <input type="tel" id="edit-celular" class="form-control" maxlength="15" required>
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label>Tel. Recado</label>
+                                    <input type="tel" id="edit-recado" class="form-control" maxlength="20">
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label>Tel. Fixo</label>
+                                    <input type="tel" id="edit-fixo" class="form-control" maxlength="14">
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label><span class="req-star">*</span> E-mail Principal</label>
+                                    <input type="email" id="edit-email" class="form-control" required>
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label>E-mail Secundário</label>
+                                    <input type="email" id="edit-email-secundario" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEÇÃO 3: Endereço Residencial -->
+                        <div class="assoc-section-container">
+                            <div class="assoc-section-heading">
+                                <h3>ENDEREÇO RESIDENCIAL</h3>
+                            </div>
+                            <div class="assoc-form-grid">
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> CEP</label>
+                                    <input type="text" id="edit-cep" class="form-control" maxlength="9" required>
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label><span class="req-star">*</span> Logradouro</label>
+                                    <input type="text" id="edit-rua" class="form-control" required>
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> Número</label>
+                                    <input type="text" id="edit-numero" class="form-control" required>
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> Bairro</label>
+                                    <input type="text" id="edit-bairro" class="form-control" required>
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> UF</label>
+                                    <input type="text" id="edit-uf" class="form-control readonly-input" readonly required>
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> Cidade</label>
+                                    <input type="text" id="edit-cidade" class="form-control readonly-input" readonly required>
+                                </div>
+                                <div class="form-group col-span-1">
+                                    <label><span class="req-star">*</span> Complemento</label>
+                                    <input type="text" id="edit-complemento" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEÇÃO 4: Acesso & Membresia -->
+                        <div class="assoc-section-container">
+                            <div class="assoc-section-heading">
+                                <h3>ACESSO & MEMBRESIA</h3>
+                            </div>
+                            <div class="assoc-form-grid">
+                                <div class="form-group col-span-2">
+                                    <label>Login / Usuário</label>
+                                    <input type="text" id="edit-login-user" class="form-control readonly-input" readonly>
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label>Status do Associado</label>
+                                    <input type="text" id="edit-status" class="form-control readonly-input" value="Ativo" readonly style="color:#16a34a; font-weight:700;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="assoc-form-footer">
+                            <button type="submit" class="btn-assoc-submit">
+                                <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações no Perfil
+                            </button>
+                        </div>
                     </form>
                 </div>
 

@@ -22,7 +22,7 @@
         getClient: getSupabaseClient,
 
         /**
-         * Registra um novo associado no Supabase Auth e insere seus dados cadastrais na tabela 'associados'
+         * Registra um novo associado no Supabase Auth e insere seus dados cadastrais completos na tabela 'associados'
          */
         registerUser: async function (userData, password) {
             const client = getSupabaseClient();
@@ -33,16 +33,29 @@
 
             const payload = {
                 nome: userData.nome,
-                nascimento: userData.nascimento || null,
                 cpf: userData.cpf,
-                email: userData.email,
+                rg: userData.rg || '',
+                nascimento: userData.nascimento || null,
+                genero: userData.genero || '',
+                profissao: userData.profissao || '',
+                origem_sbps: userData.origem_sbps || '',
+                origem_outro_desc: userData.origem_outro_desc || '',
                 celular: userData.celular || '',
                 fixo: userData.fixo || '',
-                oab: userData.oab || '',
-                conselho: userData.conselho || '',
+                recado: userData.recado || '',
+                email: userData.email,
+                email_secundario: userData.email_secundario || '',
                 cep: userData.cep || '',
-                endereco: userData.endereco || '',
-                status: userData.status || 'Ativo'
+                logradouro: userData.logradouro || '',
+                numero: userData.numero || '',
+                complemento: userData.complemento || '',
+                bairro: userData.bairro || '',
+                cidade: userData.cidade || '',
+                uf: userData.uf || '',
+                login_usuario: userData.login_usuario || userData.email,
+                foto_url: userData.foto_url || '',
+                status: userData.status || 'Ativo',
+                updated_at: new Date().toISOString()
             };
 
             let dbResult = null;
@@ -66,7 +79,7 @@
                 dbError = err;
             }
 
-            // 2. Tentar registrar no Supabase Auth (se disponível)
+            // 2. Tentar registrar no Supabase Auth
             let authUser = null;
             try {
                 const { data: authData, error: authError } = await client.auth.signUp({
@@ -76,7 +89,8 @@
                         data: {
                             nome: userData.nome,
                             cpf: userData.cpf,
-                            oab: userData.oab
+                            rg: userData.rg,
+                            login_usuario: userData.login_usuario
                         }
                     }
                 });
@@ -101,31 +115,31 @@
         },
 
         /**
-         * Realiza login no Supabase Auth ou busca perfil pelo CPF/E-mail
+         * Realiza login no Supabase Auth ou busca perfil pelo Login/Usuário, CPF ou E-mail
          */
-        loginUser: async function (emailOrCpf, password) {
+        loginUser: async function (identifier, password) {
             const client = getSupabaseClient();
             if (!client) {
                 return { success: false, message: 'Supabase SDK indisponível.' };
             }
 
             try {
-                let targetEmail = emailOrCpf.trim();
+                let targetEmail = identifier.trim();
 
-                // Se o usuário digitou CPF em vez de E-mail, busca o e-mail correspondente na tabela associados
+                // Se o usuário digitou Login/Usuário ou CPF em vez de E-mail, busca o e-mail na tabela associados
                 if (!targetEmail.includes('@')) {
                     const cleanCpf = targetEmail.replace(/\D/g, '');
                     const { data: foundProfiles } = await client
                         .from('associados')
                         .select('email')
-                        .or(`cpf.eq.${targetEmail},cpf.eq.${cleanCpf}`);
+                        .or(`login_usuario.eq.${targetEmail},cpf.eq.${targetEmail},cpf.eq.${cleanCpf}`);
 
                     if (foundProfiles && foundProfiles.length > 0) {
                         targetEmail = foundProfiles[0].email;
                     }
                 }
 
-                // Autenticar estritamente via Supabase Auth com e-mail e senha
+                // Autenticar via Supabase Auth com e-mail e senha
                 const { data: authData, error: authError } = await client.auth.signInWithPassword({
                     email: targetEmail,
                     password: password
@@ -133,7 +147,7 @@
 
                 if (authError) {
                     console.warn('Autenticação negada no Supabase Auth:', authError.message);
-                    return { success: false, error: 'E-mail ou senha incorretos.' };
+                    return { success: false, error: 'E-mail, usuário ou senha incorretos.' };
                 }
 
                 // Buscar dados completos do perfil na tabela associados
@@ -150,7 +164,7 @@
                         nome: authData.user?.user_metadata?.nome || targetEmail,
                         email: targetEmail,
                         cpf: authData.user?.user_metadata?.cpf || '',
-                        oab: authData.user?.user_metadata?.oab || ''
+                        login_usuario: authData.user?.user_metadata?.login_usuario || targetEmail
                     }
                 };
             } catch (err) {
@@ -167,22 +181,36 @@
             if (!client || !userData || !userData.email) return;
 
             try {
+                const payload = {
+                    nome: userData.nome,
+                    cpf: userData.cpf,
+                    rg: userData.rg || '',
+                    nascimento: userData.nascimento || null,
+                    genero: userData.genero || '',
+                    profissao: userData.profissao || '',
+                    origem_sbps: userData.origem_sbps || '',
+                    origem_outro_desc: userData.origem_outro_desc || '',
+                    celular: userData.celular || '',
+                    fixo: userData.fixo || '',
+                    recado: userData.recado || '',
+                    email: userData.email,
+                    email_secundario: userData.email_secundario || '',
+                    cep: userData.cep || '',
+                    logradouro: userData.logradouro || '',
+                    numero: userData.numero || '',
+                    complemento: userData.complemento || '',
+                    bairro: userData.bairro || '',
+                    cidade: userData.cidade || '',
+                    uf: userData.uf || '',
+                    login_usuario: userData.login_usuario || userData.email,
+                    foto_url: userData.foto_url || '',
+                    status: userData.status || 'Ativo',
+                    updated_at: new Date().toISOString()
+                };
+
                 const { data, error } = await client
                     .from('associados')
-                    .upsert({
-                        nome: userData.nome,
-                        nascimento: userData.nascimento || null,
-                        cpf: userData.cpf,
-                        email: userData.email,
-                        celular: userData.celular || '',
-                        fixo: userData.fixo || '',
-                        oab: userData.oab || '',
-                        conselho: userData.conselho || '',
-                        cep: userData.cep || '',
-                        endereco: userData.endereco || '',
-                        status: userData.status || 'Ativo',
-                        updated_at: new Date().toISOString()
-                    }, { onConflict: 'email' });
+                    .upsert(payload, { onConflict: 'email' });
 
                 if (error) console.error('Erro ao atualizar perfil no Supabase:', error);
                 return { success: !error, data };
@@ -230,16 +258,29 @@
                 if (localUser && localUser.email && localUser.cpf) {
                     await client.from('associados').upsert({
                         nome: localUser.nome,
-                        nascimento: localUser.nascimento || null,
                         cpf: localUser.cpf,
-                        email: localUser.email,
+                        rg: localUser.rg || '',
+                        nascimento: localUser.nascimento || null,
+                        genero: localUser.genero || '',
+                        profissao: localUser.profissao || '',
+                        origem_sbps: localUser.origem_sbps || '',
+                        origem_outro_desc: localUser.origem_outro_desc || '',
                         celular: localUser.celular || '',
                         fixo: localUser.fixo || '',
-                        oab: localUser.oab || '',
-                        conselho: localUser.conselho || '',
+                        recado: localUser.recado || '',
+                        email: localUser.email,
+                        email_secundario: localUser.email_secundario || '',
                         cep: localUser.cep || '',
-                        endereco: localUser.endereco || '',
-                        status: localUser.status || 'Ativo'
+                        logradouro: localUser.logradouro || '',
+                        numero: localUser.numero || '',
+                        complemento: localUser.complemento || '',
+                        bairro: localUser.bairro || '',
+                        cidade: localUser.cidade || '',
+                        uf: localUser.uf || '',
+                        login_usuario: localUser.login_usuario || localUser.email,
+                        foto_url: localUser.foto_url || '',
+                        status: localUser.status || 'Ativo',
+                        updated_at: new Date().toISOString()
                     }, { onConflict: 'email' });
                     console.log('Sincronização de usuário do localStorage com Supabase concluída!');
                 }

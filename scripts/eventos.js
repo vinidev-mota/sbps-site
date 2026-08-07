@@ -108,7 +108,14 @@
                 created_at: 'Há 2 dias'
             }
         ],
-        userVotes: {}
+        userVotes: {},
+        tabFilters: {
+            'eventos': { search: '', tema: '', area: '', valorModo: '', valorMin: '', valorMax: '', carga: '', shift: '', dataPer: '', dateExact: '' },
+            'inscricoes': { search: '', tema: '', area: '', valorModo: '', valorMin: '', valorMax: '', carga: '', shift: '', dataPer: '', dateExact: '' },
+            'participacoes': { search: '', tema: '', area: '', valorModo: '', valorMin: '', valorMax: '', carga: '', shift: '', dataPer: '', dateExact: '' },
+            'meus-eventos': { search: '', tema: '', area: '', valorModo: '', valorMin: '', valorMax: '', carga: '', shift: '', dataPer: '', dateExact: '' },
+            'realizados': { search: '', tema: '', area: '', valorModo: '', valorMin: '', valorMax: '', carga: '', shift: '', dataPer: '', dateExact: '' }
+        }
     };
 
     // Inicialização da Página
@@ -744,83 +751,437 @@
         };
     }
 
+    /* ==========================================================================
+       LÓGICA DE FILTRAGEM E BUSCA AVANÇADA DE EVENTOS
+       ========================================================================== */
+
+    function parseEventPrice(valorStr) {
+        if (!valorStr) return 0;
+        const str = String(valorStr).toLowerCase();
+        if (str.includes('gratuito') && !str.includes('r$')) return 0;
+        const match = str.match(/r\$\s*([\d\.\,]+)/i) || str.match(/([\d\.\,]+)/);
+        if (match && match[1]) {
+            let clean = match[1].replace(/\./g, '').replace(',', '.');
+            const num = parseFloat(clean);
+            return isNaN(num) ? 0 : num;
+        }
+        return 0;
+    }
+
+    function parseEventHours(cargaStr) {
+        if (!cargaStr) return 0;
+        const match = String(cargaStr).match(/\d+/);
+        return match ? parseInt(match[0], 10) : 0;
+    }
+
+    function parseEventShift(dateStr) {
+        if (!dateStr) return 'todos';
+        const match = String(dateStr).match(/(\d{1,2}):(\d{2})/);
+        if (match) {
+            const hour = parseInt(match[1], 10);
+            if (hour >= 6 && hour < 12) return 'manha';
+            if (hour >= 12 && hour < 18) return 'tarde';
+            return 'noite';
+        }
+        return 'todos';
+    }
+
+    function parseEventDateObj(dateStr) {
+        if (!dateStr) return null;
+        const matchBr = String(dateStr).match(/(\d{2})\/(\d{2})\/(\d{4})/);
+        if (matchBr) {
+            return new Date(parseInt(matchBr[3], 10), parseInt(matchBr[2], 10) - 1, parseInt(matchBr[1], 10));
+        }
+        const matchIso = String(dateStr).match(/(\d{4})-(\d{2})-(\d{2})/);
+        if (matchIso) {
+            return new Date(parseInt(matchIso[1], 10), parseInt(matchIso[2], 10) - 1, parseInt(matchIso[3], 10));
+        }
+        return null;
+    }
+
+    function escapeAttr(str) {
+        if (!str) return '';
+        return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function filterEventsList(eventsList, filters) {
+        if (!filters) return eventsList;
+
+        return eventsList.filter(e => {
+            // 1. Pesquisa Inteligente Textual
+            if (filters.search && filters.search.trim()) {
+                const q = filters.search.trim().toLowerCase();
+                const fullText = [
+                    e.titulo, e.resumo, e.palestrante, e.local, e.palavraChave, e.area, e.tema, e.tipo
+                ].filter(Boolean).join(' ').toLowerCase();
+
+                if (!fullText.includes(q)) return false;
+            }
+
+            // 2. Tema
+            if (filters.tema && filters.tema !== '') {
+                const t = filters.tema.toLowerCase();
+                const eTema = (e.tema || e.tipo || '').toLowerCase();
+                if (!eTema.includes(t)) return false;
+            }
+
+            // 3. Área
+            if (filters.area && filters.area !== '') {
+                const a = filters.area.toLowerCase();
+                const eArea = (e.area || '').toLowerCase();
+                if (!eArea.includes(a)) return false;
+            }
+
+            // 4. Valor (Preço & Intervalo)
+            const price = parseEventPrice(e.valor);
+            const isFree = String(e.valor || '').toLowerCase().includes('gratuito') || price === 0;
+
+            if (filters.valorModo === 'gratuito') {
+                if (!isFree) return false;
+            } else if (filters.valorModo === 'pago') {
+                if (isFree) return false;
+            } else if (filters.valorModo === 'ate100') {
+                if (price > 100) return false;
+            } else if (filters.valorModo === '100-300') {
+                if (price < 100 || price > 300) return false;
+            } else if (filters.valorModo === 'acima300') {
+                if (price <= 300) return false;
+            } else if (filters.valorModo === 'custom') {
+                if (filters.valorMin !== '' && !isNaN(parseFloat(filters.valorMin))) {
+                    if (price < parseFloat(filters.valorMin)) return false;
+                }
+                if (filters.valorMax !== '' && !isNaN(parseFloat(filters.valorMax))) {
+                    if (price > parseFloat(filters.valorMax)) return false;
+                }
+            }
+
+            // 5. Carga Horária
+            const hours = parseEventHours(e.cargaHoraria);
+            if (filters.carga === 'ate10') {
+                if (hours > 10) return false;
+            } else if (filters.carga === '10-20') {
+                if (hours < 10 || hours > 20) return false;
+            } else if (filters.carga === 'acima20') {
+                if (hours <= 20) return false;
+            }
+
+            // 6. Horário / Turno
+            if (filters.shift && filters.shift !== '' && filters.shift !== 'todos') {
+                const shift = parseEventShift(e.dateStr);
+                if (shift !== filters.shift) return false;
+            }
+
+            // 7. Dia / Período
+            if (filters.dataPer && filters.dataPer !== '' && filters.dataPer !== 'todos') {
+                const evtDate = parseEventDateObj(e.dateStr);
+                if (evtDate) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (filters.dataPer === '7dias') {
+                        const nextWeek = new Date(today);
+                        nextWeek.setDate(today.getDate() + 7);
+                        if (evtDate < today || evtDate > nextWeek) return false;
+                    } else if (filters.dataPer === 'este-mes') {
+                        if (evtDate.getMonth() !== today.getMonth() || evtDate.getFullYear() !== today.getFullYear()) {
+                            return false;
+                        }
+                    } else if (filters.dataPer === 'especifica' && filters.dateExact) {
+                        const selectedDate = parseEventDateObj(filters.dateExact);
+                        if (selectedDate) {
+                            if (evtDate.getFullYear() !== selectedDate.getFullYear() ||
+                                evtDate.getMonth() !== selectedDate.getMonth() ||
+                                evtDate.getDate() !== selectedDate.getDate()) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
+        });
+    }
+
+    function renderFilterBarHTML(tabId, totalCount, filteredCount) {
+        const f = state.tabFilters[tabId] || { search: '', tema: '', area: '', valorModo: '', valorMin: '', valorMax: '', carga: '', shift: '', dataPer: '', dateExact: '' };
+
+        const temasSet = new Set(['RGPS', 'RPPS', 'Saúde & Biopsicossocial']);
+        const areasSet = new Set(['Direito Previdenciário', 'Perícia Médica', 'Direito Público']);
+        state.events.forEach(e => {
+            if (e.tema) temasSet.add(e.tema);
+            if (e.area) areasSet.add(e.area);
+        });
+
+        const isCustomPrice = f.valorModo === 'custom';
+        const isExactDate = f.dataPer === 'especifica';
+
+        return `
+            <div class="evt-filter-panel" data-tab-id="${tabId}">
+                <!-- Barra de Pesquisa Inteligente -->
+                <div class="evt-search-box-wrapper">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" class="evt-search-input filter-field" data-field="search" value="${escapeAttr(f.search)}" placeholder="Pesquisa inteligente por título, resumo, palestrante, cidade, palavra-chave...">
+                </div>
+
+                <!-- Grid de Filtros Avançados -->
+                <div class="evt-filter-grid">
+                    <!-- Tema -->
+                    <div class="evt-filter-group">
+                        <label><i class="fa-solid fa-tag"></i> Tema</label>
+                        <select class="filter-field" data-field="tema">
+                            <option value="">Todos os Temas</option>
+                            ${Array.from(temasSet).map(t => `<option value="${escapeAttr(t)}" ${f.tema === t ? 'selected' : ''}>${t}</option>`).join('')}
+                        </select>
+                    </div>
+
+                    <!-- Área -->
+                    <div class="evt-filter-group">
+                        <label><i class="fa-solid fa-briefcase"></i> Área</label>
+                        <select class="filter-field" data-field="area">
+                            <option value="">Todas as Áreas</option>
+                            ${Array.from(areasSet).map(a => `<option value="${escapeAttr(a)}" ${f.area === a ? 'selected' : ''}>${a}</option>`).join('')}
+                        </select>
+                    </div>
+
+                    <!-- Valor / Preço -->
+                    <div class="evt-filter-group">
+                        <label><i class="fa-solid fa-coins"></i> Valor</label>
+                        <select class="filter-field" data-field="valorModo">
+                            <option value="">Todos os Valores</option>
+                            <option value="gratuito" ${f.valorModo === 'gratuito' ? 'selected' : ''}>Apenas Gratuitos</option>
+                            <option value="pago" ${f.valorModo === 'pago' ? 'selected' : ''}>Apenas Pagos</option>
+                            <option value="ate100" ${f.valorModo === 'ate100' ? 'selected' : ''}>Até R$ 100,00</option>
+                            <option value="100-300" ${f.valorModo === '100-300' ? 'selected' : ''}>R$ 100,00 a R$ 300,00</option>
+                            <option value="acima300" ${f.valorModo === 'acima300' ? 'selected' : ''}>Acima de R$ 300,00</option>
+                            <option value="custom" ${f.valorModo === 'custom' ? 'selected' : ''}>Intervalo Personalizado...</option>
+                        </select>
+                    </div>
+
+                    <!-- Intervalo de Valor Personalizado (Min / Max) -->
+                    ${isCustomPrice ? `
+                    <div class="evt-filter-group">
+                        <label><i class="fa-solid fa-calculator"></i> Faixa (R$ Min - Max)</label>
+                        <div class="evt-range-inputs">
+                            <input type="number" step="10" class="filter-field" data-field="valorMin" value="${escapeAttr(f.valorMin)}" placeholder="Min (ex: 40)">
+                            <span>-</span>
+                            <input type="number" step="10" class="filter-field" data-field="valorMax" value="${escapeAttr(f.valorMax)}" placeholder="Max (ex: 80)">
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <!-- Carga Horária -->
+                    <div class="evt-filter-group">
+                        <label><i class="fa-solid fa-clock"></i> Carga Horária</label>
+                        <select class="filter-field" data-field="carga">
+                            <option value="">Todas as Cargas</option>
+                            <option value="ate10" ${f.carga === 'ate10' ? 'selected' : ''}>Até 10 horas</option>
+                            <option value="10-20" ${f.carga === '10-20' ? 'selected' : ''}>10h a 20h</option>
+                            <option value="acima20" ${f.carga === 'acima20' ? 'selected' : ''}>Acima de 20h</option>
+                        </select>
+                    </div>
+
+                    <!-- Horário do Evento (Turno) -->
+                    <div class="evt-filter-group">
+                        <label><i class="fa-solid fa-business-time"></i> Horário / Turno</label>
+                        <select class="filter-field" data-field="shift">
+                            <option value="">Todos os Horários</option>
+                            <option value="manha" ${f.shift === 'manha' ? 'selected' : ''}>Manhã (06h - 12h)</option>
+                            <option value="tarde" ${f.shift === 'tarde' ? 'selected' : ''}>Tarde (12h - 18h)</option>
+                            <option value="noite" ${f.shift === 'noite' ? 'selected' : ''}>Noite (18h+)</option>
+                        </select>
+                    </div>
+
+                    <!-- Dia / Período -->
+                    <div class="evt-filter-group">
+                        <label><i class="fa-solid fa-calendar-day"></i> Dia / Período</label>
+                        <select class="filter-field" data-field="dataPer">
+                            <option value="">Todos os Períodos</option>
+                            <option value="7dias" ${f.dataPer === '7dias' ? 'selected' : ''}>Próximos 7 Dias</option>
+                            <option value="este-mes" ${f.dataPer === 'este-mes' ? 'selected' : ''}>Este Mês</option>
+                            <option value="especifica" ${f.dataPer === 'especifica' ? 'selected' : ''}>Data Específica...</option>
+                        </select>
+                    </div>
+
+                    ${isExactDate ? `
+                    <div class="evt-filter-group">
+                        <label><i class="fa-solid fa-calendar-check"></i> Escolher Data</label>
+                        <input type="date" class="filter-field" data-field="dateExact" value="${escapeAttr(f.dateExact)}">
+                    </div>
+                    ` : ''}
+                </div>
+
+                <!-- Rodapé dos Filtros -->
+                <div class="evt-filter-footer">
+                    <span class="evt-results-counter">Exibindo <strong>${filteredCount}</strong> de ${totalCount} evento(s)</span>
+                    <button type="button" class="evt-btn-clear-filters btn-clear-tab-filters" data-tab-id="${tabId}">
+                        <i class="fa-solid fa-filter-circle-xmark"></i> Limpar Filtros
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function attachFilterEventListeners(container, tabId) {
+        if (!container) return;
+
+        container.querySelectorAll('.filter-field').forEach(field => {
+            const eventName = field.tagName === 'SELECT' || field.type === 'date' || field.type === 'number' ? 'change' : 'input';
+            field.addEventListener(eventName, (e) => {
+                const fieldName = e.target.getAttribute('data-field');
+                state.tabFilters[tabId][fieldName] = e.target.value;
+                renderTabContent(tabId);
+            });
+        });
+
+        const btnClear = container.querySelector('.btn-clear-tab-filters');
+        if (btnClear) {
+            btnClear.addEventListener('click', () => {
+                state.tabFilters[tabId] = { search: '', tema: '', area: '', valorModo: '', valorMin: '', valorMax: '', carga: '', shift: '', dataPer: '', dateExact: '' };
+                renderTabContent(tabId);
+            });
+        }
+    }
+
     function renderEventosTab() {
         const container = document.getElementById('panel-eventos');
         if (!container) return;
+        const availableEvts = state.events.filter(e => e.status === 'Ativo');
+        const filters = state.tabFilters['eventos'];
+        const filteredEvts = filterEventsList(availableEvts, filters);
+
+        const filterHTML = renderFilterBarHTML('eventos', availableEvts.length, filteredEvts.length);
+
         container.innerHTML = `
             <div class="evt-page-header">
                 <h1 class="evt-page-title"><i class="fa-solid fa-calendar-days"></i> Todos os Eventos Disponíveis</h1>
             </div>
+            ${filterHTML}
             <div class="evt-cards-grid">
-                ${state.events.map(e => createEventCardHTML(e, 'disponivel')).join('')}
+                ${filteredEvts.length > 0 ? filteredEvts.map(e => createEventCardHTML(e, 'disponivel')).join('') : `
+                    <div class="evt-empty-results">
+                        <i class="fa-solid fa-calendar-xmark"></i>
+                        <h4>Nenhum evento encontrado</h4>
+                        <p>Nenhum evento corresponde aos filtros ou pesquisa aplicados.</p>
+                    </div>
+                `}
             </div>
         `;
         attachCardActionListeners(container);
+        attachFilterEventListeners(container, 'eventos');
     }
 
     function renderInscricoesTab() {
         const container = document.getElementById('panel-inscricoes');
         if (!container) return;
         const enrolled = state.events.filter(e => state.enrollments.includes(e.id));
+        const filters = state.tabFilters['inscricoes'];
+        const filteredEvts = filterEventsList(enrolled, filters);
+
+        const filterHTML = renderFilterBarHTML('inscricoes', enrolled.length, filteredEvts.length);
 
         container.innerHTML = `
             <div class="evt-page-header">
                 <h1 class="evt-page-title"><i class="fa-solid fa-ticket"></i> Minhas Inscrições</h1>
                 <button class="evt-btn-card-primary" style="width:auto;" onclick="window.switchTab('eventos', true)"><i class="fa-solid fa-plus"></i> Novas Inscrições</button>
             </div>
+            ${filterHTML}
             <div class="evt-cards-grid">
-                ${enrolled.length > 0 ? enrolled.map(e => createEventCardHTML(e, 'inscrito')).join('') : '<p style="color:var(--evt-text-muted);">Nenhuma inscrição ativa.</p>'}
+                ${filteredEvts.length > 0 ? filteredEvts.map(e => createEventCardHTML(e, 'inscrito')).join('') : `
+                    <div class="evt-empty-results">
+                        <i class="fa-solid fa-ticket-simple"></i>
+                        <h4>Nenhuma inscrição encontrada</h4>
+                        <p>Não há inscrições que correspondam aos filtros pesquisados.</p>
+                    </div>
+                `}
             </div>
         `;
         attachCardActionListeners(container);
+        attachFilterEventListeners(container, 'inscricoes');
     }
 
     function renderParticipacoesTab() {
         const container = document.getElementById('panel-participacoes');
         if (!container) return;
         const attended = state.events.filter(e => state.participations.includes(e.id));
+        const filters = state.tabFilters['participacoes'];
+        const filteredEvts = filterEventsList(attended, filters);
+
+        const filterHTML = renderFilterBarHTML('participacoes', attended.length, filteredEvts.length);
 
         container.innerHTML = `
             <div class="evt-page-header">
                 <h1 class="evt-page-title"><i class="fa-solid fa-award"></i> Minhas Participações</h1>
             </div>
+            ${filterHTML}
             <div class="evt-cards-grid">
-                ${attended.length > 0 ? attended.map(e => createEventCardHTML(e, 'participado')).join('') : '<p style="color:var(--evt-text-muted);">Nenhum histórico de participação concluída.</p>'}
+                ${filteredEvts.length > 0 ? filteredEvts.map(e => createEventCardHTML(e, 'participado')).join('') : `
+                    <div class="evt-empty-results">
+                        <i class="fa-solid fa-award"></i>
+                        <h4>Nenhuma participação encontrada</h4>
+                        <p>Não foram encontradas participações com os critérios selecionados.</p>
+                    </div>
+                `}
             </div>
         `;
         attachCardActionListeners(container);
+        attachFilterEventListeners(container, 'participacoes');
     }
 
     function renderMeusEventosTab() {
         const container = document.getElementById('panel-meus-eventos');
         if (!container) return;
         const myEvents = state.events.filter(e => e.palestrante_email === state.currentUser.email || e.palestrante === state.currentUser.nome);
+        const filters = state.tabFilters['meus-eventos'];
+        const filteredEvts = filterEventsList(myEvents, filters);
+
+        const filterHTML = renderFilterBarHTML('meus-eventos', myEvents.length, filteredEvts.length);
 
         container.innerHTML = `
             <div class="evt-page-header">
                 <h1 class="evt-page-title"><i class="fa-solid fa-calendar-check"></i> Meus Eventos Criados</h1>
             </div>
+            ${filterHTML}
             <div class="evt-cards-grid">
-                ${myEvents.length > 0 ? myEvents.map(e => createEventCardHTML(e, 'palestrante-criado')).join('') : '<p style="color:var(--evt-text-muted);">Você não tem eventos criados.</p>'}
+                ${filteredEvts.length > 0 ? filteredEvts.map(e => createEventCardHTML(e, 'palestrante-criado')).join('') : `
+                    <div class="evt-empty-results">
+                        <i class="fa-solid fa-calendar-minus"></i>
+                        <h4>Nenhum evento encontrado</h4>
+                        <p>Nenhum dos seus eventos criados corresponde à pesquisa ou filtros.</p>
+                    </div>
+                `}
             </div>
         `;
         attachCardActionListeners(container);
+        attachFilterEventListeners(container, 'meus-eventos');
     }
 
     function renderRealizadosTab() {
         const container = document.getElementById('panel-realizados');
         if (!container) return;
         const realized = state.events.filter(e => e.status === 'Realizado');
+        const filters = state.tabFilters['realizados'];
+        const filteredEvts = filterEventsList(realized, filters);
+
+        const filterHTML = renderFilterBarHTML('realizados', realized.length, filteredEvts.length);
 
         container.innerHTML = `
             <div class="evt-page-header">
                 <h1 class="evt-page-title"><i class="fa-solid fa-circle-check"></i> Eventos Realizados</h1>
             </div>
+            ${filterHTML}
             <div class="evt-cards-grid">
-                ${realized.length > 0 ? realized.map(e => createEventCardHTML(e, 'palestrante-realizado')).join('') : '<p style="color:var(--evt-text-muted);">Nenhum evento finalizado.</p>'}
+                ${filteredEvts.length > 0 ? filteredEvts.map(e => createEventCardHTML(e, 'palestrante-realizado')).join('') : `
+                    <div class="evt-empty-results">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <h4>Nenhum evento realizado encontrado</h4>
+                        <p>Nenhum evento finalizado corresponde aos filtros selecionados.</p>
+                    </div>
+                `}
             </div>
         `;
         attachCardActionListeners(container);
+        attachFilterEventListeners(container, 'realizados');
     }
 
     function renderComunidadeTab() {
@@ -964,18 +1325,156 @@
         });
     }
 
-    function handleAiSubmit(e) {
+    async function handleAiSubmit(e) {
         e.preventDefault();
         const input = document.getElementById('ai-input-text');
         const box = document.getElementById('ai-messages-list');
+        const form = document.getElementById('form-ai-chat');
         if (!input || !box || !input.value.trim()) return;
 
-        box.innerHTML += `<div class="evt-chat-msg sent">${input.value}</div>`;
+        const userQuestion = input.value.trim();
         input.value = '';
-        setTimeout(() => {
-            box.innerHTML += `<div class="evt-chat-msg received">Sou o assistente IA da SBPS. Como posso ajudar com seus eventos?</div>`;
+
+        // Adiciona a mensagem enviada pelo usuário no chat
+        const userMsgDiv = document.createElement('div');
+        userMsgDiv.className = 'evt-chat-msg sent';
+        userMsgDiv.textContent = userQuestion;
+        box.appendChild(userMsgDiv);
+        box.scrollTop = box.scrollHeight;
+
+        // Adiciona indicador visual de carregamento / digitando
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'evt-chat-msg received';
+        loadingDiv.id = 'ai-loading-indicator';
+        loadingDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Digitando resposta...';
+        box.appendChild(loadingDiv);
+        box.scrollTop = box.scrollHeight;
+
+        // Desabilita input e botão enquanto aguarda resposta
+        input.disabled = true;
+        const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+        if (submitBtn) submitBtn.disabled = true;
+
+        const sessionId = getOrCreateChatSessionId();
+        const currentUser = state.currentUser || {};
+        const userId = currentUser.email || currentUser.cpf || sessionId;
+
+        const payload = {
+            pergunta: userQuestion,
+            sessionId: sessionId,
+            userId: userId
+        };
+        if (currentUser.nome) payload.user_name = currentUser.nome;
+        if (currentUser.email) payload.user_email = currentUser.email;
+
+        try {
+            const response = await fetch('https://n8n-motaadv.duckdns.org/webhook/mensagem-de-entrada', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const currentLoading = document.getElementById('ai-loading-indicator');
+            if (currentLoading) currentLoading.remove();
+
+            if (!response.ok) {
+                let errDetail = '';
+                try { errDetail = await response.text(); } catch (_) {}
+                throw new Error(`Erro HTTP ${response.status}: ${errDetail}`);
+            }
+
+            let responseData;
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                responseData = await response.json();
+            } else {
+                responseData = await response.text();
+            }
+
+            const aiText = parseAiWebhookResponse(responseData);
+
+            const aiMsgDiv = document.createElement('div');
+            aiMsgDiv.className = 'evt-chat-msg received';
+            aiMsgDiv.innerHTML = formatAiResponseContent(aiText);
+            box.appendChild(aiMsgDiv);
+        } catch (err) {
+            console.error('Erro na resposta do chatbot:', err);
+            const currentLoading = document.getElementById('ai-loading-indicator');
+            if (currentLoading) currentLoading.remove();
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'evt-chat-msg received';
+            errorDiv.style.borderLeft = '3px solid #ef4444';
+            errorDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i> Ocorreu um erro ao comunicar com a IA. Certifique-se de que o fluxo n8n esteja ativo e tente novamente.';
+            box.appendChild(errorDiv);
+        } finally {
+            input.disabled = false;
+            if (submitBtn) submitBtn.disabled = false;
+            input.focus();
             box.scrollTop = box.scrollHeight;
-        }, 500);
+        }
+    }
+
+    function getOrCreateChatSessionId() {
+        let sId = localStorage.getItem('sbps_chat_session_id');
+        if (!sId) {
+            sId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+            localStorage.setItem('sbps_chat_session_id', sId);
+        }
+        return sId;
+    }
+
+    function parseAiWebhookResponse(data) {
+        if (!data) return "Desculpe, não recebi uma resposta válida do servidor.";
+        if (typeof data === 'string') {
+            try {
+                const parsed = JSON.parse(data);
+                return parseAiWebhookResponse(parsed);
+            } catch (e) {
+                return data;
+            }
+        }
+        if (Array.isArray(data)) {
+            if (data.length === 0) return "Nenhuma resposta retornada do fluxo.";
+            return parseAiWebhookResponse(data[0]);
+        }
+        if (typeof data === 'object') {
+            if (data.resposta) return data.resposta;
+            if (data.output) return data.output;
+            if (data.response) return data.response;
+            if (data.text) return data.text;
+            if (data.mensagem) return data.mensagem;
+            if (data.message) return data.message;
+            if (data.result) return data.result;
+            if (data.data) return parseAiWebhookResponse(data.data);
+            if (data.body) return parseAiWebhookResponse(data.body);
+
+            const keys = Object.keys(data);
+            if (keys.length === 1 && typeof data[keys[0]] === 'string') {
+                return data[keys[0]];
+            }
+            return JSON.stringify(data, null, 2);
+        }
+        return String(data);
+    }
+
+    function formatAiResponseContent(text) {
+        if (!text) return '';
+        let escaped = String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+        // Format **bold**
+        escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Format *italic*
+        escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        // Convert newlines to <br>
+        escaped = escaped.replace(/\n/g, '<br>');
+
+        return escaped;
     }
 
     function showToast(msg) {
