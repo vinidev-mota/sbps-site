@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style/style.css">
-    <link rel="stylesheet" href="../style/associado.css">
+    <link rel="stylesheet" href="../style/style.css?v=5">
+    <link rel="stylesheet" href="../style/associado.css?v=11">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -69,9 +69,9 @@
     </div>
 
     <!-- ==========================================================================
-         SEÇÃO DE AUTENTICAÇÃO (LOGIN & CADASTRO PESSOA FÍSICA)
-         ========================================================================== -->
-    <div id="auth-container" class="container">
+          SEÇÃO DE AUTENTICAÇÃO (LOGIN & CADASTRO PESSOA FÍSICA)
+          ========================================================================== -->
+    <div id="auth-container" class="container" style="display: none;">
         <div class="auth-wrapper">
             <div class="auth-header-tabs">
                 <button type="button" id="tab-login-btn" class="auth-tab-btn active">Entrar na Área do Associado</button>
@@ -93,6 +93,13 @@
                         <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
                     </div>
                     <button type="submit" class="btn-auth-submit"><i class="fa-solid fa-right-to-bracket"></i> Acessar Portal</button>
+
+                    <div class="auth-demo-box">
+                        <span class="auth-demo-divider">OU</span>
+                        <button type="button" id="btn-quick-guest-login" class="btn-guest-login" onclick="showDashboard()">
+                            <i class="fa-solid fa-bolt"></i> Acessar Modo Demonstração (1 Clique)
+                        </button>
+                    </div>
                 </form>
 
                 <!-- Form Cadastro (Exclusivo Pessoa Física) -->
@@ -137,11 +144,13 @@
                             <div class="form-group col-span-1">
                                 <label><span class="req-star">*</span> CPF</label>
                                 <input type="text" id="reg-cpf" class="form-control" placeholder="000.000.000-00" maxlength="14" required>
+                                <small class="field-help-hint"><i class="fa-solid fa-shield-halved"></i> Validação com dígitos verificadores</small>
                             </div>
 
                             <div class="form-group col-span-1">
                                 <label><span class="req-star">*</span> RG</label>
-                                <input type="text" id="reg-rg" class="form-control" placeholder="Número do RG" required>
+                                <input type="text" id="reg-rg" class="form-control" placeholder="00.000.000-0" maxlength="14" required>
+                                <small class="field-help-hint"><i class="fa-solid fa-shield-halved"></i> Validação com dígito verificador</small>
                             </div>
 
                             <div class="form-group col-span-1">
@@ -187,16 +196,32 @@
                         </div>
                     </div>
 
-                    <!-- SEÇÃO 2: Informações de Contato -->
+                    <!-- SEÇÃO 2: Informações de Contato com Códigos de Verificação -->
                     <div class="assoc-section-container">
                         <div class="assoc-section-heading">
-                            <h3>INFORMAÇÕES DE CONTATO</h3>
+                            <h3>INFORMAÇÕES DE CONTATO (COM VERIFICAÇÃO EM 2 ETAPAS)</h3>
                         </div>
 
                         <div class="assoc-form-grid">
+                            <!-- Celular com Código de Confirmação -->
                             <div class="form-group col-span-2">
                                 <label><span class="req-star">*</span> Tel. Celular / WhatsApp</label>
-                                <input type="tel" id="reg-celular" class="form-control" placeholder="(00) 90000-0000" maxlength="15" required>
+                                <div class="input-with-action-btn">
+                                    <input type="tel" id="reg-celular" class="form-control" placeholder="(00) 90000-0000" maxlength="15" required>
+                                    <button type="button" id="btn-send-phone-code" class="btn-send-code">
+                                        <i class="fa-solid fa-paper-plane"></i> Enviar Código
+                                    </button>
+                                </div>
+                                <div class="code-verification-row" id="row-phone-code" style="display: none;">
+                                    <input type="text" id="reg-phone-code" class="form-control code-input" placeholder="Código (6 dígitos)" maxlength="6">
+                                    <button type="button" id="btn-verify-phone-code" class="btn-verify-code">
+                                        <i class="fa-solid fa-check"></i> Validar Celular
+                                    </button>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                                    <small class="field-help-hint"><i class="fa-brands fa-whatsapp"></i> Receba o token no seu celular</small>
+                                    <span id="badge-phone-status" class="verification-badge badge-pending"><i class="fa-solid fa-clock"></i> Não verificado</span>
+                                </div>
                             </div>
 
                             <div class="form-group col-span-1">
@@ -209,10 +234,25 @@
                                 <input type="tel" id="reg-fixo" class="form-control" placeholder="(00) 0000-0000" maxlength="14">
                             </div>
 
+                            <!-- E-mail Principal com Código de Confirmação -->
                             <div class="form-group col-span-2">
                                 <label><span class="req-star">*</span> E-mail Principal</label>
-                                <input type="email" id="reg-email" class="form-control" placeholder="seu.email@exemplo.com" required>
-                                <small class="field-help-hint"><i class="fa-solid fa-circle-exclamation"></i> E-mail para cobrança, notificações e acesso</small>
+                                <div class="input-with-action-btn">
+                                    <input type="email" id="reg-email" class="form-control" placeholder="seu.email@exemplo.com" required>
+                                    <button type="button" id="btn-send-email-code" class="btn-send-code">
+                                        <i class="fa-solid fa-paper-plane"></i> Enviar Código
+                                    </button>
+                                </div>
+                                <div class="code-verification-row" id="row-email-code" style="display: none;">
+                                    <input type="text" id="reg-email-code" class="form-control code-input" placeholder="Código (6 dígitos)" maxlength="6">
+                                    <button type="button" id="btn-verify-email-code" class="btn-verify-code">
+                                        <i class="fa-solid fa-check"></i> Validar E-mail
+                                    </button>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                                    <small class="field-help-hint"><i class="fa-solid fa-envelope"></i> E-mail para notificações e acesso</small>
+                                    <span id="badge-email-status" class="verification-badge badge-pending"><i class="fa-solid fa-clock"></i> Não verificado</span>
+                                </div>
                             </div>
 
                             <div class="form-group col-span-2">
@@ -285,8 +325,10 @@
 
                         <div class="assoc-form-grid">
                             <div class="form-group col-span-1">
-                                <label><span class="req-star">*</span> Login</label>
-                                <input type="text" id="reg-login-user" class="form-control" placeholder="Nome de usuário" required>
+                                <label><span class="req-star">*</span> Login / Usuário</label>
+                                <input type="text" id="reg-login-user" class="form-control" placeholder="Ex: vinimota" required>
+                                <div id="username-feedback" class="username-feedback-box" style="display: none;"></div>
+                                <small class="field-help-hint"><i class="fa-solid fa-fingerprint"></i> Nome de usuário exclusivo e único</small>
                             </div>
 
                             <div class="form-group col-span-1">
@@ -335,15 +377,15 @@
     </div>
 
     <!-- ==========================================================================
-         CONTEÚDO DA ÁREA DO ASSOCIADO (AUTENTICADO)
+         CONTEÚDO DA ÁREA DO ASSOCIADO (AUTENTICADO / ABERTO)
          ========================================================================== -->
-    <div id="member-content" style="display: none;">
+    <div id="member-content">
         
         <!-- Barra de Navegação Interna da Área do Associado -->
         <nav class="member-top-nav">
             <div class="container member-nav-inner">
                 <div class="member-nav-left">
-                    <button type="button" id="btn-back-dashboard" class="btn-nav-back" style="display: none;">
+                    <button type="button" id="btn-back-dashboard" class="btn-nav-back" style="display: none;" onclick="showDashboard()">
                         <i class="fa-solid fa-arrow-left"></i> Voltar à Tela Inicial
                     </button>
 
@@ -361,29 +403,65 @@
                     </button>
                     
                     <div id="quick-menu-dropdown" class="quick-menu-dropdown">
-                        <button class="quick-menu-item" data-tab="dashboard"><i class="fa-solid fa-house"></i> 0. Tela Inicial (Cards)</button>
-                        <button class="quick-menu-item" data-tab="perfil"><i class="fa-solid fa-id-card"></i> 1. Perfil</button>
-                        <button class="quick-menu-item" data-tab="beneficios"><i class="fa-solid fa-gift"></i> 2. Benefícios</button>
-                        <button class="quick-menu-item" data-tab="atalhos"><i class="fa-solid fa-arrow-up-right-from-square"></i> 3. Atalhos</button>
-                        <button class="quick-menu-item" data-tab="cursos"><i class="fa-solid fa-graduation-cap"></i> 4. Cursos</button>
-                        <button class="quick-menu-item" data-tab="seminarios"><i class="fa-solid fa-users-rectangle"></i> 5. Seminários</button>
-                        <button class="quick-menu-item" data-tab="certificados"><i class="fa-solid fa-certificate"></i> 6. Certificados</button>
-                        <button class="quick-menu-item" data-tab="templates"><i class="fa-solid fa-table-cells-large"></i> 7. Templates (Canva)</button>
-                        <button class="quick-menu-item" data-tab="livraria"><i class="fa-solid fa-book"></i> 8. Livraria</button>
-                        <button class="quick-menu-item" data-tab="outros"><i class="fa-solid fa-gear"></i> 9. Outros & Ajuda</button>
+                        <button type="button" class="quick-menu-item active" data-tab="dashboard" onclick="showDashboard()"><i class="fa-solid fa-house"></i> 0. Tela Inicial (Cards)</button>
+                        <button type="button" class="quick-menu-item" data-tab="perfil" onclick="switchTab('perfil', '1. Perfil')"><i class="fa-solid fa-id-card"></i> 1. Perfil</button>
+                        <button type="button" class="quick-menu-item" data-tab="beneficios" onclick="switchTab('beneficios', '2. Benefícios')"><i class="fa-solid fa-gift"></i> 2. Benefícios</button>
+                        <button type="button" class="quick-menu-item" data-tab="atalhos" onclick="switchTab('atalhos', '3. Atalhos')"><i class="fa-solid fa-arrow-up-right-from-square"></i> 3. Atalhos</button>
+                        <button type="button" class="quick-menu-item" data-tab="cursos" onclick="switchTab('cursos', '4. Cursos')"><i class="fa-solid fa-graduation-cap"></i> 4. Cursos</button>
+                        <button type="button" class="quick-menu-item" data-tab="seminarios" onclick="switchTab('seminarios', '5. Seminários')"><i class="fa-solid fa-users-rectangle"></i> 5. Seminários</button>
+                        <button type="button" class="quick-menu-item" data-tab="certificados" onclick="switchTab('certificados', '6. Certificados')"><i class="fa-solid fa-certificate"></i> 6. Certificados</button>
+                        <button type="button" class="quick-menu-item" data-tab="templates" onclick="switchTab('templates', '7. Templates')"><i class="fa-solid fa-table-cells-large"></i> 7. Templates (Canva)</button>
+                        <button type="button" class="quick-menu-item" data-tab="livraria" onclick="switchTab('livraria', '8. Livraria')"><i class="fa-solid fa-book"></i> 8. Livraria</button>
+                        <button type="button" class="quick-menu-item" data-tab="outros" onclick="switchTab('outros', '9. Outros')"><i class="fa-solid fa-gear"></i> 9. Outros</button>
                     </div>
                 </div>
 
                 <div class="member-user-badge">
-                    <div class="user-avatar user-avatar-display">A</div>
-                    <div class="user-info">
-                        <span class="user-name user-name-display">Carregando...</span>
-                        <span class="user-oab user-oab-display">OAB SBPS</span>
+                    <div class="user-avatar user-avatar-display" id="nav-user-avatar" style="cursor: pointer;" title="Clique para abrir seu Perfil" onclick="switchTab('perfil', '1. Perfil')">V</div>
+                    <div class="user-info" id="nav-user-info" style="cursor: pointer;" title="Clique para abrir seu Perfil" onclick="switchTab('perfil', '1. Perfil')">
+                        <span class="user-name user-name-display">Vinícius Mota</span>
+                        <span class="user-oab user-oab-display">Advogado(a) Previdenciarista</span>
                     </div>
-                    <button class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+                    <button type="button" class="btn-logout" title="Sair" onclick="logoutAssociado()"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
                 </div>
             </div>
         </nav>
+        
+        <!-- Barra de Abas Horizontais para Navegação Rápida -->
+        <div class="member-horizontal-tabs">
+            <div class="container member-tabs-container">
+                <button type="button" class="nav-tab-btn active" data-tab="dashboard" onclick="showDashboard()">
+                    <i class="fa-solid fa-house"></i> <span>Início</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="perfil" onclick="switchTab('perfil', '1. Perfil')">
+                    <i class="fa-solid fa-id-card"></i> <span>1. Perfil</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="beneficios" onclick="switchTab('beneficios', '2. Benefícios')">
+                    <i class="fa-solid fa-gift"></i> <span>2. Benefícios</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="atalhos" onclick="switchTab('atalhos', '3. Atalhos')">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>3. Atalhos</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="cursos" onclick="switchTab('cursos', '4. Cursos')">
+                    <i class="fa-solid fa-graduation-cap"></i> <span>4. Cursos</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="seminarios" onclick="switchTab('seminarios', '5. Seminários')">
+                    <i class="fa-solid fa-users-rectangle"></i> <span>5. Seminários</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="certificados" onclick="switchTab('certificados', '6. Certificados')">
+                    <i class="fa-solid fa-certificate"></i> <span>6. Certificados</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="templates" onclick="switchTab('templates', '7. Templates')">
+                    <i class="fa-solid fa-table-cells-large"></i> <span>7. Templates</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="livraria" onclick="switchTab('livraria', '8. Livraria')">
+                    <i class="fa-solid fa-book"></i> <span>8. Livraria</span>
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="outros" onclick="switchTab('outros', '9. Outros')">
+                    <i class="fa-solid fa-gear"></i> <span>9. Outros</span>
+                </button>
+            </div>
+        </div>
 
         <div class="container dashboard-container">
 
@@ -398,7 +476,7 @@
 
                 <div class="dashboard-grid">
                     <!-- Card 1: Perfil -->
-                    <div class="dashboard-card" data-tab="perfil">
+                    <div class="dashboard-card" data-tab="perfil" onclick="switchTab('perfil', '1. Perfil')">
                         <div class="card-icon-wrapper"><i class="fa-solid fa-id-card"></i></div>
                         <div>
                             <h3 class="card-title">1. Perfil</h3>
@@ -408,7 +486,7 @@
                     </div>
 
                     <!-- Card 2: Benefícios -->
-                    <div class="dashboard-card" data-tab="beneficios">
+                    <div class="dashboard-card" data-tab="beneficios" onclick="switchTab('beneficios', '2. Benefícios')">
                         <span class="card-badge">Vantagens</span>
                         <div class="card-icon-wrapper"><i class="fa-solid fa-gift"></i></div>
                         <div>
@@ -419,7 +497,7 @@
                     </div>
 
                     <!-- Card 3: Atalhos -->
-                    <div class="dashboard-card" data-tab="atalhos">
+                    <div class="dashboard-card" data-tab="atalhos" onclick="switchTab('atalhos', '3. Atalhos')">
                         <div class="card-icon-wrapper"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
                         <div>
                             <h3 class="card-title">3. Atalhos</h3>
@@ -429,7 +507,7 @@
                     </div>
 
                     <!-- Card 4: Cursos -->
-                    <div class="dashboard-card" data-tab="cursos">
+                    <div class="dashboard-card" data-tab="cursos" onclick="switchTab('cursos', '4. Cursos')">
                         <span class="card-badge">Desconto</span>
                         <div class="card-icon-wrapper"><i class="fa-solid fa-graduation-cap"></i></div>
                         <div>
@@ -440,7 +518,7 @@
                     </div>
 
                     <!-- Card 5: Seminários -->
-                    <div class="dashboard-card" data-tab="seminarios">
+                    <div class="dashboard-card" data-tab="seminarios" onclick="switchTab('seminarios', '5. Seminários')">
                         <div class="card-icon-wrapper"><i class="fa-solid fa-users-rectangle"></i></div>
                         <div>
                             <h3 class="card-title">5. Seminários</h3>
@@ -450,7 +528,7 @@
                     </div>
 
                     <!-- Card 6: Certificados -->
-                    <div class="dashboard-card" data-tab="certificados">
+                    <div class="dashboard-card" data-tab="certificados" onclick="switchTab('certificados', '6. Certificados')">
                         <div class="card-icon-wrapper"><i class="fa-solid fa-certificate"></i></div>
                         <div>
                             <h3 class="card-title">6. Certificados</h3>
@@ -460,7 +538,7 @@
                     </div>
 
                     <!-- Card 7: Templates -->
-                    <div class="dashboard-card" data-tab="templates">
+                    <div class="dashboard-card" data-tab="templates" onclick="switchTab('templates', '7. Templates')">
                         <span class="card-badge">Estilo Canva</span>
                         <div class="card-icon-wrapper"><i class="fa-solid fa-table-cells-large"></i></div>
                         <div>
@@ -471,7 +549,7 @@
                     </div>
 
                     <!-- Card 8: Livraria -->
-                    <div class="dashboard-card" data-tab="livraria">
+                    <div class="dashboard-card" data-tab="livraria" onclick="switchTab('livraria', '8. Livraria')">
                         <div class="card-icon-wrapper"><i class="fa-solid fa-book"></i></div>
                         <div>
                             <h3 class="card-title">8. Livraria</h3>
@@ -481,7 +559,7 @@
                     </div>
 
                     <!-- Card 9: Outros -->
-                    <div class="dashboard-card" data-tab="outros">
+                    <div class="dashboard-card" data-tab="outros" onclick="switchTab('outros', '9. Outros & Ajuda')">
                         <div class="card-icon-wrapper"><i class="fa-solid fa-gear"></i></div>
                         <div>
                             <h3 class="card-title">9. Outros & Ajuda</h3>
@@ -907,7 +985,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../scripts/supabase-client.js?v=1"></script>
     <script src="../scripts/script.js?v=5"></script>
-    <script src="../scripts/associado.js?v=999"></script>
+    <script src="../scripts/associado.js?v=2001"></script>
 </body>
 
 </html>

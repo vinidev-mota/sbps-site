@@ -174,6 +174,32 @@
         },
 
         /**
+         * Verifica se o nome de usuário (login_usuario) já está em uso no banco Supabase
+         */
+        isUsernameAvailable: async function (login_usuario) {
+            const client = getSupabaseClient();
+            if (!client || !login_usuario) return true;
+
+            try {
+                const cleanUser = login_usuario.trim().toLowerCase();
+                const { data, error } = await client
+                    .from('associados')
+                    .select('id, login_usuario')
+                    .ilike('login_usuario', cleanUser);
+
+                if (error) {
+                    console.warn('Consulta de usuário único no Supabase:', error.message);
+                    return true;
+                }
+
+                return !(data && data.length > 0);
+            } catch (err) {
+                console.error('Erro na checagem de usuário único:', err);
+                return true;
+            }
+        },
+
+        /**
          * Atualiza os dados do perfil do associado no Supabase
          */
         updateProfile: async function (userData) {

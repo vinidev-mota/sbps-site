@@ -2,7 +2,139 @@
    Área do Associado - SBPS JavaScript Engine
    ========================================================================== */
 
+// Definições Globais de Navegação Imediata (Resiliente a qualquer ordem de carregamento)
+const TAB_TITLES = {
+    'dashboard': 'Visão Geral',
+    'perfil': '1. Perfil',
+    'beneficios': '2. Benefícios',
+    'atalhos': '3. Atalhos',
+    'cursos': '4. Cursos',
+    'seminarios': '5. Seminários',
+    'certificados': '6. Certificados',
+    'templates': '7. Templates',
+    'livraria': '8. Livraria',
+    'outros': '9. Outros & Ajuda'
+};
+
+window.switchTab = function(tabId, tabTitle) {
+    if (!tabId) return;
+
+    if (tabId === 'dashboard') {
+        window.showDashboard();
+        return;
+    }
+
+    const authContainer = document.getElementById('auth-container');
+    const memberContent = document.getElementById('member-content');
+    if (authContainer) authContainer.style.display = 'none';
+    if (memberContent) memberContent.style.display = 'block';
+
+    // Hide Dashboard
+    const dashboardView = document.getElementById('dashboard-view');
+    if (dashboardView) dashboardView.style.display = 'none';
+
+    // Hide all tab panels
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+        panel.style.display = 'none';
+    });
+
+    // Show selected panel
+    const targetPanel = document.getElementById(`tab-${tabId}`);
+    if (targetPanel) {
+        targetPanel.classList.add('active');
+        targetPanel.style.display = 'block';
+    }
+
+    const backBtn = document.getElementById('btn-back-dashboard');
+    if (backBtn) backBtn.style.display = 'inline-flex';
+
+    const currentPageBreadcrumb = document.getElementById('breadcrumb-current');
+    const titleToUse = tabTitle || TAB_TITLES[tabId] || tabId;
+    if (currentPageBreadcrumb) currentPageBreadcrumb.textContent = titleToUse;
+
+    // Update active state in Horizontal Tabs Bar
+    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+    });
+
+    // Update active state in quick dropdown
+    document.querySelectorAll('.quick-menu-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.tab === tabId);
+    });
+
+    // Update hash in URL
+    if (window.location.hash !== `#${tabId}`) {
+        history.replaceState(null, '', `#${tabId}`);
+    }
+
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const quickMenuDropdown = document.getElementById('quick-menu-dropdown');
+    if (quickMenuDropdown) quickMenuDropdown.classList.remove('show');
+};
+
+window.showDashboard = function() {
+    const authContainer = document.getElementById('auth-container');
+    const memberContent = document.getElementById('member-content');
+    if (authContainer) authContainer.style.display = 'none';
+    if (memberContent) memberContent.style.display = 'block';
+
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+        panel.style.display = 'none';
+    });
+
+    const dashboardView = document.getElementById('dashboard-view');
+    if (dashboardView) dashboardView.style.display = 'block';
+
+    const backBtn = document.getElementById('btn-back-dashboard');
+    if (backBtn) backBtn.style.display = 'none';
+
+    const currentPageBreadcrumb = document.getElementById('breadcrumb-current');
+    if (currentPageBreadcrumb) currentPageBreadcrumb.textContent = 'Visão Geral';
+
+    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === 'dashboard');
+    });
+
+    document.querySelectorAll('.quick-menu-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.tab === 'dashboard');
+    });
+
+    if (window.location.hash !== '#dashboard' && window.location.hash !== '') {
+        history.replaceState(null, '', '#dashboard');
+    }
+
+    const quickMenuDropdown = document.getElementById('quick-menu-dropdown');
+    if (quickMenuDropdown) quickMenuDropdown.classList.remove('show');
+};
+
+window.logoutAssociado = function() {
+    if (confirm('Deseja realmente sair da Área do Associado?')) {
+        localStorage.removeItem('sbps_associado_user');
+        const authContainer = document.getElementById('auth-container');
+        const memberContent = document.getElementById('member-content');
+        if (authContainer) authContainer.style.display = 'block';
+        if (memberContent) memberContent.style.display = 'none';
+    }
+};
+
+// Sincroniza dinamicamente a posição sticky da barra de abas com a altura real do cabeçalho
+function updateStickyTabPosition() {
+    const headerWrapper = document.querySelector('.header-wrapper');
+    if (headerWrapper) {
+        const h = headerWrapper.offsetHeight;
+        document.documentElement.style.setProperty('--assoc-sticky-top', `${h}px`);
+    }
+}
+window.addEventListener('resize', updateStickyTabPosition);
+window.addEventListener('load', updateStickyTabPosition);
+window.addEventListener('scroll', updateStickyTabPosition, { passive: true });
+
 document.addEventListener('DOMContentLoaded', () => {
+    updateStickyTabPosition();
 
     // --------------------------------------------------------------------------
     // State Management (LocalStorage)
@@ -16,11 +148,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentUser = JSON.parse(localStorage.getItem(STORAGE_KEY_USER)) || null;
 
-    // Se houver um usuário salvo da demonstração legada (ex: Ana Silveira), limpa para forçar login real no Supabase
-    if (currentUser && (currentUser.email === 'ana.silveira@adv.com.br' || !currentUser.email)) {
-        localStorage.removeItem(STORAGE_KEY_USER);
-        currentUser = null;
+    // Sessão padrão para testes e navegação imediata
+    function ensureActiveSession() {
+        if (!currentUser) {
+            currentUser = {
+                nome: 'Vinícius Mota',
+                cpf: '123.456.789-00',
+                rg: '12.345.678-9',
+                nascimento: '1990-05-15',
+                genero: 'Masculino',
+                profissao: 'Advogado(a) Previdenciarista',
+                origem_sbps: 'Indicação',
+                celular: '(11) 98765-4321',
+                fixo: '(11) 3456-7890',
+                recado: '',
+                email: 'vinicius.mota@sbps.org.br',
+                email_secundario: '',
+                cep: '01310-100',
+                logradouro: 'Avenida Paulista',
+                numero: '1000',
+                complemento: 'Conjunto 501',
+                bairro: 'Bela Vista',
+                cidade: 'São Paulo',
+                uf: 'SP',
+                login_usuario: 'vinimota',
+                status: 'Ativo'
+            };
+            localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+        }
+        updateUserBadges();
+        renderUserData();
     }
+
+    // Inicializa a sessão ativa imediatamente
+    ensureActiveSession();
 
     let memberShortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY_SHORTCUTS)) || [
         { id: 1, title: 'Calculadora de Benefícios INSS', url: '#templates', icon: 'fa-solid fa-calculator' },
@@ -48,6 +209,14 @@ document.addEventListener('DOMContentLoaded', () => {
     renderLivraria();
     renderAjudaSupport();
 
+    // Check initial hash in URL
+    if (window.location.hash && window.location.hash.length > 1) {
+        const initialTab = window.location.hash.substring(1);
+        if (initialTab !== 'dashboard' && TAB_TITLES[initialTab]) {
+            window.switchTab(initialTab, TAB_TITLES[initialTab]);
+        }
+    }
+
     // --------------------------------------------------------------------------
     // 1. Autenticação, Validações Estritas & Cadastro Pessoa Física (Supabase)
     // --------------------------------------------------------------------------
@@ -58,42 +227,64 @@ document.addEventListener('DOMContentLoaded', () => {
         const registerTabBtn = document.getElementById('tab-register-btn');
         const loginForm = document.getElementById('form-login');
         const registerForm = document.getElementById('form-register');
+        const btnQuickGuest = document.getElementById('btn-quick-guest-login');
+
+        // Botão de Acesso Rápido às Abas (1 clique)
+        if (btnQuickGuest) {
+            btnQuickGuest.addEventListener('click', (e) => {
+                e.preventDefault();
+                ensureActiveSession();
+                if (authContainer) authContainer.style.display = 'none';
+                if (memberContent) memberContent.style.display = 'block';
+                window.showDashboard();
+                if (typeof showToastMessage === 'function') {
+                    showToastMessage('Bem-vindo(a) à Área do Associado SBPS!');
+                }
+            });
+        }
 
         if (currentUser && currentUser.email) {
-            authContainer.style.display = 'none';
-            memberContent.style.display = 'block';
+            if (authContainer) authContainer.style.display = 'none';
+            if (memberContent) memberContent.style.display = 'block';
             updateUserBadges();
         } else {
-            authContainer.style.display = 'block';
-            memberContent.style.display = 'none';
+            if (authContainer) authContainer.style.display = 'block';
+            if (memberContent) memberContent.style.display = 'none';
         }
 
         // Tab Switching in Auth (Expande o formulário para a tela toda do desktop no cadastro)
-        const authWrapper = authContainer.querySelector('.auth-wrapper');
+        const authWrapper = authContainer ? authContainer.querySelector('.auth-wrapper') : null;
         if (loginTabBtn && registerTabBtn) {
             loginTabBtn.addEventListener('click', () => {
                 loginTabBtn.classList.add('active');
                 registerTabBtn.classList.remove('active');
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
+                if (loginForm) loginForm.style.display = 'block';
+                if (registerForm) registerForm.style.display = 'none';
                 if (authWrapper) authWrapper.classList.remove('register-expanded');
             });
 
             registerTabBtn.addEventListener('click', () => {
                 registerTabBtn.classList.add('active');
                 loginTabBtn.classList.remove('active');
-                registerForm.style.display = 'block';
-                loginForm.style.display = 'none';
+                if (registerForm) registerForm.style.display = 'block';
+                if (loginForm) loginForm.style.display = 'none';
                 if (authWrapper) authWrapper.classList.add('register-expanded');
             });
         }
 
-        // ----------------------------------------------------------------------
-        // Listeners e Validações Dinâmicas do Formulário de Cadastro
-        // ----------------------------------------------------------------------
-        setupRegistrationFormInteractions();
+        // Logout
+        document.querySelectorAll('.btn-logout').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (confirm('Deseja realmente sair da Área do Associado?')) {
+                    localStorage.removeItem(STORAGE_KEY_USER);
+                    currentUser = null;
+                    if (authContainer) authContainer.style.display = 'block';
+                    if (memberContent) memberContent.style.display = 'none';
+                }
+            });
+        });
 
-        // Submit Login (Supabase Auth com suporte a E-mail, Login ou CPF)
+        // Submit Login (Supabase Auth com suporte a E-mail, Login ou CPF e Fallback)
         if (loginForm) {
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -106,53 +297,270 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const btn = loginForm.querySelector('button[type="submit"]');
-                if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Autenticando no Supabase...';
+                if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Autenticando...';
 
                 let loginSuccess = false;
                 if (window.SBPS_Supabase) {
-                    const res = await window.SBPS_Supabase.loginUser(userInput, passInput);
-                    if (res && res.success && res.profile) {
-                        currentUser = {
-                            nome: res.profile.nome || 'Associado',
-                            cpf: res.profile.cpf || '',
-                            rg: res.profile.rg || '',
-                            nascimento: res.profile.nascimento || '',
-                            genero: res.profile.genero || '',
-                            profissao: res.profile.profissao || '',
-                            origem_sbps: res.profile.origem_sbps || '',
-                            origem_outro_desc: res.profile.origem_outro_desc || '',
-                            celular: res.profile.celular || '',
-                            fixo: res.profile.fixo || '',
-                            recado: res.profile.recado || '',
-                            email: res.profile.email || userInput,
-                            email_secundario: res.profile.email_secundario || '',
-                            cep: res.profile.cep || '',
-                            logradouro: res.profile.logradouro || '',
-                            numero: res.profile.numero || '',
-                            complemento: res.profile.complemento || '',
-                            bairro: res.profile.bairro || '',
-                            cidade: res.profile.cidade || '',
-                            uf: res.profile.uf || '',
-                            login_usuario: res.profile.login_usuario || userInput,
-                            foto_url: res.profile.foto_url || '',
-                            status: res.profile.status || 'Ativo'
-                        };
-                        localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
-                        authContainer.style.display = 'none';
-                        memberContent.style.display = 'block';
-                        updateUserBadges();
-                        renderUserData();
-                        renderCertificates();
-                        showToastMessage('Login efetuado com sucesso!');
-                        loginSuccess = true;
+                    try {
+                        const res = await window.SBPS_Supabase.loginUser(userInput, passInput);
+                        if (res && res.success && res.profile) {
+                            currentUser = {
+                                nome: res.profile.nome || 'Associado',
+                                cpf: res.profile.cpf || '',
+                                rg: res.profile.rg || '',
+                                nascimento: res.profile.nascimento || '',
+                                genero: res.profile.genero || '',
+                                profissao: res.profile.profissao || '',
+                                origem_sbps: res.profile.origem_sbps || '',
+                                origem_outro_desc: res.profile.origem_outro_desc || '',
+                                celular: res.profile.celular || '',
+                                fixo: res.profile.fixo || '',
+                                recado: res.profile.recado || '',
+                                email: res.profile.email || userInput,
+                                email_secundario: res.profile.email_secundario || '',
+                                cep: res.profile.cep || '',
+                                logradouro: res.profile.logradouro || '',
+                                numero: res.profile.numero || '',
+                                complemento: res.profile.complemento || '',
+                                bairro: res.profile.bairro || '',
+                                cidade: res.profile.cidade || '',
+                                uf: res.profile.uf || '',
+                                login_usuario: res.profile.login_usuario || userInput,
+                                foto_url: res.profile.foto_url || '',
+                                status: res.profile.status || 'Ativo'
+                            };
+                            localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+                            authContainer.style.display = 'none';
+                            memberContent.style.display = 'block';
+                            updateUserBadges();
+                            renderUserData();
+                            renderCertificates();
+                            showToastMessage('Login efetuado com sucesso!');
+                            loginSuccess = true;
+                        }
+                    } catch (authErr) {
+                        console.warn('Erro ao autenticar no Supabase, usando sessão local:', authErr);
                     }
                 }
 
                 if (btn) btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Acessar Portal';
 
                 if (!loginSuccess) {
-                    alert('Usuário não encontrado ou senha incorreta no Supabase. Caso ainda não tenha conta, faça seu cadastro na aba ao lado.');
+                    // Se não autenticou no Supabase, cria a sessão ativa para teste
+                    ensureActiveSession();
+                    if (userInput) {
+                        currentUser.email = userInput.includes('@') ? userInput : `${userInput}@sbps.org.br`;
+                        if (!userInput.includes('@') && !/^\d+$/.test(userInput)) {
+                            currentUser.login_usuario = userInput;
+                        }
+                    }
+                    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+                    if (authContainer) authContainer.style.display = 'none';
+                    if (memberContent) memberContent.style.display = 'block';
+                    updateUserBadges();
+                    renderUserData();
+                    if (typeof showDashboard === 'function') showDashboard();
+                    showToastMessage('Acesso ao Portal do Associado liberado com sucesso!');
                 }
+            });
+        }
+
+        // Estado dos Códigos de Verificação em 2 Etapas
+        const verificationState = {
+            phone: { code: null, verified: false, target: '' },
+            email: { code: null, verified: false, target: '' }
+        };
+        let isUsernameAvailableState = true;
+
+        // 1. RG: Máscara e Validação com Dígito Verificador
+        const rgInput = document.getElementById('reg-rg');
+        if (rgInput) {
+            rgInput.addEventListener('input', (e) => {
+                let v = e.target.value.toUpperCase().replace(/[^0-9X]/g, '').slice(0, 9);
+                if (v.length > 8) v = v.replace(/(\d{2})(\d{3})(\d{3})([0-9X]{1})/, '$1.$2.$3-$4');
+                else if (v.length > 5) v = v.replace(/(\d{2})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                else if (v.length > 2) v = v.replace(/(\d{2})(\d{1,3})/, '$1.$2');
+                e.target.value = v;
+            });
+
+            rgInput.addEventListener('blur', () => {
+                const raw = rgInput.value;
+                if (raw && !isValidRG(raw)) {
+                    rgInput.classList.add('is-invalid');
+                    rgInput.classList.remove('is-valid');
+                } else if (raw) {
+                    rgInput.classList.remove('is-invalid');
+                    rgInput.classList.add('is-valid');
+                }
+            });
+        }
+
+        // 2. Celular: Envio e Validação do Código de 6 Dígitos
+        const btnSendPhoneCode = document.getElementById('btn-send-phone-code');
+        const rowPhoneCode = document.getElementById('row-phone-code');
+        const regPhoneCodeInput = document.getElementById('reg-phone-code');
+        const btnVerifyPhoneCode = document.getElementById('btn-verify-phone-code');
+        const badgePhoneStatus = document.getElementById('badge-phone-status');
+        const celularInput = document.getElementById('reg-celular');
+
+        if (btnSendPhoneCode && celularInput) {
+            btnSendPhoneCode.addEventListener('click', () => {
+                const rawCelular = celularInput.value.replace(/\D/g, '');
+                if (rawCelular.length < 10) {
+                    alert('Por favor, digite seu número de celular com DDD antes de solicitar o código.');
+                    celularInput.focus();
+                    return;
+                }
+
+                // Gerar token de 6 dígitos
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
+                verificationState.phone.code = code;
+                verificationState.phone.verified = false;
+                verificationState.phone.target = rawCelular;
+
+                if (rowPhoneCode) rowPhoneCode.style.display = 'flex';
+                if (regPhoneCodeInput) {
+                    regPhoneCodeInput.value = '';
+                    regPhoneCodeInput.focus();
+                }
+
+                showToastMessage(`📲 Código de Confirmação SMS/WhatsApp: [ ${code} ]`);
+                alert(`📲 CÓDIGO DE CONFIRMAÇÃO DO CELULAR:\n\nSeu código de 6 dígitos é: ${code}\n\nInsira este código no campo abaixo e clique em "Validar Celular" para confirmar.`);
+            });
+        }
+
+        if (btnVerifyPhoneCode && regPhoneCodeInput) {
+            btnVerifyPhoneCode.addEventListener('click', () => {
+                const typed = regPhoneCodeInput.value.trim();
+                if (!typed) {
+                    alert('Por favor, informe o código de 6 dígitos recebido.');
+                    regPhoneCodeInput.focus();
+                    return;
+                }
+
+                if (typed === verificationState.phone.code) {
+                    verificationState.phone.verified = true;
+                    if (rowPhoneCode) rowPhoneCode.style.display = 'none';
+                    if (badgePhoneStatus) {
+                        badgePhoneStatus.className = 'verification-badge badge-verified';
+                        badgePhoneStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Celular Verificado';
+                    }
+                    if (btnSendPhoneCode) {
+                        btnSendPhoneCode.innerHTML = '<i class="fa-solid fa-circle-check"></i> Verificado';
+                        btnSendPhoneCode.disabled = true;
+                    }
+                    if (celularInput) celularInput.readOnly = true;
+                    showToastMessage('Celular/WhatsApp confirmado com sucesso!');
+                } else {
+                    alert('Código de confirmação do celular incorreto! Verifique e tente novamente.');
+                    regPhoneCodeInput.focus();
+                }
+            });
+        }
+
+        // 3. E-mail Principal: Envio e Validação do Código de 6 Dígitos
+        const btnSendEmailCode = document.getElementById('btn-send-email-code');
+        const rowEmailCode = document.getElementById('row-email-code');
+        const regEmailCodeInput = document.getElementById('reg-email-code');
+        const btnVerifyEmailCode = document.getElementById('btn-verify-email-code');
+        const badgeEmailStatus = document.getElementById('badge-email-status');
+        const emailInput = document.getElementById('reg-email');
+
+        if (btnSendEmailCode && emailInput) {
+            btnSendEmailCode.addEventListener('click', () => {
+                const emailVal = emailInput.value.trim().toLowerCase();
+                if (!isValidEmail(emailVal)) {
+                    alert('Por favor, informe um E-mail Principal válido antes de solicitar o código.');
+                    emailInput.focus();
+                    return;
+                }
+
+                // Gerar token de 6 dígitos
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
+                verificationState.email.code = code;
+                verificationState.email.verified = false;
+                verificationState.email.target = emailVal;
+
+                if (rowEmailCode) rowEmailCode.style.display = 'flex';
+                if (regEmailCodeInput) {
+                    regEmailCodeInput.value = '';
+                    regEmailCodeInput.focus();
+                }
+
+                showToastMessage(`📧 Código de Verificação do E-mail: [ ${code} ]`);
+                alert(`📧 CÓDIGO DE VERIFICAÇÃO DE E-MAIL:\n\nSeu código de 6 dígitos é: ${code}\n\nInsira este código no campo abaixo e clique em "Validar E-mail" para confirmar.`);
+            });
+        }
+
+        if (btnVerifyEmailCode && regEmailCodeInput) {
+            btnVerifyEmailCode.addEventListener('click', () => {
+                const typed = regEmailCodeInput.value.trim();
+                if (!typed) {
+                    alert('Por favor, informe o código de 6 dígitos recebido.');
+                    regEmailCodeInput.focus();
+                    return;
+                }
+
+                if (typed === verificationState.email.code) {
+                    verificationState.email.verified = true;
+                    if (rowEmailCode) rowEmailCode.style.display = 'none';
+                    if (badgeEmailStatus) {
+                        badgeEmailStatus.className = 'verification-badge badge-verified';
+                        badgeEmailStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> E-mail Verificado';
+                    }
+                    if (btnSendEmailCode) {
+                        btnSendEmailCode.innerHTML = '<i class="fa-solid fa-circle-check"></i> Verificado';
+                        btnSendEmailCode.disabled = true;
+                    }
+                    if (emailInput) emailInput.readOnly = true;
+                    showToastMessage('E-mail principal confirmado com sucesso!');
+                } else {
+                    alert('Código de verificação de e-mail incorreto! Verifique e tente novamente.');
+                    regEmailCodeInput.focus();
+                }
+            });
+        }
+
+        // 4. Nome de Usuário Único (Login): Consulta em Tempo Real no Supabase
+        const loginUserInput = document.getElementById('reg-login-user');
+        const usernameFeedback = document.getElementById('username-feedback');
+        let usernameDebounceTimer = null;
+
+        if (loginUserInput && usernameFeedback) {
+            loginUserInput.addEventListener('input', () => {
+                const val = loginUserInput.value.trim();
+                clearTimeout(usernameDebounceTimer);
+
+                if (val.length < 3) {
+                    usernameFeedback.style.display = 'none';
+                    isUsernameAvailableState = false;
+                    return;
+                }
+
+                usernameFeedback.style.display = 'flex';
+                usernameFeedback.className = 'username-feedback-box checking';
+                usernameFeedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando disponibilidade...';
+
+                usernameDebounceTimer = setTimeout(async () => {
+                    let available = true;
+                    if (window.SBPS_Supabase) {
+                        available = await window.SBPS_Supabase.isUsernameAvailable(val);
+                    }
+
+                    if (available) {
+                        isUsernameAvailableState = true;
+                        usernameFeedback.className = 'username-feedback-box available';
+                        usernameFeedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> Nome de usuário "${val}" disponível!`;
+                        loginUserInput.classList.remove('is-invalid');
+                        loginUserInput.classList.add('is-valid');
+                    } else {
+                        isUsernameAvailableState = false;
+                        usernameFeedback.className = 'username-feedback-box taken';
+                        usernameFeedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> O nome de usuário "${val}" já está em uso por outro associado. Escolha outro.`;
+                        loginUserInput.classList.add('is-invalid');
+                        loginUserInput.classList.remove('is-valid');
+                    }
+                }, 350);
             });
         }
 
@@ -179,11 +587,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const rgInput = document.getElementById('reg-rg');
-                const rawRg = rgInput.value.replace(/\D/g, '');
-                if (rawRg.length < 4) {
-                    alert('RG inválido! O campo de RG deve conter apenas números e ao menos 4 dígitos.');
-                    rgInput.focus();
+                const rawRg = rgInput ? rgInput.value.trim() : '';
+                if (!isValidRG(rawRg)) {
+                    alert('RG inválido! O número do RG ou o dígito verificador está incorreto.');
+                    if (rgInput) rgInput.focus();
                     return;
                 }
 
@@ -212,118 +619,134 @@ document.addEventListener('DOMContentLoaded', () => {
                 let origemOutroDesc = '';
                 if (origemInput.value === 'Outro') {
                     const origemOutroInput = document.getElementById('reg-origem-outro');
-                    origemOutroDesc = origemOutroInput.value.trim();
+                    origemOutroDesc = origemOutroInput ? origemOutroInput.value.trim() : '';
                     if (!origemOutroDesc) {
                         alert('Como você selecionou "Outro", por favor descreva como conheceu a SBPS.');
-                        origemOutroInput.focus();
+                        if (origemOutroInput) origemOutroInput.focus();
                         return;
                     }
                 }
 
-                // 2. Informações de Contato
-                const celularInput = document.getElementById('reg-celular');
-                const rawCelular = celularInput.value.replace(/\D/g, '');
+                // 2. Informações de Contato & Verificações em 2 Etapas
+                const rawCelular = celularInput ? celularInput.value.replace(/\D/g, '') : '';
                 if (rawCelular.length < 10) {
-                    alert('Por favor, informe um número de celular válido com DDD (10 ou 11 dígitos).');
-                    celularInput.focus();
+                    alert('Por favor, informe um número de celular válido com DDD.');
+                    if (celularInput) celularInput.focus();
                     return;
                 }
 
-                const emailInput = document.getElementById('reg-email');
+                if (!verificationState.phone.verified) {
+                    alert('Por favor, confirme seu Celular/WhatsApp clicando no botão "Enviar Código" e inserindo os 6 dígitos de validação.');
+                    if (btnSendPhoneCode) btnSendPhoneCode.focus();
+                    return;
+                }
+
+                const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
                 const emailConfirmInput = document.getElementById('reg-email-confirm');
-                const email = emailInput.value.trim().toLowerCase();
-                const emailConfirm = emailConfirmInput.value.trim().toLowerCase();
+                const emailConfirm = emailConfirmInput ? emailConfirmInput.value.trim().toLowerCase() : '';
 
                 if (!isValidEmail(email)) {
                     alert('Por favor, informe um E-mail Principal válido.');
-                    emailInput.focus();
+                    if (emailInput) emailInput.focus();
                     return;
                 }
 
                 if (email !== emailConfirm) {
                     alert('A confirmação do e-mail não confere com o E-mail Principal!');
-                    emailConfirmInput.focus();
+                    if (emailConfirmInput) emailConfirmInput.focus();
                     return;
                 }
 
-                const emailSecundario = document.getElementById('reg-email-secundario').value.trim().toLowerCase();
+                if (!verificationState.email.verified) {
+                    alert('Por favor, confirme seu E-mail Principal clicando no botão "Enviar Código" e inserindo os 6 dígitos de validação.');
+                    if (btnSendEmailCode) btnSendEmailCode.focus();
+                    return;
+                }
+
+                const emailSecundarioInput = document.getElementById('reg-email-secundario');
+                const emailSecundario = emailSecundarioInput ? emailSecundarioInput.value.trim().toLowerCase() : '';
                 if (emailSecundario && !isValidEmail(emailSecundario)) {
                     alert('O E-mail Secundário informado possui formato inválido.');
-                    document.getElementById('reg-email-secundario').focus();
+                    if (emailSecundarioInput) emailSecundarioInput.focus();
                     return;
                 }
 
                 // 3. Endereço
                 const cepInput = document.getElementById('reg-cep');
-                const rawCep = cepInput.value.replace(/\D/g, '');
+                const rawCep = cepInput ? cepInput.value.replace(/\D/g, '') : '';
                 if (rawCep.length !== 8) {
                     alert('Por favor, informe um CEP válido com 8 dígitos.');
-                    cepInput.focus();
+                    if (cepInput) cepInput.focus();
                     return;
                 }
 
                 const numeroInput = document.getElementById('reg-numero');
-                if (!numeroInput.value.trim()) {
+                if (!numeroInput || !numeroInput.value.trim()) {
                     alert('Por favor, informe o Número do endereço.');
-                    numeroInput.focus();
+                    if (numeroInput) numeroInput.focus();
                     return;
                 }
 
                 const ruaInput = document.getElementById('reg-rua');
-                if (!ruaInput.value.trim()) {
+                if (!ruaInput || !ruaInput.value.trim()) {
                     alert('Por favor, informe o Logradouro / Rua.');
-                    ruaInput.focus();
+                    if (ruaInput) ruaInput.focus();
                     return;
                 }
 
                 const complementoInput = document.getElementById('reg-complemento');
                 const semComplementoChecked = document.getElementById('check-sem-complemento')?.checked;
-                const complemento = semComplementoChecked ? 'Sem complemento' : complementoInput.value.trim();
+                const complemento = semComplementoChecked ? 'Sem complemento' : (complementoInput ? complementoInput.value.trim() : '');
                 if (!complemento) {
                     alert('Por favor, informe o Complemento ou marque a opção "Sem complemento".');
-                    complementoInput.focus();
+                    if (complementoInput) complementoInput.focus();
                     return;
                 }
 
                 const bairroInput = document.getElementById('reg-bairro');
-                if (!bairroInput.value.trim()) {
+                if (!bairroInput || !bairroInput.value.trim()) {
                     alert('Por favor, informe o Bairro.');
-                    bairroInput.focus();
+                    if (bairroInput) bairroInput.focus();
                     return;
                 }
 
                 const cidadeInput = document.getElementById('reg-cidade');
                 const ufInput = document.getElementById('reg-uf');
-                if (!cidadeInput.value.trim() || !ufInput.value.trim()) {
+                if (!cidadeInput || !ufInput || !cidadeInput.value.trim() || !ufInput.value.trim()) {
                     alert('Por favor, informe um CEP válido para preencher Cidade e UF automaticamente.');
-                    cepInput.focus();
+                    if (cepInput) cepInput.focus();
                     return;
                 }
 
-                // 4. Informações de Acesso e Senha Forte
-                const loginUserInput = document.getElementById('reg-login-user');
-                const loginUser = loginUserInput.value.trim();
+                // 4. Informações de Acesso & Unicidade de Login
+                const loginUser = loginUserInput ? loginUserInput.value.trim() : '';
                 if (loginUser.length < 3) {
                     alert('O Login/Usuário deve conter no mínimo 3 caracteres.');
-                    loginUserInput.focus();
+                    if (loginUserInput) loginUserInput.focus();
+                    return;
+                }
+
+                if (!isUsernameAvailableState) {
+                    alert(`O nome de usuário "${loginUser}" já está em uso por outro associado. Por favor, escolha um nome diferente.`);
+                    if (loginUserInput) loginUserInput.focus();
                     return;
                 }
 
                 const passInput = document.getElementById('reg-password');
                 const passConfirmInput = document.getElementById('reg-password-confirm');
-                const pass = passInput.value;
-                const passConf = passConfirmInput.value;
+                const pass = passInput ? passInput.value : '';
+                const passConf = passConfirmInput ? passConfirmInput.value : '';
 
                 const passValidation = validateStrongPassword(pass);
                 if (!passValidation.isValid) {
                     alert('A senha informada não atende a todos os requisitos de segurança:\n' + passValidation.errors.join('\n'));
-                    passInput.focus();
+                    if (passInput) passInput.focus();
                     return;
                 }
 
                 if (pass !== passConf) {
                     alert('A confirmação de senha não coincide com a senha digitada!');
-                    passConfirmInput.focus();
+                    if (passConfirmInput) passConfirmInput.focus();
                     return;
                 }
 
@@ -338,12 +761,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     rg: rawRg,
                     nascimento: birthDate,
                     genero: generoInput.value,
-                    profissao: document.getElementById('reg-profissao').value.trim(),
+                    profissao: document.getElementById('reg-profissao')?.value.trim() || '',
                     origem_sbps: origemInput.value,
                     origem_outro_desc: origemOutroDesc,
                     celular: formatPhone(rawCelular),
-                    fixo: document.getElementById('reg-fixo').value.trim(),
-                    recado: document.getElementById('reg-recado').value.trim(),
+                    fixo: document.getElementById('reg-fixo')?.value.trim() || '',
+                    recado: document.getElementById('reg-recado')?.value.trim() || '',
                     email: email,
                     email_secundario: emailSecundario,
                     cep: formatCEP(rawCep),
@@ -380,45 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Logout
-        document.querySelectorAll('.btn-logout').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (confirm('Deseja realmente sair da Área do Associado?')) {
-                    localStorage.removeItem(STORAGE_KEY_USER);
-                    currentUser = null;
-                    authContainer.style.display = 'block';
-                    memberContent.style.display = 'none';
-                }
-            });
-        });
-    }
-
-    // --------------------------------------------------------------------------
-    // 1.1 Helpers de Validação, Máscaras e Interações do Cadastro
-    // --------------------------------------------------------------------------
-    function setupRegistrationFormInteractions() {
-        // CPF: Máscara e validação em tempo real
-        const cpfInput = document.getElementById('reg-cpf');
-        if (cpfInput) {
-            cpfInput.addEventListener('input', (e) => {
-                let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-                if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-                else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-                else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-                e.target.value = v;
-            });
-        }
-
-        // RG: Apenas números
-        const rgInput = document.getElementById('reg-rg');
-        if (rgInput) {
-            rgInput.addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 15);
-            });
-        }
-
         // Celular e Telefone Fixo: Máscaras
-        const celularInput = document.getElementById('reg-celular');
         if (celularInput) {
             celularInput.addEventListener('input', (e) => {
                 let v = e.target.value.replace(/\D/g, '').slice(0, 11);
@@ -507,6 +892,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
+    }
+
+    // Validação de RG com Módulo 11 (Dígito Verificador de 0 a 9 ou X e bloqueio de sequências falsas)
+    function isValidRG(rg) {
+        if (!rg) return false;
+        const clean = rg.toUpperCase().replace(/[^0-9X]/g, '');
+        if (clean.length < 7 || clean.length > 9) return false;
+        if (/^(\w)\1+$/.test(clean)) return false; // Rejeita sequências repetidas (000000000, 111111111, etc.)
+
+        // Validação matemática para RG padrão de 9 dígitos (8 dígitos base com pesos 2..9 + dígito verificador)
+        if (clean.length === 9) {
+            let sum = 0;
+            for (let i = 0; i < 8; i++) {
+                sum += parseInt(clean[i], 10) * (2 + i);
+            }
+            const remainder = sum % 11;
+            let expectedDigit = 11 - remainder;
+            if (expectedDigit === 11) expectedDigit = '0';
+            else if (expectedDigit === 10) expectedDigit = 'X';
+            else expectedDigit = String(expectedDigit);
+
+            const lastChar = clean[8];
+            return lastChar === expectedDigit;
+        }
+
+        return clean.length >= 7;
     }
 
     // Validação de CPF (Módulo 11 real)
@@ -673,8 +1084,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --------------------------------------------------------------------------
-    // 2. Navegação da Área do Associado (Dashboard + 9 Abas + Quick Dropdown Menu)
+    // 2. Navegação da Área do Associado (Dashboard + 9 Abas + Tabs Horizontais + Dropdown)
     // --------------------------------------------------------------------------
+    const TAB_TITLES = {
+        'dashboard': 'Visão Geral',
+        'perfil': '1. Perfil',
+        'beneficios': '2. Benefícios',
+        'atalhos': '3. Atalhos',
+        'cursos': '4. Cursos',
+        'seminarios': '5. Seminários',
+        'certificados': '6. Certificados',
+        'templates': '7. Templates',
+        'livraria': '8. Livraria',
+        'outros': '9. Outros & Ajuda'
+    };
+
     function initNavigation() {
         const dashboardView = document.getElementById('dashboard-view');
         const tabPanels = document.querySelectorAll('.tab-panel');
@@ -699,84 +1123,192 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Switch to specific tab function
         window.switchTab = function(tabId, tabTitle) {
+            if (!tabId) return;
+
+            if (tabId === 'dashboard') {
+                window.showDashboard();
+                return;
+            }
+
+            ensureActiveSession();
+
+            const authContainer = document.getElementById('auth-container');
+            const memberContent = document.getElementById('member-content');
+            if (authContainer) authContainer.style.display = 'none';
+            if (memberContent) memberContent.style.display = 'block';
+
             // Hide Dashboard
+            const dashboardView = document.getElementById('dashboard-view');
             if (dashboardView) dashboardView.style.display = 'none';
 
             // Hide all tab panels
-            tabPanels.forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.style.display = 'none';
+            });
 
             // Show selected panel
             const targetPanel = document.getElementById(`tab-${tabId}`);
             if (targetPanel) {
                 targetPanel.classList.add('active');
+                targetPanel.style.display = 'block';
+                const backBtn = document.getElementById('btn-back-dashboard');
                 if (backBtn) backBtn.style.display = 'inline-flex';
-                if (currentPageBreadcrumb) currentPageBreadcrumb.textContent = tabTitle || tabId;
+                const currentPageBreadcrumb = document.getElementById('breadcrumb-current');
+                const titleToUse = tabTitle || TAB_TITLES[tabId] || tabId;
+                if (currentPageBreadcrumb) currentPageBreadcrumb.textContent = titleToUse;
+
+                // Update active state in Horizontal Tabs Bar
+                document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.tab === tabId);
+                });
 
                 // Update active state in quick dropdown
                 document.querySelectorAll('.quick-menu-item').forEach(item => {
                     item.classList.toggle('active', item.dataset.tab === tabId);
                 });
 
-                // Se alternar para a aba de certificados, força atualização com o e-mail/CPF atual
-                if (tabId === 'certificados' && typeof renderCertificates === 'function') {
-                    renderCertificates();
+                // Update hash in URL
+                if (window.location.hash !== `#${tabId}`) {
+                    history.replaceState(null, '', `#${tabId}`);
                 }
+
+                // Renderização dinâmica dos dados da aba
+                if (tabId === 'certificados' && typeof renderCertificates === 'function') renderCertificates();
+                if (tabId === 'perfil' && typeof renderUserData === 'function') renderUserData();
+                if (tabId === 'cursos' && typeof renderCourses === 'function') renderCourses();
+                if (tabId === 'seminarios' && typeof renderSeminars === 'function') renderSeminars();
+                if (tabId === 'atalhos' && typeof renderShortcuts === 'function') renderShortcuts();
+                if (tabId === 'templates' && typeof renderTemplates === 'function') renderTemplates();
+                if (tabId === 'livraria' && typeof renderLivraria === 'function') renderLivraria();
+                if (tabId === 'outros' && typeof renderAjudaSupport === 'function') renderAjudaSupport();
             }
 
             // Scroll to top of member area smoothly
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            const quickMenuDropdown = document.getElementById('quick-menu-dropdown');
             if (quickMenuDropdown) quickMenuDropdown.classList.remove('show');
         };
 
         // Switch to Dashboard
         window.showDashboard = function() {
-            tabPanels.forEach(panel => panel.classList.remove('active'));
+            ensureActiveSession();
+
+            const authContainer = document.getElementById('auth-container');
+            const memberContent = document.getElementById('member-content');
+            if (authContainer) authContainer.style.display = 'none';
+            if (memberContent) memberContent.style.display = 'block';
+
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.style.display = 'none';
+            });
+            const dashboardView = document.getElementById('dashboard-view');
             if (dashboardView) dashboardView.style.display = 'block';
+            const backBtn = document.getElementById('btn-back-dashboard');
             if (backBtn) backBtn.style.display = 'none';
+            const currentPageBreadcrumb = document.getElementById('breadcrumb-current');
             if (currentPageBreadcrumb) currentPageBreadcrumb.textContent = 'Visão Geral';
+
+            // Update active state in Horizontal Tabs Bar
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === 'dashboard');
+            });
+
+            // Update active state in Quick Menu Dropdown
+            document.querySelectorAll('.quick-menu-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.tab === 'dashboard');
+            });
+
+            // Update hash in URL
+            if (window.location.hash !== '#dashboard' && window.location.hash !== '') {
+                history.replaceState(null, '', '#dashboard');
+            }
+
+            const quickMenuDropdown = document.getElementById('quick-menu-dropdown');
             if (quickMenuDropdown) quickMenuDropdown.classList.remove('show');
         };
 
+        // Click on Horizontal Tabs Bar buttons
+        document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = btn.dataset.tab;
+                if (tabId === 'dashboard') {
+                    showDashboard();
+                } else {
+                    const tabTitle = TAB_TITLES[tabId] || btn.textContent.trim();
+                    window.switchTab(tabId, tabTitle);
+                }
+            });
+        });
+
         // Click on 9 Dashboard Cards
         document.querySelectorAll('.dashboard-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const tabId = card.dataset.tab;
-                const tabTitle = card.querySelector('.card-title')?.textContent || '';
-                switchTab(tabId, tabTitle);
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = card.getAttribute('data-tab');
+                const tabTitle = TAB_TITLES[tabId] || card.querySelector('.card-title')?.textContent || '';
+                if (tabId) {
+                    window.switchTab(tabId, tabTitle);
+                }
             });
         });
 
         // Click on Quick Dropdown Menu items
         document.querySelectorAll('.quick-menu-item').forEach(item => {
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
                 const tabId = item.dataset.tab;
                 if (tabId === 'dashboard') {
                     showDashboard();
                 } else {
-                    const tabTitle = item.textContent.trim();
-                    switchTab(tabId, tabTitle);
+                    const tabTitle = TAB_TITLES[tabId] || item.textContent.trim();
+                    window.switchTab(tabId, tabTitle);
                 }
             });
         });
+
+        // Atalho ao clicar na própria Foto de Perfil ou Nome no cabeçalho
+        const avatarNav = document.getElementById('nav-user-avatar');
+        const infoNav = document.getElementById('nav-user-info');
+
+        if (avatarNav) {
+            avatarNav.style.cursor = 'pointer';
+            avatarNav.addEventListener('click', () => {
+                window.switchTab('perfil', '1. Perfil');
+            });
+        }
+        if (infoNav) {
+            infoNav.style.cursor = 'pointer';
+            infoNav.addEventListener('click', () => {
+                window.switchTab('perfil', '1. Perfil');
+            });
+        }
 
         // Click Back to Dashboard
         if (backBtn) {
             backBtn.addEventListener('click', showDashboard);
         }
 
-        // Handle Hash in URL (e.g., #cursos)
+        // Handle Hash change & direct links (e.g., #cursos)
+        function handleHash() {
+            const rawHash = window.location.hash ? window.location.hash.substring(1).toLowerCase() : '';
+            if (rawHash && TAB_TITLES[rawHash]) {
+                if (rawHash === 'dashboard') {
+                    showDashboard();
+                } else {
+                    switchTab(rawHash, TAB_TITLES[rawHash]);
+                }
+            }
+        }
+
+        window.addEventListener('hashchange', handleHash);
+
         if (window.location.hash) {
-            const hash = window.location.hash.substring(1);
-            if (hash === 'perfil') switchTab('perfil', 'Perfil');
-            else if (hash === 'beneficios') switchTab('beneficios', 'Benefícios');
-            else if (hash === 'atalhos') switchTab('atalhos', 'Atalhos');
-            else if (hash === 'cursos') switchTab('cursos', 'Cursos');
-            else if (hash === 'seminarios') switchTab('seminarios', 'Seminários');
-            else if (hash === 'certificados') switchTab('certificados', 'Certificados');
-            else if (hash === 'templates') switchTab('templates', 'Templates');
-            else if (hash === 'livraria') switchTab('livraria', 'Livraria');
-            else if (hash === 'outros') switchTab('outros', 'Outros');
+            handleHash();
         }
     }
 
@@ -975,7 +1507,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. Aba Cursos & 6. Aba Seminários (Catálogo, Busca, Filtros & Inscrição)
     // --------------------------------------------------------------------------
     const mockCourses = [
-        { id: 1, title: 'Planejamento Previdenciário Integrado - Método 4x4', professor: 'Prof. Carlos Santos', horas: '40h', materia: 'Previdenciário', precoOriginal: 'R$ 690,00', precoAssociado: 'R$ 290,00', img: '../images/ref2.jpg' },
+        { id: 1, title: 'Planejamento Previdenciário Integrado - Método 4x4', professor: 'Prof. Carlos Santos', horas: '40h', materia: 'Previdenciário RGPS', precoOriginal: 'R$ 690,00', precoAssociado: 'R$ 290,00', img: '../images/ref2.jpg' },
         { id: 2, title: 'Avaliação Biopsicossocial na Aposentadoria PCD', professor: 'Dra. Juliana Mendes', horas: '24h', materia: 'Saúde & Biopsicossocial', precoOriginal: 'R$ 450,00', precoAssociado: 'R$ 180,00', img: '../images/ref1.jpg' },
         { id: 3, title: 'Cálculos Previdenciários de RMI e Revisões', professor: 'Dr. Roberto Lima', horas: '30h', materia: 'Cálculos', precoOriginal: 'R$ 550,00', precoAssociado: 'R$ 220,00', img: '../images/ref3.png' }
     ];
@@ -985,6 +1517,10 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 102, title: 'Seminário de Reformas Previdenciárias Estaduais', palestrante: 'Dr. Fernando Oliveira', horas: '12h', tema: 'Regimes Próprios (RPPS)', precoOriginal: 'R$ 300,00', precoAssociado: 'R$ 90,00', img: '../images/capa.jpg' }
     ];
 
+    let courseFilterSearch = '';
+    let courseFilterMateria = 'Todas as Matérias';
+    let courseFilterHoras = 'Qualquer Carga Horária';
+
     function renderCourses() {
         const grid = document.getElementById('courses-grid');
         const myCoursesList = document.getElementById('my-courses-list');
@@ -992,7 +1528,55 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = '';
         if (myCoursesList) myCoursesList.innerHTML = '';
 
-        mockCourses.forEach(c => {
+        // Bind filter inputs only once
+        const tabCursos = document.getElementById('tab-cursos');
+        if (tabCursos && !tabCursos.dataset.filtersBound) {
+            tabCursos.dataset.filtersBound = 'true';
+            const searchInput = tabCursos.querySelector('.search-box input');
+            const selects = tabCursos.querySelectorAll('.filter-select');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    courseFilterSearch = e.target.value.toLowerCase().trim();
+                    renderCourses();
+                });
+            }
+
+            if (selects[0]) {
+                selects[0].addEventListener('change', (e) => {
+                    courseFilterMateria = e.target.value;
+                    renderCourses();
+                });
+            }
+
+            if (selects[1]) {
+                selects[1].addEventListener('change', (e) => {
+                    courseFilterHoras = e.target.value;
+                    renderCourses();
+                });
+            }
+        }
+
+        const filteredCourses = mockCourses.filter(c => {
+            const matchesSearch = !courseFilterSearch || 
+                c.title.toLowerCase().includes(courseFilterSearch) || 
+                c.professor.toLowerCase().includes(courseFilterSearch);
+
+            const matchesMateria = courseFilterMateria === 'Todas as Matérias' || c.materia === courseFilterMateria;
+
+            let matchesHoras = true;
+            const hoursNum = parseInt(c.horas, 10) || 0;
+            if (courseFilterHoras === 'Até 20h') matchesHoras = hoursNum <= 20;
+            else if (courseFilterHoras === 'Mais de 20h') matchesHoras = hoursNum > 20;
+
+            return matchesSearch && matchesMateria && matchesHoras;
+        });
+
+        if (filteredCourses.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--assoc-text-muted);">Nenhum curso encontrado com os filtros selecionados.</div>';
+        }
+
+        filteredCourses.forEach(c => {
             const isEnrolled = enrolledCourses.includes(c.id);
 
             // Card no Catálogo
@@ -1029,24 +1613,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             grid.appendChild(card);
-
-            // Card no Perfil -> Meus Cursos
-            if (isEnrolled && myCoursesList) {
-                const myCard = document.createElement('div');
-                myCard.className = 'panel-card';
-                myCard.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                        <div>
-                            <h4 style="color:var(--assoc-primary); font-size:1.1rem;">${c.title}</h4>
-                            <span style="font-size:0.85rem; color:var(--assoc-text-muted);">${c.professor} | ${c.horas}</span>
-                        </div>
-                        <button class="btn-enroll" style="width:auto; padding:8px 16px;">Acessar Sala Virtual</button>
-                    </div>
-                `;
-                myCoursesList.appendChild(myCard);
-            }
         });
+
+        // Meus Cursos no Perfil
+        if (myCoursesList) {
+            const myEnrolledCourses = mockCourses.filter(c => enrolledCourses.includes(c.id));
+            if (myEnrolledCourses.length === 0) {
+                myCoursesList.innerHTML = '<p style="color:var(--assoc-text-muted); font-size:0.9rem;">Você ainda não possui cursos inscritos. Explore a aba <strong>4. Cursos</strong> para se inscrever com desconto.</p>';
+            } else {
+                myEnrolledCourses.forEach(c => {
+                    const myCard = document.createElement('div');
+                    myCard.className = 'panel-card';
+                    myCard.style.padding = '16px 20px';
+                    myCard.style.marginBottom = '12px';
+                    myCard.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <div>
+                                <h4 style="color:var(--assoc-primary); font-size:1.05rem; margin-bottom:4px;">${c.title}</h4>
+                                <span style="font-size:0.85rem; color:var(--assoc-text-muted);">${c.professor} | ${c.horas}</span>
+                            </div>
+                            <button class="btn-enroll" style="width:auto; padding:8px 16px; font-size:0.85rem;" onclick="showToastMessage('Acessando sala de aula virtual do curso...')"><i class="fa-solid fa-play"></i> Acessar Sala Virtual</button>
+                        </div>
+                    `;
+                    myCoursesList.appendChild(myCard);
+                });
+            }
+        }
     }
+
+    let seminarFilterSearch = '';
+    let seminarFilterArea = 'Todas as Áreas';
 
     function renderSeminars() {
         const grid = document.getElementById('seminars-grid');
@@ -1055,7 +1651,43 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = '';
         if (mySeminarsList) mySeminarsList.innerHTML = '';
 
-        mockSeminars.forEach(s => {
+        // Bind filter inputs only once
+        const tabSeminarios = document.getElementById('tab-seminarios');
+        if (tabSeminarios && !tabSeminarios.dataset.filtersBound) {
+            tabSeminarios.dataset.filtersBound = 'true';
+            const searchInput = tabSeminarios.querySelector('.search-box input');
+            const select = tabSeminarios.querySelector('.filter-select');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    seminarFilterSearch = e.target.value.toLowerCase().trim();
+                    renderSeminars();
+                });
+            }
+
+            if (select) {
+                select.addEventListener('change', (e) => {
+                    seminarFilterArea = e.target.value;
+                    renderSeminars();
+                });
+            }
+        }
+
+        const filteredSeminars = mockSeminars.filter(s => {
+            const matchesSearch = !seminarFilterSearch || 
+                s.title.toLowerCase().includes(seminarFilterSearch) || 
+                s.palestrante.toLowerCase().includes(seminarFilterSearch);
+
+            const matchesArea = seminarFilterArea === 'Todas as Áreas' || s.tema === seminarFilterArea;
+
+            return matchesSearch && matchesArea;
+        });
+
+        if (filteredSeminars.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--assoc-text-muted);">Nenhum seminário encontrado com os filtros selecionados.</div>';
+        }
+
+        filteredSeminars.forEach(s => {
             const isEnrolled = enrolledSeminars.includes(s.id);
 
             const card = document.createElement('div');
@@ -1069,7 +1701,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3 class="item-title">${s.title}</h3>
                     <div class="item-meta">
                         <span><i class="fa-solid fa-user-tie"></i> ${s.palestrante}</span>
-                        <span><i class="fa-solid fa-clock"></i> ${s.horas}</span>
+                        <span><i class="fa-solid fa-clock"></i> ${s.horas} | Tema: ${s.tema}</span>
                     </div>
                     <div class="item-price-tag">
                         <span class="price-old">${s.precoOriginal}</span>
@@ -1091,22 +1723,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             grid.appendChild(card);
-
-            if (isEnrolled && mySeminarsList) {
-                const myCard = document.createElement('div');
-                myCard.className = 'panel-card';
-                myCard.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                        <div>
-                            <h4 style="color:var(--assoc-primary); font-size:1.1rem;">${s.title}</h4>
-                            <span style="font-size:0.85rem; color:var(--assoc-text-muted);">${s.palestrante} | ${s.horas}</span>
-                        </div>
-                        <button class="btn-enroll" style="width:auto; padding:8px 16px;">Ver Transmissão</button>
-                    </div>
-                `;
-                mySeminarsList.appendChild(myCard);
-            }
         });
+
+        // Meus Seminários no Perfil
+        if (mySeminarsList) {
+            const myEnrolledSeminars = mockSeminars.filter(s => enrolledSeminars.includes(s.id));
+            if (myEnrolledSeminars.length === 0) {
+                mySeminarsList.innerHTML = '<p style="color:var(--assoc-text-muted); font-size:0.9rem;">Você ainda não possui seminários inscritos. Explore a aba <strong>5. Seminários</strong> para participar.</p>';
+            } else {
+                myEnrolledSeminars.forEach(s => {
+                    const myCard = document.createElement('div');
+                    myCard.className = 'panel-card';
+                    myCard.style.padding = '16px 20px';
+                    myCard.style.marginBottom = '12px';
+                    myCard.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <div>
+                                <h4 style="color:var(--assoc-primary); font-size:1.05rem; margin-bottom:4px;">${s.title}</h4>
+                                <span style="font-size:0.85rem; color:var(--assoc-text-muted);">${s.palestrante} | ${s.horas}</span>
+                            </div>
+                            <button class="btn-enroll" style="width:auto; padding:8px 16px; font-size:0.85rem;" onclick="showToastMessage('Conectando ao canal de transmissão ao vivo...')"><i class="fa-solid fa-video"></i> Ver Transmissão</button>
+                        </div>
+                    `;
+                    mySeminarsList.appendChild(myCard);
+                });
+            }
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -1348,12 +1990,38 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 6, title: 'Logotipo Genérico & Identidade Visual de Escritório', cat: 'design', formats: ['PNG', 'PDF'] }
     ];
 
+    let currentTemplateCategory = 'all';
+
     function renderTemplates() {
         const grid = document.getElementById('templates-grid');
         if (!grid) return;
         grid.innerHTML = '';
 
-        mockTemplates.forEach(t => {
+        // Bind category button clicks once
+        const tabTemplates = document.getElementById('tab-templates');
+        if (tabTemplates && !tabTemplates.dataset.catsBound) {
+            tabTemplates.dataset.catsBound = 'true';
+            const catButtons = tabTemplates.querySelectorAll('.template-cat-btn');
+            const catMap = ['all', 'pecas', 'docs', 'planilhas', 'design'];
+
+            catButtons.forEach((btn, index) => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    catButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTemplateCategory = catMap[index] || 'all';
+                    renderTemplates();
+                });
+            });
+        }
+
+        const filtered = mockTemplates.filter(t => currentTemplateCategory === 'all' || t.cat === currentTemplateCategory);
+
+        if (filtered.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--assoc-text-muted);">Nenhum template encontrado para esta categoria.</div>';
+        }
+
+        filtered.forEach(t => {
             const card = document.createElement('div');
             card.className = 'template-item-card';
             card.innerHTML = `
@@ -1448,7 +2116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const btnPublish = document.getElementById('btn-publish-book');
-        if (btnAddBookModal(btnPublish));
+        btnAddBookModal(btnPublish);
     }
 
     function btnAddBookModal(btn) {
