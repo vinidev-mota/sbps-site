@@ -4,10 +4,10 @@
    ========================================================================== */
 
 :root {
-    --evt-primary: #0F3B5F;
-    --evt-primary-dark: #0A2640;
-    --evt-secondary: #0088CC;
-    --evt-accent: #00B4D8;
+    --evt-primary: #1E293B;
+    --evt-primary-dark: #0F172A;
+    --evt-secondary: #059669;
+    --evt-accent: #10B981;
     --evt-bg-light: #F8FAFC;
     --evt-bg-card: #FFFFFF;
     --evt-border: #E2E8F0;
@@ -17,9 +17,9 @@
     --evt-warning: #F59E0B;
     --evt-danger: #EF4444;
     --evt-purple: #8B5CF6;
-    --evt-radius: 12px;
-    --evt-shadow: 0 10px 25px -5px rgba(15, 59, 95, 0.08);
-    --evt-shadow-hover: 0 16px 28px -8px rgba(0, 136, 204, 0.18);
+    --evt-radius: 16px;
+    --evt-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --evt-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
 body.eventos-portal-page {
@@ -56,38 +56,41 @@ body.eventos-portal-page {
 .evt-type-selector {
     display: flex;
     background: #F1F5F9;
-    padding: 8px;
-    gap: 8px;
-    border-bottom: 1px solid var(--evt-border);
+    padding: 6px;
+    margin: 20px 30px 0 30px;
+    border-radius: 10px;
 }
 
 .evt-type-btn {
     flex: 1;
-    padding: 14px 20px;
+    padding: 10px;
     border: none;
     background: transparent;
-    font-size: 0.92rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 500;
     color: var(--evt-text-muted);
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    text-transform: capitalize;
 }
 
 .evt-type-btn.active {
     background: #ffffff;
     color: var(--evt-primary);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .evt-subtabs-nav {
     display: flex;
-    border-bottom: 1px solid var(--evt-border);
     background: #FAFAFA;
+    border-bottom: 1px solid var(--evt-border);
+    padding: 0 30px;
 }
 
 .evt-subtab-btn {
@@ -104,9 +107,9 @@ body.eventos-portal-page {
 }
 
 .evt-subtab-btn.active {
-    color: var(--evt-secondary);
-    border-bottom-color: var(--evt-secondary);
-    background: #ffffff;
+    color: var(--evt-primary);
+    border-bottom-color: var(--evt-primary);
+    background: transparent;
 }
 
 .evt-auth-form-body {
@@ -162,8 +165,8 @@ body.eventos-portal-page {
 
 .evt-form-control {
     width: 100%;
-    padding: 11px 14px;
-    border: 1.5px solid var(--evt-border);
+    padding: 12px 16px;
+    border: 1px solid var(--evt-border);
     border-radius: 8px;
     font-size: 0.9rem;
     font-family: inherit;
@@ -177,10 +180,10 @@ body.eventos-portal-page {
 }
 
 .evt-btn-primary {
-    background: linear-gradient(135deg, var(--evt-primary), var(--evt-secondary));
+    background-color: var(--evt-primary);
     color: #ffffff;
-    font-weight: 700;
-    padding: 13px 28px;
+    font-weight: 500;
+    padding: 12px 16px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -189,14 +192,14 @@ body.eventos-portal-page {
     justify-content: center;
     gap: 10px;
     font-size: 0.95rem;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, background-color 0.2s;
     width: 100%;
     margin-top: 15px;
 }
 
 .evt-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 136, 204, 0.3);
+    transform: scale(1.01);
+    background-color: var(--evt-secondary);
 }
 
 .evt-edu-row {
@@ -1208,3 +1211,58 @@ body.eventos-portal-page {
     font-size: 1.1rem;
     color: var(--evt-primary);
 }
+
+/* Logout Modal */
+.logout-confirm-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease-out;
+}
+.logout-modal-content {
+    background: #FFFFFF;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    animation: slideUp 0.3s ease-out;
+}
+.logout-icon {
+    width: 60px; height: 60px;
+    background: #FEE2E2; color: #DC2626;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin: 0 auto 20px auto;
+}
+.logout-modal-content h3 {
+    color: #1E293B; font-size: 1.25rem; margin-bottom: 10px;
+}
+.logout-modal-content p {
+    color: #64748B; font-size: 0.95rem; margin-bottom: 25px;
+}
+.logout-actions {
+    display: flex; flex-direction: column; gap: 8px;
+}
+.btn-logout-cancel, .btn-logout-area, .btn-logout-confirm {
+    padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s;
+}
+.btn-logout-cancel {
+    background: #FFFFFF; color: #1E293B; border: 1px solid #E2E8F0;
+}
+.btn-logout-cancel:hover { background: #F8FAFC; }
+.btn-logout-area {
+    background: #F1F5F9; color: #1E293B; border: 1px solid #E2E8F0;
+}
+.btn-logout-area:hover { background: #E2E8F0; }
+.btn-logout-confirm {
+    background: #DC2626; color: #FFF;
+}
+.btn-logout-confirm:hover { background: #B91C1C; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

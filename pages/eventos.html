@@ -14,59 +14,6 @@
 </head>
 <body class="eventos-portal-page">
 
-    <!-- Header Wrapper for Sticky Position -->
-    <div class="header-wrapper">
-        <!-- Top Bar do Site Principal -->
-        <div class="top-bar">
-            <div class="container top-bar-inner">
-                <div class="top-bar-left">
-                    <a href="javascript:void(0)" class="email-action-link" title="Opções de e-mail" data-email="contato@sbps.org.br"><i class="fa-solid fa-envelope"></i> contato@sbps.org.br <i class="fa-solid fa-chevron-down email-chevron"></i></a>
-                    <a href="javascript:void(0)" class="phone-copy-link" title="Clique para copiar o número de telefone" data-phone="(00) 0000-0000"><i class="fa-solid fa-phone"></i> (00) 0000-0000</a>
-                    <a href="associado.html"><i class="fa-solid fa-user"></i> Área do Associado</a>
-                </div>
-                <div class="top-bar-right">
-                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Header / Nav -->
-        <header class="main-header">
-            <div class="container header-inner">
-                <div class="logo">
-                    <a href="../index.html">
-                        <img src="../images/image-header.png" alt="SBPS Logo" class="logo-img">
-                    </a>
-                </div>
-                <nav class="main-nav">
-                    <ul>
-                        <li class="dropdown">
-                            <a href="../index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="sobre.html">SOBRE A SBPS</a></li>
-                                <li><a href="objetivos.html">OBJETIVOS</a></li>
-                                <li><a href="diretoria.html">DIRETORIA</a></li>
-                                <li><a href="descricaodiretorias.html">DESCRIÇÃO DE DIRETORIAS</a></li>
-                                <li><a href="resolucoes.html">RESOLUÇÕES</a></li>
-                                <li><a href="estatuto.html">ESTATUTO</a></li>
-                                <li><a href="convenios.html">CONVÊNIOS</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="noticias.html">PUBLICAÇÕES</a></li>
-                        <li><a href="eventos.html" class="active">EVENTOS</a></li>
-                        <li><a href="notas.html">NOTAS</a></li>
-                        <li><a href="contatos.html">CONTATOS</a></li>
-                        <li><a href="informacoes.html">INFORMAÇÕES</a></li>
-                    </ul>
-                    <a href="#" class="btn btn-associe">ASSOCIE-SE</a>
-                    <button class="search-btn"><i class="fa-solid fa-search"></i></button>
-                </nav>
-            </div>
-        </header>
-    </div>
-
     <!-- ==========================================================================
          SEÇÃO DE AUTENTICAÇÃO DUAL (PARTICIPANTE E PALESTRANTE)
          ========================================================================== -->
@@ -85,8 +32,8 @@
             <!-- BOX AUTENTICAÇÃO - PARTICIPANTE -->
             <div id="auth-box-participante">
                 <div class="evt-subtabs-nav">
-                    <button type="button" id="tab-part-login-btn" class="evt-subtab-btn active">Acessar Área do Participante</button>
-                    <button type="button" id="tab-part-reg-btn" class="evt-subtab-btn">Cadastrar-se como Participante</button>
+                    <button type="button" id="tab-part-login-btn" class="evt-subtab-btn active">Acessar área do participante</button>
+                    <button type="button" id="tab-part-reg-btn" class="evt-subtab-btn">Criar conta como participante</button>
                 </div>
 
                 <div class="evt-auth-form-body">
@@ -104,13 +51,21 @@
                             <input type="text" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
                         </div>
                         <div class="evt-form-group" style="margin-bottom: 15px;">
-                            <label>Senha <span style="color:red;">*</span></label>
-                            <input type="password" class="evt-form-control" placeholder="••••••••" required>
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <label>Senha <span style="color:red;">*</span></label>
+                                <a href="#" style="font-size: 0.8rem; color: var(--evt-secondary); text-decoration: none; font-weight: 600;">Esqueceu a senha?</a>
+                            </div>
+                            <div style="position: relative;">
+                                <input type="password" id="login-part-password" class="evt-form-control" placeholder="••••••••" required style="padding-right: 40px;">
+                                <button type="button" onclick="togglePasswordVisibility('login-part-password', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer;">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
-                        <button type="submit" class="evt-btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Entrar na Área de Eventos</button>
+                        <button type="submit" class="evt-btn-primary">Acessar portal do participante</button>
                     </form>
 
-                    <!-- Form Cadastro Participante -->
+                                        <!-- Form Cadastro Participante -->
                     <form id="form-register-participante" style="display: none;">
                         <h2 class="evt-form-title">Cadastro de Participante</h2>
                         <p class="evt-form-desc">Preencha seus dados para se inscrever nos eventos e cursos SBPS.</p>
@@ -119,54 +74,122 @@
                             <i class="fa-solid fa-triangle-exclamation"></i> O participante cadastrado nesta área terá acesso exclusivo aos eventos, não possuindo acesso à Área de Associados a menos que efetue a associação oficial.
                         </div>
 
-                        <div class="evt-grid-2">
-                            <div class="evt-form-group evt-full-width">
-                                <label>Nome Completo <span style="color:red;">*</span></label>
-                                <input type="text" id="reg-part-nome" class="evt-form-control" required>
+                        <!-- SEÇÃO 1: Informações Pessoais -->
+                        <div style="margin-bottom: 28px;">
+                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">INFORMAÇÕES PESSOAIS</h3>
                             </div>
-                            <div class="evt-form-group">
-                                <label>Data de Nascimento <span style="color:red;">*</span></label>
-                                <input type="date" id="reg-part-nasc" class="evt-form-control" required>
+                            <div class="evt-grid-2">
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Nome Completo <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-nome" class="evt-form-control" placeholder="Digite seu nome completo" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>CPF <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-cpf" class="evt-form-control" placeholder="000.000.000-00" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>RG <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-rg" class="evt-form-control" placeholder="00.000.000-0" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Data de Nascimento <span style="color:red;">*</span></label>
+                                    <input type="date" id="reg-part-nasc" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Gênero <span style="color:red;">*</span></label>
+                                    <select id="reg-part-genero" class="evt-form-control" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Feminino">Feminino</option>
+                                        <option value="Não-binário">Não-binário</option>
+                                        <option value="Prefiro não informar">Prefiro não informar</option>
+                                        <option value="Outro">Outro</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="evt-form-group">
-                                <label>CPF <span style="color:red;">*</span></label>
-                                <input type="text" id="reg-part-cpf" class="evt-form-control" placeholder="000.000.000-00" required>
+                        </div>
+
+                        <!-- SEÇÃO 2: Informações de Contato -->
+                        <div style="margin-bottom: 28px;">
+                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">INFORMAÇÕES DE CONTATO</h3>
                             </div>
-                            <div class="evt-form-group">
-                                <label>E-mail <span style="color:red;">*</span></label>
-                                <input type="email" id="reg-part-email" class="evt-form-control" placeholder="seu@email.com" required>
+                            <div class="evt-grid-2">
+                                <div class="evt-form-group">
+                                    <label>Celular / WhatsApp <span style="color:red;">*</span></label>
+                                    <input type="tel" id="reg-part-celular" class="evt-form-control" placeholder="(00) 90000-0000" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Telefone Fixo</label>
+                                    <input type="tel" id="reg-part-fixo" class="evt-form-control" placeholder="(00) 0000-0000">
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>E-mail Principal <span style="color:red;">*</span></label>
+                                    <input type="email" id="reg-part-email" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Confirmação do E-mail <span style="color:red;">*</span></label>
+                                    <input type="email" id="reg-part-email-confirm" class="evt-form-control" placeholder="Repita seu e-mail" required>
+                                </div>
                             </div>
-                            <div class="evt-form-group">
-                                <label>Celular (com DDD) <span style="color:red;">*</span></label>
-                                <input type="tel" id="reg-part-celular" class="evt-form-control" placeholder="(00) 90000-0000" required>
+                        </div>
+
+                        <!-- SEÇÃO 3: Endereço Residencial -->
+                        <div style="margin-bottom: 28px;">
+                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">ENDEREÇO RESIDENCIAL</h3>
                             </div>
-                            <div class="evt-form-group">
-                                <label>Telefone Fixo (Opcional)</label>
-                                <input type="tel" id="reg-part-fixo" class="evt-form-control" placeholder="(00) 0000-0000">
+                            <div class="evt-grid-2">
+                                <div class="evt-form-group">
+                                    <label>CEP <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-cep" class="evt-form-control" placeholder="00000-000" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Logradouro <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-rua" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Número <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-numero" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Bairro <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-bairro" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>UF <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-uf" class="evt-form-control" readonly required style="background:#F1F5F9;">
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Cidade <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-cidade" class="evt-form-control" readonly required style="background:#F1F5F9;">
+                                </div>
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Complemento <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-complemento" class="evt-form-control" required>
+                                </div>
                             </div>
-                            <div class="evt-form-group">
-                                <label>Registro OAB (Se houver)</label>
-                                <input type="text" id="reg-part-oab" class="evt-form-control" placeholder="Ex: 123456/SP">
+                        </div>
+
+                        <!-- SEÇÃO 4: Acesso -->
+                        <div style="margin-bottom: 28px;">
+                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">ACESSO</h3>
                             </div>
-                            <div class="evt-form-group evt-full-width">
-                                <label>Registro em outro Conselho Profissional</label>
-                                <input type="text" id="reg-part-conselho" class="evt-form-control" placeholder="Ex: CREA, CRA, CRM">
-                            </div>
-                            <div class="evt-form-group">
-                                <label>CEP <span style="color:red;">*</span></label>
-                                <input type="text" id="reg-part-cep" class="evt-form-control" placeholder="00000-000" required>
-                            </div>
-                            <div class="evt-form-group evt-full-width">
-                                <label>Endereço Completo <span style="color:red;">*</span></label>
-                                <input type="text" id="reg-part-endereco" class="evt-form-control" required>
-                            </div>
-                            <div class="evt-form-group">
-                                <label>Senha <span style="color:red;">*</span></label>
-                                <input type="password" id="reg-part-password" class="evt-form-control" required>
-                            </div>
-                            <div class="evt-form-group">
-                                <label>Confirmar Senha <span style="color:red;">*</span></label>
-                                <input type="password" id="reg-part-password-confirm" class="evt-form-control" required>
+                            <div class="evt-grid-2">
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Login / Usuário <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-part-login-user" class="evt-form-control" placeholder="Ex: seunome" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Senha <span style="color:red;">*</span></label>
+                                    <input type="password" id="reg-part-password" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Confirmar Senha <span style="color:red;">*</span></label>
+                                    <input type="password" id="reg-part-password-confirm" class="evt-form-control" required>
+                                </div>
                             </div>
                         </div>
 
@@ -178,8 +201,8 @@
             <!-- BOX AUTENTICAÇÃO - PALESTRANTE -->
             <div id="auth-box-palestrante" style="display: none;">
                 <div class="evt-subtabs-nav">
-                    <button type="button" id="tab-pal-login-btn" class="evt-subtab-btn active">Acessar Área do Palestrante</button>
-                    <button type="button" id="tab-pal-reg-btn" class="evt-subtab-btn">Cadastrar-se como Palestrante</button>
+                    <button type="button" id="tab-pal-login-btn" class="evt-subtab-btn active">Acessar área do palestrante</button>
+                    <button type="button" id="tab-pal-reg-btn" class="evt-subtab-btn">Criar conta como palestrante</button>
                 </div>
 
                 <div class="evt-auth-form-body">
@@ -193,103 +216,168 @@
                             <input type="text" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
                         </div>
                         <div class="evt-form-group" style="margin-bottom: 15px;">
-                            <label>Senha <span style="color:red;">*</span></label>
-                            <input type="password" class="evt-form-control" placeholder="••••••••" required>
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <label>Senha <span style="color:red;">*</span></label>
+                                <a href="#" style="font-size: 0.8rem; color: var(--evt-purple); text-decoration: none; font-weight: 600;">Esqueceu a senha?</a>
+                            </div>
+                            <div style="position: relative;">
+                                <input type="password" id="login-pal-password" class="evt-form-control" placeholder="••••••••" required style="padding-right: 40px;">
+                                <button type="button" onclick="togglePasswordVisibility('login-pal-password', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer;">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
-                        <button type="submit" class="evt-btn-primary" style="background:linear-gradient(135deg, #0F3B5F, #8B5CF6);"><i class="fa-solid fa-right-to-bracket"></i> Acessar Portal do Palestrante</button>
+                        <button type="submit" class="evt-btn-primary" style="background:linear-gradient(135deg, #0F3B5F, #8B5CF6);">Acessar portal do palestrante</button>
                     </form>
 
-                    <!-- Form Cadastro Palestrante -->
+                                        <!-- Form Cadastro Palestrante -->
                     <form id="form-register-palestrante" style="display: none;">
                         <h2 class="evt-form-title">Cadastro Completo de Palestrante</h2>
                         <p class="evt-form-desc">Preencha seus dados acadêmicos, profissionais e bancários para ministrar eventos na SBPS.</p>
 
-                        <div class="evt-grid-2">
-                            <div class="evt-form-group evt-full-width">
-                                <label>Nome Completo <span style="color:red;">*</span></label>
-                                <input type="text" id="reg-pal-nome" class="evt-form-control" required>
+                        <!-- SEÇÃO 1: Informações Pessoais -->
+                        <div style="margin-bottom: 28px;">
+                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">INFORMAÇÕES PESSOAIS</h3>
                             </div>
-                            <div class="evt-form-group">
-                                <label>Data de Nascimento <span style="color:red;">*</span></label>
-                                <input type="date" id="reg-pal-nasc" class="evt-form-control" required>
-                            </div>
-                            <div class="evt-form-group">
-                                <label>CPF <span style="color:red;">*</span></label>
-                                <input type="text" id="reg-pal-cpf" class="evt-form-control" required>
-                            </div>
-                            <div class="evt-form-group">
-                                <label>E-mail <span style="color:red;">*</span></label>
-                                <input type="email" id="reg-pal-email" class="evt-form-control" required>
-                            </div>
-                            <div class="evt-form-group">
-                                <label>Celular (com DDD) <span style="color:red;">*</span></label>
-                                <input type="tel" id="reg-pal-celular" class="evt-form-control" required>
-                            </div>
-
-                            <div class="evt-form-group evt-full-width" style="border-top:1px solid #E2E8F0; padding-top:15px; margin-top:10px;">
-                                <h4 style="color:var(--evt-primary); margin:0 0 10px 0;"><i class="fa-solid fa-graduation-cap"></i> 1. Formação Acadêmica & Qualificação</h4>
-                            </div>
-
-                            <div class="evt-form-group">
-                                <label>Nível de Escolaridade <span style="color:red;">*</span></label>
-                                <select id="reg-pal-escolaridade" class="evt-form-control" required>
-                                    <option value="">Selecione...</option>
-                                    <option value="Graduação">Graduação</option>
-                                    <option value="Pós-Graduação">Pós-Graduação</option>
-                                    <option value="Mestrado">Mestrado</option>
-                                    <option value="Doutorado">Doutorado</option>
-                                    <option value="Pós-Doutorado">Pós-Doutorado</option>
-                                </select>
-                            </div>
-
-                            <div class="evt-form-group evt-full-width">
-                                <label>Cursos de Formação (com Ano de Início e Conclusão) <span style="color:red;">*</span></label>
-                                <div id="edu-courses-container">
-                                    <div class="evt-edu-row">
-                                        <input type="text" class="evt-form-control edu-nome" placeholder="Ex: Direito Previdenciário - USP" required>
-                                        <input type="number" class="evt-form-control edu-inicio" placeholder="Ano Início" style="width:110px;" required>
-                                        <input type="number" class="evt-form-control edu-fim" placeholder="Ano Fim" style="width:110px;" required>
-                                    </div>
+                            <div class="evt-grid-2">
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Nome Completo <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-nome" class="evt-form-control" required>
                                 </div>
-                                <button type="button" id="btn-add-edu-item" class="evt-btn-add-item"><i class="fa-solid fa-plus"></i> Adicionar Mais um Curso</button>
+                                <div class="evt-form-group">
+                                    <label>CPF <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-cpf" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>RG <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-rg" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Data de Nascimento <span style="color:red;">*</span></label>
+                                    <input type="date" id="reg-pal-nasc" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Gênero <span style="color:red;">*</span></label>
+                                    <select id="reg-pal-genero" class="evt-form-control" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Feminino">Feminino</option>
+                                        <option value="Não-binário">Não-binário</option>
+                                        <option value="Prefiro não informar">Prefiro não informar</option>
+                                        <option value="Outro">Outro</option>
+                                    </select>
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="evt-form-group">
-                                <label>Área de Atuação Principal <span style="color:red;">*</span></label>
-                                <input type="text" id="reg-pal-area" class="evt-form-control" placeholder="Ex: Direito Previdenciário RGPS / RPPS" required>
+                        <!-- SEÇÃO 2: Informações de Contato e Endereço -->
+                        <div style="margin-bottom: 28px;">
+                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">CONTATO E ENDEREÇO</h3>
                             </div>
+                            <div class="evt-grid-2">
+                                <div class="evt-form-group">
+                                    <label>Celular / WhatsApp <span style="color:red;">*</span></label>
+                                    <input type="tel" id="reg-pal-celular" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>E-mail Principal <span style="color:red;">*</span></label>
+                                    <input type="email" id="reg-pal-email" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>CEP <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-cep" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>UF <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-uf" class="evt-form-control" readonly required style="background:#F1F5F9;">
+                                </div>
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Endereço Completo <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-endereco" class="evt-form-control" required>
+                                </div>
+                            </div>
+                        </div>
 
-                            <div class="evt-form-group">
-                                <label>Profissão Atual & Anos de Experiência <span style="color:red;">*</span></label>
-                                <input type="text" id="reg-pal-profissao" class="evt-form-control" placeholder="Ex: Advogado e Professor (12 anos de experiência)" required>
+                        <!-- SEÇÃO 3: Formação e Qualificação -->
+                        <div style="margin-bottom: 28px;">
+                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;"><i class="fa-solid fa-graduation-cap"></i> FORMAÇÃO E QUALIFICAÇÃO</h3>
                             </div>
+                            <div class="evt-grid-2">
+                                <div class="evt-form-group">
+                                    <label>Nível de Escolaridade <span style="color:red;">*</span></label>
+                                    <select id="reg-pal-escolaridade" class="evt-form-control" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="Graduação">Graduação</option>
+                                        <option value="Pós-Graduação">Pós-Graduação</option>
+                                        <option value="Mestrado">Mestrado</option>
+                                        <option value="Doutorado">Doutorado</option>
+                                        <option value="Pós-Doutorado">Pós-Doutorado</option>
+                                    </select>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Área de Atuação Principal <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-area" class="evt-form-control" placeholder="Ex: Direito Previdenciário RGPS / RPPS" required>
+                                </div>
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Cursos de Formação (com Ano de Início e Conclusão) <span style="color:red;">*</span></label>
+                                    <div id="edu-courses-container">
+                                        <div class="evt-edu-row">
+                                            <input type="text" class="evt-form-control edu-nome" placeholder="Ex: Direito Previdenciário - USP" required>
+                                            <input type="number" class="evt-form-control edu-inicio" placeholder="Ano Início" style="width:110px;" required>
+                                            <input type="number" class="evt-form-control edu-fim" placeholder="Ano Fim" style="width:110px;" required>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="btn-add-edu-item" class="evt-btn-add-item"><i class="fa-solid fa-plus"></i> Adicionar Mais um Curso</button>
+                                </div>
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Profissão Atual & Anos de Experiência <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-profissao" class="evt-form-control" placeholder="Ex: Advogado e Professor (12 anos de experiência)" required>
+                                </div>
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Experiências Profissionais Relevantes (Opcional)</label>
+                                    <textarea id="reg-pal-experiencia" class="evt-form-control" rows="2" placeholder="Descreva brevemente suas principais atuações..."></textarea>
+                                </div>
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Resumo "Sobre Mim" <span style="color:red;">*</span></label>
+                                    <textarea id="reg-pal-sobre" class="evt-form-control" rows="3" placeholder="Apresentação curta para os participantes do evento..." required></textarea>
+                                </div>
+                            </div>
+                        </div>
 
-                            <div class="evt-form-group evt-full-width">
-                                <label>Experiências Profissionais Relevantes (Opcional)</label>
-                                <textarea id="reg-pal-experiencia" class="evt-form-control" rows="2" placeholder="Descreva brevemente suas principais atuações..."></textarea>
+                        <!-- SEÇÃO 4: Dados Bancários -->
+                        <div style="margin-bottom: 28px;">
+                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;"><i class="fa-solid fa-building-columns"></i> DADOS BANCÁRIOS</h3>
                             </div>
+                            <div class="evt-grid-2">
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Chave PIX / Dados Bancários (Agência, Conta, Banco) <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-pix" class="evt-form-control" placeholder="Ex: Chave PIX E-mail ou Ag: 0001 C/C: 12345-6 Banco do BB" required>
+                                </div>
+                            </div>
+                        </div>
 
-                            <div class="evt-form-group evt-full-width">
-                                <label>Resumo "Sobre Mim" <span style="color:red;">*</span></label>
-                                <textarea id="reg-pal-sobre" class="evt-form-control" rows="3" placeholder="Apresentação curta para os participantes do evento..." required></textarea>
+                        <!-- SEÇÃO 5: Acesso -->
+                        <div style="margin-bottom: 28px;">
+                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">ACESSO</h3>
                             </div>
-
-                            <div class="evt-form-group evt-full-width" style="border-top:1px solid #E2E8F0; padding-top:15px; margin-top:10px;">
-                                <h4 style="color:var(--evt-primary); margin:0 0 10px 0;"><i class="fa-solid fa-building-columns"></i> 2. Dados Bancários para Honorários</h4>
-                            </div>
-
-                            <div class="evt-form-group evt-full-width">
-                                <label>Chave PIX / Dados Bancários (Agência, Conta, Banco) <span style="color:red;">*</span></label>
-                                <input type="text" id="reg-pal-pix" class="evt-form-control" placeholder="Ex: Chave PIX E-mail ou Ag: 0001 C/C: 12345-6 Banco do Brasil" required>
-                            </div>
-
-                            <div class="evt-form-group">
-                                <label>Senha <span style="color:red;">*</span></label>
-                                <input type="password" id="reg-pal-password" class="evt-form-control" required>
-                            </div>
-                            <div class="evt-form-group">
-                                <label>Confirmar Senha <span style="color:red;">*</span></label>
-                                <input type="password" id="reg-pal-password-confirm" class="evt-form-control" required>
+                            <div class="evt-grid-2">
+                                <div class="evt-form-group evt-full-width">
+                                    <label>Login / Usuário <span style="color:red;">*</span></label>
+                                    <input type="text" id="reg-pal-login-user" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Senha <span style="color:red;">*</span></label>
+                                    <input type="password" id="reg-pal-password" class="evt-form-control" required>
+                                </div>
+                                <div class="evt-form-group">
+                                    <label>Confirmar Senha <span style="color:red;">*</span></label>
+                                    <input type="password" id="reg-pal-password-confirm" class="evt-form-control" required>
+                                </div>
                             </div>
                         </div>
 
@@ -529,10 +617,26 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmação de Logout -->
+    <div id="logout-modal" class="logout-confirm-modal">
+        <div class="logout-modal-content">
+            <div class="logout-icon">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <h3>Sair da Área de Eventos</h3>
+            <p>Você tem certeza que deseja sair da sua conta?</p>
+            <div class="logout-actions">
+                <button type="button" class="btn-logout-cancel" onclick="cancelLogoutEventos()">Cancelar</button>
+                <button type="button" class="btn-logout-area" onclick="leaveAreaEventos()">Sair da Área de Eventos</button>
+                <button type="button" class="btn-logout-confirm" onclick="confirmLogoutEventos()">Sair da Conta</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts da Aplicação -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../scripts/supabase-client.js?v=2"></script>
-    <script src="../scripts/script.js?v=5"></script>
-    <script src="../scripts/eventos.js?v=6"></script>
+    <script src="../scripts/script.js?v=9999"></script>
+    <script src="../scripts/eventos.js?v=9999"></script>
 </body>
 </html>

@@ -233,16 +233,32 @@
         const formAi = document.getElementById('form-ai-chat');
         if (formAi) formAi.addEventListener('submit', handleAiSubmit);
 
-        // Logout
+        // Logout Modal Trigger
         const btnLogoutSidebar = document.getElementById('btn-logout-workspace');
         if (btnLogoutSidebar) {
             btnLogoutSidebar.addEventListener('click', () => {
-                localStorage.removeItem('sbps_evt_session');
-                document.body.classList.remove('evt-logged-in');
-                location.reload();
+                const modal = document.getElementById('logout-modal');
+                if (modal) modal.style.display = 'flex';
             });
         }
     }
+
+    window.cancelLogoutEventos = function() {
+        const modal = document.getElementById('logout-modal');
+        if (modal) modal.style.display = 'none';
+    };
+
+    window.leaveAreaEventos = function() {
+        window.location.href = '../index.html';
+    };
+
+    window.confirmLogoutEventos = function() {
+        localStorage.removeItem('sbps_evt_session');
+        document.body.classList.remove('evt-logged-in');
+        const modal = document.getElementById('logout-modal');
+        if (modal) modal.style.display = 'none';
+        location.reload();
+    };
 
     function selectUserRole(role) {
         state.userRole = role;

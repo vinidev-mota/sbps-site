@@ -16,7 +16,7 @@ const TAB_TITLES = {
     'outros': '9. Outros & Ajuda'
 };
 
-window.switchTab = function(tabId, tabTitle) {
+window.switchTab = function(tabId, tabTitle, fromPopState = false) {
     if (!tabId) return;
 
     if (tabId === 'dashboard') {
@@ -64,8 +64,8 @@ window.switchTab = function(tabId, tabTitle) {
     });
 
     // Update hash in URL
-    if (window.location.hash !== `#${tabId}`) {
-        history.replaceState(null, '', `#${tabId}`);
+    if (!fromPopState && window.location.hash !== `#${tabId}`) {
+        history.pushState({ internal: true, tab: tabId }, '', `#${tabId}`);
     }
 
     // Scroll to top smoothly
@@ -75,7 +75,7 @@ window.switchTab = function(tabId, tabTitle) {
     if (quickMenuDropdown) quickMenuDropdown.classList.remove('show');
 };
 
-window.showDashboard = function() {
+window.showDashboard = function(fromPopState = false) {
     const authContainer = document.getElementById('auth-container');
     const memberContent = document.getElementById('member-content');
     if (authContainer) authContainer.style.display = 'none';
@@ -103,38 +103,60 @@ window.showDashboard = function() {
         item.classList.toggle('active', item.dataset.tab === 'dashboard');
     });
 
-    if (window.location.hash !== '#dashboard' && window.location.hash !== '') {
-        history.replaceState(null, '', '#dashboard');
+    if (!fromPopState && window.location.hash !== '#dashboard') {
+        history.pushState({ internal: true, tab: 'dashboard' }, '', '#dashboard');
     }
 
     const quickMenuDropdown = document.getElementById('quick-menu-dropdown');
     if (quickMenuDropdown) quickMenuDropdown.classList.remove('show');
 };
 
-window.logoutAssociado = function() {
-    if (confirm('Deseja realmente sair da Área do Associado?')) {
-        localStorage.removeItem('sbps_associado_user');
-        const authContainer = document.getElementById('auth-container');
-        const memberContent = document.getElementById('member-content');
-        if (authContainer) authContainer.style.display = 'block';
-        if (memberContent) memberContent.style.display = 'none';
+window.goBack = function() {
+    if (window.history.state && window.history.state.internal) {
+        history.back();
+    } else {
+        window.showDashboard();
     }
 };
 
-// Sincroniza dinamicamente a posição sticky da barra de abas com a altura real do cabeçalho
-function updateStickyTabPosition() {
-    const headerWrapper = document.querySelector('.header-wrapper');
-    if (headerWrapper) {
-        const h = headerWrapper.offsetHeight;
-        document.documentElement.style.setProperty('--assoc-sticky-top', `${h}px`);
+window.logoutAssociado = function() {
+    const modal = document.getElementById('logout-modal');
+    if (modal) {
+        modal.style.display = 'flex';
     }
-}
-window.addEventListener('resize', updateStickyTabPosition);
-window.addEventListener('load', updateStickyTabPosition);
-window.addEventListener('scroll', updateStickyTabPosition, { passive: true });
+};
+
+window.confirmLogout = function() {
+    localStorage.removeItem('sbps_associado_user');
+    const authContainer = document.getElementById('auth-container');
+    const memberContent = document.getElementById('member-content');
+    if (authContainer) authContainer.style.display = 'block';
+    if (memberContent) memberContent.style.display = 'none';
+    const modal = document.getElementById('logout-modal');
+    if (modal) modal.style.display = 'none';
+};
+
+window.cancelLogout = function() {
+    const modal = document.getElementById('logout-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+};
+
+window.leaveArea = function() {
+    window.location.href = '../index.html';
+};
+
+window.addEventListener('popstate', (e) => {
+    const hash = window.location.hash.substring(1);
+    if (!hash || hash === 'dashboard') {
+        window.showDashboard(true);
+    } else if (TAB_TITLES[hash]) {
+        window.switchTab(hash, TAB_TITLES[hash], true);
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-    updateStickyTabPosition();
 
     // --------------------------------------------------------------------------
     // State Management (LocalStorage)
@@ -237,9 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (authContainer) authContainer.style.display = 'none';
                 if (memberContent) memberContent.style.display = 'block';
                 window.showDashboard();
-                if (typeof showToastMessage === 'function') {
-                    showToastMessage('Bem-vindo(a) à Área do Associado SBPS!');
-                }
+                // Toast removido
             });
         }
 
@@ -275,12 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Logout
         document.querySelectorAll('.btn-logout').forEach(btn => {
             btn.addEventListener('click', () => {
-                if (confirm('Deseja realmente sair da Área do Associado?')) {
-                    localStorage.removeItem(STORAGE_KEY_USER);
-                    currentUser = null;
-                    if (authContainer) authContainer.style.display = 'block';
-                    if (memberContent) memberContent.style.display = 'none';
-                }
+                window.logoutAssociado();
             });
         });
 
@@ -335,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             updateUserBadges();
                             renderUserData();
                             renderCertificates();
-                            showToastMessage('Login efetuado com sucesso!');
                             loginSuccess = true;
                         }
                     } catch (authErr) {
@@ -360,7 +374,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateUserBadges();
                     renderUserData();
                     if (typeof showDashboard === 'function') showDashboard();
-                    showToastMessage('Acesso ao Portal do Associado liberado com sucesso!');
                 }
             });
         }
@@ -1122,7 +1135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Switch to specific tab function
-        window.switchTab = function(tabId, tabTitle) {
+        window.switchTab = function(tabId, tabTitle, fromPopState = false) {
             if (!tabId) return;
 
             if (tabId === 'dashboard') {
@@ -1169,8 +1182,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 // Update hash in URL
-                if (window.location.hash !== `#${tabId}`) {
-                    history.replaceState(null, '', `#${tabId}`);
+                if (!fromPopState && window.location.hash !== `#${tabId}`) {
+                    history.pushState({ internal: true, tab: tabId }, '', `#${tabId}`);
                 }
 
                 // Renderização dinâmica dos dados da aba
@@ -1192,7 +1205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // Switch to Dashboard
-        window.showDashboard = function() {
+        window.showDashboard = function(fromPopState = false) {
             ensureActiveSession();
 
             const authContainer = document.getElementById('auth-container');
@@ -1222,8 +1235,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Update hash in URL
-            if (window.location.hash !== '#dashboard' && window.location.hash !== '') {
-                history.replaceState(null, '', '#dashboard');
+            if (!fromPopState && window.location.hash !== '#dashboard') {
+                history.pushState({ internal: true, tab: 'dashboard' }, '', '#dashboard');
             }
 
             const quickMenuDropdown = document.getElementById('quick-menu-dropdown');
@@ -1459,7 +1472,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn-enroll btn-open-sc" style="padding: 8px 14px; font-size: 0.85rem;"><i class="fa-solid fa-external-link"></i> Acessar</button>
-                    <button class="btn-logout btn-del-sc" style="margin:0;"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn-del-sc"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `;
 
@@ -1485,22 +1498,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnAdd = document.getElementById('btn-add-shortcut');
         if (btnAdd) {
             btnAdd.onclick = () => {
-                const title = prompt('Digite o nome do Atalho:');
-                if (!title) return;
-                const url = prompt('Digite o destino (ex: #cursos, #templates ou /pages/noticias.html):', '#cursos');
-                if (!url) return;
-
-                memberShortcuts.push({
-                    id: Date.now(),
-                    title,
-                    url,
-                    icon: 'fa-solid fa-arrow-up-right-from-square'
-                });
-                localStorage.setItem(STORAGE_KEY_SHORTCUTS, JSON.stringify(memberShortcuts));
-                renderShortcuts();
-                showToastMessage('Novo atalho criado!');
+                const modal = document.getElementById('shortcut-modal');
+                if (modal) {
+                    document.getElementById('shortcut-title').value = '';
+                    document.getElementById('shortcut-url').value = '';
+                    modal.style.display = 'flex';
+                }
             };
         }
+        
+        window.saveShortcut = function() {
+            const title = document.getElementById('shortcut-title').value.trim();
+            const url = document.getElementById('shortcut-url').value.trim();
+            if (!title || !url) {
+                showToastMessage('Por favor, preencha o nome e o destino do atalho.');
+                return;
+            }
+            
+            memberShortcuts.push({
+                id: Date.now(),
+                title,
+                url,
+                icon: 'fa-solid fa-arrow-up-right-from-square'
+            });
+            localStorage.setItem(STORAGE_KEY_SHORTCUTS, JSON.stringify(memberShortcuts));
+            renderShortcuts();
+            document.getElementById('shortcut-modal').style.display = 'none';
+            showToastMessage('Novo atalho criado!');
+        };
     }
 
     // --------------------------------------------------------------------------
@@ -2198,4 +2223,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+});
+
+
+// Dropdown de perfil
+document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.getElementById('user-profile-trigger');
+    const dropdown = document.getElementById('user-profile-dropdown');
+    
+    if(trigger && dropdown) {
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    }
 });

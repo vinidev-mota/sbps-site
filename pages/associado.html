@@ -10,72 +10,36 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css?v=5">
-    <link rel="stylesheet" href="../style/associado.css?v=11">
+    <link rel="stylesheet" href="../style/associado.css?v=14">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos Adicionais -->
+    <style>
+        .btn-del-sc {
+            background: rgba(225, 29, 72, 0.1);
+            color: #e11d48;
+            border: 1px solid rgba(225, 29, 72, 0.2);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-del-sc:hover {
+            background: #e11d48;
+            color: #fff;
+        }
+    </style>
 </head>
 
 <body class="associado-page">
     <!-- Header Wrapper for Sticky Position -->
-    <div class="header-wrapper">
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <div class="container top-bar-inner">
-                <div class="top-bar-left">
-                    <a href="javascript:void(0)" class="email-action-link" title="Opções de e-mail" data-email="contato@sbps.org.br"><i class="fa-solid fa-envelope"></i> contato@sbps.org.br <i class="fa-solid fa-chevron-down email-chevron"></i></a>
-                    <a href="javascript:void(0)" class="phone-copy-link" title="Clique para copiar o número de telefone" data-phone="(00) 0000-0000"><i class="fa-solid fa-phone"></i> (00) 0000-0000</a>
-                    <a href="associado.html" style="color:var(--color-accent); font-weight:700;"><i class="fa-solid fa-user"></i> Área do Associado</a>
-                </div>
-                <div class="top-bar-right">
-                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Header / Nav -->
-        <header class="main-header">
-            <div class="container header-inner">
-                <div class="logo">
-                    <a href="../index.html">
-                        <img src="../images/image-header.png" alt="SBPS Logo" class="logo-img">
-                    </a>
-                </div>
-                <nav class="main-nav">
-                    <ul>
-                        <li class="dropdown">
-                            <a href="../index.html">A SBPS <i class="fa-solid fa-chevron-down"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="sobre.html">SOBRE A SBPS</a></li>
-                                <li><a href="objetivos.html">OBJETIVOS</a></li>
-                                <li><a href="diretoria.html">DIRETORIA</a></li>
-                                <li><a href="descricaodiretorias.html">DESCRIÇÃO DE DIRETORIAS</a></li>
-                                <li><a href="resolucoes.html">RESOLUÇÕES</a></li>
-                                <li><a href="estatuto.html">ESTATUTO</a></li>
-                                <li><a href="convenios.html">CONVÊNIOS</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="noticias.html">PUBLICAÇÕES</a></li>
-                        <li><a href="eventos.html">EVENTOS</a></li>
-                        <li><a href="notas.html">NOTAS</a></li>
-                        <li><a href="contatos.html">CONTATOS</a></li>
-                        <li><a href="informacoes.html">INFORMAÇÕES</a></li>
-                    </ul>
-                    <a href="#" class="btn btn-associe">ASSOCIE-SE</a>
-                    <button class="search-btn"><i class="fa-solid fa-search"></i></button>
-                </nav>
-            </div>
-        </header>
-    </div>
-
     <!-- ==========================================================================
           SEÇÃO DE AUTENTICAÇÃO (LOGIN & CADASTRO PESSOA FÍSICA)
           ========================================================================== -->
     <div id="auth-container" class="container" style="display: none;">
         <div class="auth-wrapper">
             <div class="auth-header-tabs">
-                <button type="button" id="tab-login-btn" class="auth-tab-btn active">Entrar na Área do Associado</button>
-                <button type="button" id="tab-register-btn" class="auth-tab-btn">Cadastrar-se (Pessoa Física)</button>
+                <button type="button" id="tab-login-btn" class="auth-tab-btn active">Entrar na área do associado</button>
+                <button type="button" id="tab-register-btn" class="auth-tab-btn">Criar conta</button>
             </div>
 
             <div class="auth-body">
@@ -89,15 +53,23 @@
                         <input type="text" id="login-user" class="form-control" placeholder="seu.email@exemplo.com" required>
                     </div>
                     <div class="form-group">
-                        <label>Senha <span class="required">*</span></label>
-                        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                            <label>Senha <span class="required">*</span></label>
+                            <a href="#" style="font-size: 0.8rem; color: var(--assoc-secondary); text-decoration: none; font-weight: 600;">Esqueceu a senha?</a>
+                        </div>
+                        <div style="position: relative;">
+                            <input type="password" id="login-password" class="form-control" placeholder="••••••••" required style="padding-right: 40px;">
+                            <button type="button" onclick="togglePasswordVisibility('login-password', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer;">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
-                    <button type="submit" class="btn-auth-submit"><i class="fa-solid fa-right-to-bracket"></i> Acessar Portal</button>
+                    <button type="submit" class="btn-auth-submit">Acessar portal</button>
 
                     <div class="auth-demo-box">
                         <span class="auth-demo-divider">OU</span>
                         <button type="button" id="btn-quick-guest-login" class="btn-guest-login" onclick="showDashboard()">
-                            <i class="fa-solid fa-bolt"></i> Acessar Modo Demonstração (1 Clique)
+                            Acessar demonstração em 1 clique
                         </button>
                     </div>
                 </form>
@@ -384,48 +356,61 @@
         <!-- Barra de Navegação Interna da Área do Associado -->
         <nav class="member-top-nav">
             <div class="container member-nav-inner">
-                <div class="member-nav-left">
-                    <button type="button" id="btn-back-dashboard" class="btn-nav-back" style="display: none;" onclick="showDashboard()">
+                <div class="member-nav-left" style="display: flex; align-items: center; gap: 15px;">
+                    <button type="button" id="btn-back-dashboard" class="btn-nav-back" style="display: none;" onclick="goBack()">
                         <i class="fa-solid fa-arrow-left"></i> Voltar à Tela Inicial
                     </button>
 
-                    <div class="member-breadcrumbs">
-                        <span><a href="javascript:void(0)" onclick="showDashboard()" style="color:#fff; text-decoration:underline;">Início</a></span>
-                        <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
-                        <span id="breadcrumb-current" class="current-page">Visão Geral</span>
+                    <!-- User Profile Integration on the Left -->
+                    <div style="position: relative;">
+                        <div class="user-profile-trigger" id="user-profile-trigger" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 12px; border-radius: 20px; background: rgba(255,255,255,0.1); transition: background 0.2s;">
+                            <div class="user-avatar user-avatar-display" id="nav-user-avatar">V</div>
+                            <div class="user-info" id="nav-user-info" style="display: flex; flex-direction: column;">
+                                <span class="user-name user-name-display" style="font-weight: 600; font-size: 0.9rem;">Vinícius Mota</span>
+                                <span class="user-oab user-oab-display" style="font-size: 0.75rem; opacity: 0.8;">Advogado(a) Previdenciarista</span>
+                            </div>
+                        </div>
+
+                        <!-- Profile Dropdown Menu -->
+                        <div id="user-profile-dropdown" class="profile-dropdown-menu" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 10px; background: white; border: 1px solid var(--assoc-border); border-radius: 12px; box-shadow: var(--assoc-shadow-lg); width: 200px; z-index: 1000; overflow: hidden;">
+                            <button type="button" class="profile-dropdown-item" onclick="switchTab('perfil', '1. Perfil')" style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; color: var(--assoc-text-dark); font-size: 0.9rem; transition: background 0.2s;">
+                                <i class="fa-solid fa-id-card"></i> Meu Perfil
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Menu de Troca Rápida de Abas -->
-                <div class="member-quick-menu">
-                    <button type="button" id="btn-quick-menu-toggle" class="btn-quick-menu-toggle">
-                        <i class="fa-solid fa-compass"></i> Navegar na Área do Associado <i class="fa-solid fa-chevron-down"></i>
-                    </button>
-                    
-                    <div id="quick-menu-dropdown" class="quick-menu-dropdown">
-                        <button type="button" class="quick-menu-item active" data-tab="dashboard" onclick="showDashboard()"><i class="fa-solid fa-house"></i> 0. Tela Inicial (Cards)</button>
-                        <button type="button" class="quick-menu-item" data-tab="perfil" onclick="switchTab('perfil', '1. Perfil')"><i class="fa-solid fa-id-card"></i> 1. Perfil</button>
-                        <button type="button" class="quick-menu-item" data-tab="beneficios" onclick="switchTab('beneficios', '2. Benefícios')"><i class="fa-solid fa-gift"></i> 2. Benefícios</button>
-                        <button type="button" class="quick-menu-item" data-tab="atalhos" onclick="switchTab('atalhos', '3. Atalhos')"><i class="fa-solid fa-arrow-up-right-from-square"></i> 3. Atalhos</button>
-                        <button type="button" class="quick-menu-item" data-tab="cursos" onclick="switchTab('cursos', '4. Cursos')"><i class="fa-solid fa-graduation-cap"></i> 4. Cursos</button>
-                        <button type="button" class="quick-menu-item" data-tab="seminarios" onclick="switchTab('seminarios', '5. Seminários')"><i class="fa-solid fa-users-rectangle"></i> 5. Seminários</button>
-                        <button type="button" class="quick-menu-item" data-tab="certificados" onclick="switchTab('certificados', '6. Certificados')"><i class="fa-solid fa-certificate"></i> 6. Certificados</button>
-                        <button type="button" class="quick-menu-item" data-tab="templates" onclick="switchTab('templates', '7. Templates')"><i class="fa-solid fa-table-cells-large"></i> 7. Templates (Canva)</button>
-                        <button type="button" class="quick-menu-item" data-tab="livraria" onclick="switchTab('livraria', '8. Livraria')"><i class="fa-solid fa-book"></i> 8. Livraria</button>
-                        <button type="button" class="quick-menu-item" data-tab="outros" onclick="switchTab('outros', '9. Outros')"><i class="fa-solid fa-gear"></i> 9. Outros</button>
-                    </div>
-                </div>
-
+                <!-- Right Side - Logout only -->
                 <div class="member-user-badge">
-                    <div class="user-avatar user-avatar-display" id="nav-user-avatar" style="cursor: pointer;" title="Clique para abrir seu Perfil" onclick="switchTab('perfil', '1. Perfil')">V</div>
-                    <div class="user-info" id="nav-user-info" style="cursor: pointer;" title="Clique para abrir seu Perfil" onclick="switchTab('perfil', '1. Perfil')">
-                        <span class="user-name user-name-display">Vinícius Mota</span>
-                        <span class="user-oab user-oab-display">Advogado(a) Previdenciarista</span>
-                    </div>
-                    <button type="button" class="btn-logout" title="Sair" onclick="logoutAssociado()"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+
+                    <button type="button" class="btn-logout-accessible" onclick="logoutAssociado()" title="Sair" style="background: rgba(225, 29, 72, 0.15); color: #fecdd3; border: 1px solid rgba(225, 29, 72, 0.3); padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sair
+                    </button>
                 </div>
-            </div>
         </nav>
+        <!-- Mobile Menu (Navegar na Área do Associado) -->
+        <div class="mobile-only-menu">
+            <div style="flex: 1; position: relative;">
+                <button type="button" class="btn-mobile-nav" onclick="const m = document.getElementById('mobile-quick-menu'); m.style.display = m.style.display === 'block' ? 'none' : 'block';">
+                    <i class="fa-solid fa-compass"></i> Navegar na Área <i class="fa-solid fa-chevron-down"></i>
+                </button>
+            <div id="mobile-quick-menu" class="mobile-quick-menu-dropdown">
+                <button type="button" class="quick-menu-item" data-tab="dashboard" onclick="switchTab('dashboard', 'Visão Geral'); this.parentElement.style.display='none';"><i class="fa-solid fa-house"></i> 0. Tela Inicial</button>
+                <button type="button" class="quick-menu-item" data-tab="perfil" onclick="switchTab('perfil', '1. Perfil'); this.parentElement.style.display='none';"><i class="fa-solid fa-id-card"></i> 1. Perfil</button>
+                <button type="button" class="quick-menu-item" data-tab="beneficios" onclick="switchTab('beneficios', '2. Benefícios'); this.parentElement.style.display='none';"><i class="fa-solid fa-gift"></i> 2. Benefícios</button>
+                <button type="button" class="quick-menu-item" data-tab="atalhos" onclick="switchTab('atalhos', '3. Atalhos'); this.parentElement.style.display='none';"><i class="fa-solid fa-arrow-up-right-from-square"></i> 3. Atalhos</button>
+                <button type="button" class="quick-menu-item" data-tab="cursos" onclick="switchTab('cursos', '4. Cursos'); this.parentElement.style.display='none';"><i class="fa-solid fa-graduation-cap"></i> 4. Cursos</button>
+                <button type="button" class="quick-menu-item" data-tab="seminarios" onclick="switchTab('seminarios', '5. Seminários'); this.parentElement.style.display='none';"><i class="fa-solid fa-users-rectangle"></i> 5. Seminários</button>
+                <button type="button" class="quick-menu-item" data-tab="certificados" onclick="switchTab('certificados', '6. Certificados'); this.parentElement.style.display='none';"><i class="fa-solid fa-certificate"></i> 6. Certificados</button>
+                <button type="button" class="quick-menu-item" data-tab="templates" onclick="switchTab('templates', '7. Templates'); this.parentElement.style.display='none';"><i class="fa-solid fa-table-cells-large"></i> 7. Templates</button>
+                <button type="button" class="quick-menu-item" data-tab="livraria" onclick="switchTab('livraria', '8. Livraria'); this.parentElement.style.display='none';"><i class="fa-solid fa-book"></i> 8. Livraria</button>
+                <button type="button" class="quick-menu-item" data-tab="outros" onclick="switchTab('outros', '9. Outros'); this.parentElement.style.display='none';"><i class="fa-solid fa-gear"></i> 9. Outros</button>
+            </div>
+            </div>
+            <button type="button" class="btn-logout-accessible" onclick="logoutAssociado()" title="Sair" style="background: rgba(225, 29, 72, 0.15); color: #fecdd3; border: 1px solid rgba(225, 29, 72, 0.3); padding: 12px 16px; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: background 0.2s, color 0.2s; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
         
         <!-- Barra de Abas Horizontais para Navegação Rápida -->
         <div class="member-horizontal-tabs">
@@ -470,8 +455,7 @@
                  ------------------------------------------------------------------ -->
             <div id="dashboard-view">
                 <div class="dashboard-welcome">
-                    <h2>Bem-vindo(a) ao Portal do Associado SBPS</h2>
-                    <p>Selecione uma das 9 opções abaixo para acessar os recursos exclusivos da sua membresia:</p>
+                    <h2 style="margin-bottom: 25px;">Portal do Associado SBPS</h2>
                 </div>
 
                 <div class="dashboard-grid">
@@ -487,7 +471,7 @@
 
                     <!-- Card 2: Benefícios -->
                     <div class="dashboard-card" data-tab="beneficios" onclick="switchTab('beneficios', '2. Benefícios')">
-                        <span class="card-badge">Vantagens</span>
+                        <span class="card-badge badge-green">Vantagens</span>
                         <div class="card-icon-wrapper"><i class="fa-solid fa-gift"></i></div>
                         <div>
                             <h3 class="card-title">2. Benefícios</h3>
@@ -599,7 +583,7 @@
                                 </div>
                                 <div class="form-group col-span-1">
                                     <label><span class="req-star">*</span> RG</label>
-                                    <input type="text" id="edit-rg" class="form-control" required>
+                                    <input type="text" id="edit-rg" class="form-control readonly-input" readonly style="background:#f1f5f9;">
                                 </div>
                                 <div class="form-group col-span-1">
                                     <label><span class="req-star">*</span> Data de Nascimento</label>
@@ -936,7 +920,49 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Modal de Atalho Personalizado -->
+    <div id="shortcut-modal" class="logout-confirm-modal">
+        <div class="logout-modal-content" style="max-width: 450px;">
+            <div class="logout-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981; margin-bottom: 15px;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </div>
+            <h3 style="margin-bottom: 15px;">Criar Novo Atalho</h3>
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Nome do Atalho <span style="color:red;">*</span></label>
+                <input type="text" id="shortcut-title" class="form-control" placeholder="Ex: Minha Livraria">
+                
+                <label style="display:block; margin-top:15px; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Destino (Para onde este atalho vai?) <span style="color:red;">*</span></label>
+                <select id="shortcut-url" class="form-control" style="cursor: pointer;" onchange="if(this.value && !document.getElementById('shortcut-title').value) document.getElementById('shortcut-title').value = this.options[this.selectedIndex].text;">
+                    <option value="" disabled selected>-- Selecione um destino --</option>
+                    <optgroup label="Área do Associado (Navegação Interna)">
+                        <option value="#perfil">Meu Perfil</option>
+                        <option value="#beneficios">Meus Benefícios</option>
+                        <option value="#cursos">Cursos com Desconto</option>
+                        <option value="#seminarios">Seminários e Congressos</option>
+                        <option value="#certificados">Meus Certificados</option>
+                        <option value="#templates">Templates de Peças</option>
+                        <option value="#livraria">Livraria e Autores</option>
+                        <option value="#outros">Ajuda e Configurações</option>
+                    </optgroup>
+                    <optgroup label="Portal Público (Páginas do Site)">
+                        <option value="../index.html">Página Inicial (Home)</option>
+                        <option value="sobre.html">Sobre a SBPS</option>
+                        <option value="diretoria.html">Diretoria</option>
+                        <option value="noticias.html">Notícias e Artigos</option>
+                        <option value="eventos.html">Portal de Eventos Público</option>
+                        <option value="estatuto.html">Estatuto Social</option>
+                        <option value="transparencia.html">Portal da Transparência</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="logout-actions">
+                <button type="button" class="btn-logout-cancel" onclick="document.getElementById('shortcut-modal').style.display='none'">Cancelar</button>
+                <button type="button" class="btn-logout-confirm" style="background: var(--assoc-primary);" onclick="window.saveShortcut()">Criar Atalho</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col">
@@ -981,11 +1007,27 @@
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
+    <!-- Modal de Confirmação de Logout -->
+    <div id="logout-modal" class="logout-confirm-modal">
+        <div class="logout-modal-content">
+            <div class="logout-icon">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <h3>Sair da Área do Associado</h3>
+            <p>Você tem certeza que deseja sair da sua conta?</p>
+            <div class="logout-actions">
+                <button type="button" class="btn-logout-cancel" onclick="cancelLogout()">Cancelar</button>
+                <button type="button" class="btn-logout-area" onclick="leaveArea()">Sair da Área do Associado</button>
+                <button type="button" class="btn-logout-confirm" onclick="confirmLogout()">Sair da Conta</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Supabase JS SDK & Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../scripts/supabase-client.js?v=1"></script>
-    <script src="../scripts/script.js?v=5"></script>
-    <script src="../scripts/associado.js?v=2001"></script>
+    <script src="../scripts/script.js?v=9999"></script>
+    <script src="../scripts/associado.js?v=99995"></script>
 </body>
 
 </html>
