@@ -123,7 +123,13 @@
         loadLocalStorageData();
         setupEventListeners();
         setupPopStateHistory();
-        checkActiveSession();
+        const hasSession = checkActiveSession();
+        if (!hasSession) {
+            const lastRole = localStorage.getItem('sbps_evt_last_role');
+            if (lastRole) {
+                selectUserRole(lastRole);
+            }
+        }
     });
 
     function loadLocalStorageData() {
@@ -253,6 +259,9 @@
     };
 
     window.confirmLogoutEventos = function() {
+        if (state.userRole) {
+            localStorage.setItem('sbps_evt_last_role', state.userRole);
+        }
         localStorage.removeItem('sbps_evt_session');
         document.body.classList.remove('evt-logged-in');
         const modal = document.getElementById('logout-modal');
@@ -403,11 +412,13 @@
                     state.currentUser = userObj;
                     state.userRole = userObj.role;
                     renderWorkspace();
+                    return true;
                 }
             } catch (e) {
                 localStorage.removeItem('sbps_evt_session');
             }
         }
+        return false;
     }
 
     function renderWorkspace() {
@@ -557,12 +568,13 @@
             <div class="evt-page-header">
                 <h1 class="evt-page-title"><i class="fa-solid fa-house"></i> Dashboard do Participante</h1>
             </div>
+            <hr class="evt-dashboard-divider">
 
             <!-- Seção 1: Eventos recomendados -->
             <div style="margin-bottom:35px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
                     <h3 style="color:var(--evt-primary); margin:0;"><i class="fa-solid fa-compass"></i> Recomendados para Você</h3>
-                    <button class="evt-btn-card-secondary" style="width:auto; padding:6px 14px;" onclick="window.switchTab('eventos', true)">Ver todos os eventos <i class="fa-solid fa-arrow-right"></i></button>
+                    <button class="evt-btn-card-secondary evt-btn-ver-todas" onclick="window.switchTab('eventos', true)">Ver todos os eventos <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
                 <div class="evt-cards-grid">
                     ${availableEvts.slice(0, 6).map(e => createEventCardHTML(e, 'disponivel')).join('')}
@@ -573,7 +585,7 @@
             <div style="margin-bottom:35px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
                     <h3 style="color:var(--evt-primary); margin:0;"><i class="fa-solid fa-ticket"></i> Minhas Inscrições Ativas</h3>
-                    <button class="evt-btn-card-secondary" style="width:auto; padding:6px 14px;" onclick="window.switchTab('inscricoes', true)">Ver todas as minhas inscrições <i class="fa-solid fa-arrow-right"></i></button>
+                    <button class="evt-btn-card-secondary evt-btn-ver-todas" onclick="window.switchTab('inscricoes', true)">Ver todas as minhas inscrições <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
                 <div class="evt-card-row-single">
                     ${enrolledEvts.length > 0 ? enrolledEvts.map(e => createEventCardHTML(e, 'inscrito')).join('') : '<p style="color:var(--evt-text-muted);">Você ainda não possui inscrições ativas.</p>'}
@@ -584,7 +596,7 @@
             <div style="margin-bottom:35px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
                     <h3 style="color:var(--evt-primary); margin:0;"><i class="fa-solid fa-award"></i> Minhas Participações Realizadas</h3>
-                    <button class="evt-btn-card-secondary" style="width:auto; padding:6px 14px;" onclick="window.switchTab('participacoes', true)">Ver todas as minhas participações <i class="fa-solid fa-arrow-right"></i></button>
+                    <button class="evt-btn-card-secondary evt-btn-ver-todas" onclick="window.switchTab('participacoes', true)">Ver todas as minhas participações <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
                 <div class="evt-card-row-single">
                     ${attendedEvts.length > 0 ? attendedEvts.map(e => createEventCardHTML(e, 'participado')).join('') : '<p style="color:var(--evt-text-muted);">Nenhum histórico de participação concluída.</p>'}
@@ -670,7 +682,7 @@
         }
 
         return `
-            <div class="evt-event-card" data-id="${evt.id}">
+            <div class="evt-event-card" data-id="${evt.id}" data-mode="${mode}">
                 ${dotsMenuHTML}
                 <div class="evt-card-img-wrapper">
                     <img src="${evt.img || '../images/ref1.jpg'}" alt="${evt.titulo}">
@@ -686,6 +698,77 @@
                 </div>
             </div>
         `;
+    }
+
+    function renderVisualizarEventoTab(evt, mode) {
+        const container = document.getElementById('panel-visualizar-evento');
+        if (!container) return;
+
+        const isEnrolled = state.enrollments.includes(evt.id);
+        
+        let footerButtonsHTML = '';
+        if (mode === 'participado' || mode === 'palestrante-realizado') {
+            footerButtonsHTML = `<button class="evt-btn-card-secondary" disabled><i class="fa-solid fa-check-circle"></i> Evento Concluído</button>`;
+        } else if (mode === 'palestrante-criado') {
+            footerButtonsHTML = `<button class="evt-btn-card-secondary" disabled><i class="fa-solid fa-user-tie"></i> Seu Evento</button>`;
+        } else {
+            footerButtonsHTML = isEnrolled ? `
+                <button class="evt-btn-card-danger" id="btn-cancel-view-inscricao" data-id="${evt.id}">Cancelar Inscrição</button>
+                <button class="evt-btn-card-secondary" disabled><i class="fa-solid fa-check"></i> Inscrito</button>
+            ` : `
+                <button class="evt-btn-primary" id="btn-do-view-inscricao" data-id="${evt.id}" style="width: auto;">Inscrever-se</button>
+            `;
+        }
+
+        container.innerHTML = `
+            <div class="evt-page-header">
+                <button class="evt-btn-card-secondary" style="width: auto; margin-right: 15px;" onclick="window.switchTab('dashboard', true)"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+                <h1 class="evt-page-title">${evt.titulo}</h1>
+            </div>
+            <div class="evt-auth-card" style="padding: 0; overflow: hidden;">
+                <div style="height: 250px; width: 100%; background: url('${evt.img || '../images/ref1.jpg'}') center/cover no-repeat; background-position: ${evt.imgPos || 'center'};"></div>
+                <div style="padding: 25px;">
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                        <span class="evt-badge-tag"><i class="fa-solid fa-clock"></i> Carga Horária: ${evt.cargaHoraria}</span>
+                        <span class="evt-badge-tag"><i class="fa-solid fa-calendar"></i> Data: ${evt.dateStr}</span>
+                        <span class="evt-badge-tag"><i class="fa-solid fa-location-dot"></i> Local/Link: ${evt.local || 'Online'}</span>
+                        <span class="evt-badge-tag" style="background:#FEF3C7; color:#D97706;"><i class="fa-solid fa-coins"></i> Valor: ${evt.taxas || 'Gratuito'}</span>
+                    </div>
+
+                    <h3 style="color: var(--evt-primary); margin-bottom: 10px;">Resumo</h3>
+                    <p style="color: var(--evt-text-muted); line-height: 1.6; margin-bottom: 25px;">${evt.resumo}</p>
+
+                    <h3 style="color: var(--evt-primary); margin-bottom: 10px;">Programação</h3>
+                    <p style="color: var(--evt-text-muted); line-height: 1.6; margin-bottom: 25px;">${evt.programacao || 'Programação não informada.'}</p>
+
+                    <div style="border-top: 1px solid var(--evt-border); padding-top: 20px; display: flex; gap: 15px; justify-content: flex-end;">
+                        ${footerButtonsHTML}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        if (isEnrolled) {
+            const btnCancel = document.getElementById('btn-cancel-view-inscricao');
+            if (btnCancel) {
+                btnCancel.onclick = () => {
+                    state.enrollments = state.enrollments.filter(eId => eId !== evt.id);
+                    saveData();
+                    showToast('Inscrição cancelada.');
+                    window.switchTab('dashboard', true);
+                };
+            }
+        } else {
+            const btnInsc = document.getElementById('btn-do-view-inscricao');
+            if (btnInsc) {
+                btnInsc.onclick = () => {
+                    state.enrollments.push(evt.id);
+                    saveData();
+                    showToast('Inscrição realizada com sucesso!');
+                    window.switchTab('dashboard', true);
+                };
+            }
+        }
     }
 
     function attachCardActionListeners(container) {
@@ -715,15 +798,17 @@
             btn.onclick = () => {
                 const id = btn.getAttribute('data-id');
                 const evt = state.events.find(e => e.id === id);
-                if (evt) alert(`Visualização do Evento: ${evt.titulo}\nData: ${evt.dateStr}\nLocal: ${evt.local}`);
+                const mode = btn.closest('.evt-event-card').getAttribute('data-mode');
+                if (evt) {
+                    renderVisualizarEventoTab(evt, mode);
+                    window.switchTab('visualizar-evento');
+                }
             };
         });
 
         container.querySelectorAll('.btn-certificado').forEach(btn => {
             btn.onclick = () => {
-                const id = btn.getAttribute('data-id');
-                const evt = state.events.find(e => e.id === id);
-                alert(`Emitindo Certificado Oficial SBPS em PDF para:\n${evt ? evt.titulo : 'Evento SBPS'}`);
+                window.open('https://docs.google.com/forms/d/e/1FAIpQLSdBn7At3hUaj4fiWxXqmEAYo9c-O7FGPNf55JZv4SyFcvuM6A/viewform?usp=header', '_blank');
             };
         });
     }
@@ -732,6 +817,67 @@
         const container = document.getElementById('panel-perfil');
         if (!container) return;
         const u = state.currentUser;
+        const isPalestrante = state.userRole === 'palestrante';
+
+        let extraCampos = '';
+        if (isPalestrante) {
+            extraCampos = `
+                <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px; margin-top: 25px;">
+                    <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;"><i class="fa-solid fa-graduation-cap"></i> FORMAÇÃO E QUALIFICAÇÃO</h3>
+                </div>
+                <div class="evt-grid-2">
+                    <div class="evt-form-group">
+                        <label>Nível de Escolaridade</label>
+                        <select id="edit-evt-escolaridade" class="evt-form-control">
+                            <option value="">Selecione...</option>
+                            <option value="Graduação" ${u.escolaridade==='Graduação'?'selected':''}>Graduação</option>
+                            <option value="Pós-Graduação" ${u.escolaridade==='Pós-Graduação'?'selected':''}>Pós-Graduação</option>
+                            <option value="Mestrado" ${u.escolaridade==='Mestrado'?'selected':''}>Mestrado</option>
+                            <option value="Doutorado" ${u.escolaridade==='Doutorado'?'selected':''}>Doutorado</option>
+                            <option value="Pós-Doutorado" ${u.escolaridade==='Pós-Doutorado'?'selected':''}>Pós-Doutorado</option>
+                        </select>
+                    </div>
+                    <div class="evt-form-group">
+                        <label>Área de Atuação Principal</label>
+                        <input type="text" id="edit-evt-area" class="evt-form-control" value="${u.area || ''}">
+                    </div>
+                    <div class="evt-form-group evt-full-width">
+                        <label>Profissão Atual & Anos de Experiência</label>
+                        <input type="text" id="edit-evt-profissao" class="evt-form-control" value="${u.profissao || ''}">
+                    </div>
+                    <div class="evt-form-group evt-full-width">
+                        <label>Experiências Profissionais Relevantes</label>
+                        <textarea id="edit-evt-experiencia" class="evt-form-control" rows="2">${u.experiencia || ''}</textarea>
+                    </div>
+                    <div class="evt-form-group evt-full-width">
+                        <label>Resumo "Sobre Mim"</label>
+                        <textarea id="edit-evt-sobre" class="evt-form-control" rows="3">${u.sobre || ''}</textarea>
+                    </div>
+                </div>
+                
+                <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px; margin-top: 25px;">
+                    <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;"><i class="fa-solid fa-building-columns"></i> DADOS BANCÁRIOS</h3>
+                </div>
+                <div class="evt-grid-2">
+                    <div class="evt-form-group">
+                        <label>Banco</label>
+                        <input type="text" id="edit-evt-banco" class="evt-form-control" value="${u.banco || ''}" placeholder="Ex: Banco do Brasil">
+                    </div>
+                    <div class="evt-form-group">
+                        <label>Agência</label>
+                        <input type="text" id="edit-evt-agencia" class="evt-form-control" value="${u.agencia || ''}">
+                    </div>
+                    <div class="evt-form-group">
+                        <label>Conta</label>
+                        <input type="text" id="edit-evt-conta" class="evt-form-control" value="${u.conta || ''}">
+                    </div>
+                    <div class="evt-form-group">
+                        <label>Chave PIX</label>
+                        <input type="text" id="edit-evt-pix" class="evt-form-control" value="${u.pix || ''}">
+                    </div>
+                </div>
+            `;
+        }
 
         container.innerHTML = `
             <div class="evt-page-header">
@@ -739,6 +885,9 @@
             </div>
             <div class="evt-auth-card" style="padding:25px;">
                 <form id="form-edit-perfil-evt">
+                    <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
+                        <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">INFORMAÇÕES PESSOAIS</h3>
+                    </div>
                     <div class="evt-grid-2">
                         <div class="evt-form-group evt-full-width">
                             <label>Nome Completo</label>
@@ -752,8 +901,87 @@
                             <label>CPF</label>
                             <input type="text" id="edit-evt-cpf" class="evt-form-control" value="${u.cpf || ''}" required>
                         </div>
+                        <div class="evt-form-group">
+                            <label>RG</label>
+                            <input type="text" id="edit-evt-rg" class="evt-form-control" value="${u.rg || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label>Data de Nascimento</label>
+                            <input type="date" id="edit-evt-nasc" class="evt-form-control" value="${u.nasc || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label>Gênero</label>
+                            <select id="edit-evt-genero" class="evt-form-control">
+                                <option value="">Selecione...</option>
+                                <option value="Masculino" ${u.genero==='Masculino'?'selected':''}>Masculino</option>
+                                <option value="Feminino" ${u.genero==='Feminino'?'selected':''}>Feminino</option>
+                                <option value="Não-binário" ${u.genero==='Não-binário'?'selected':''}>Não-binário</option>
+                                <option value="Prefiro não informar" ${u.genero==='Prefiro não informar'?'selected':''}>Prefiro não informar</option>
+                                <option value="Outro" ${u.genero==='Outro'?'selected':''}>Outro</option>
+                            </select>
+                        </div>
+                        <div class="evt-form-group">
+                            <label>Celular / WhatsApp</label>
+                            <input type="tel" id="edit-evt-celular" class="evt-form-control" value="${u.celular || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label>Telefone Fixo</label>
+                            <input type="tel" id="edit-evt-fixo" class="evt-form-control" value="${u.fixo || ''}">
+                        </div>
                     </div>
-                    <button type="submit" class="evt-btn-primary" style="width:auto; margin-top:15px;"><i class="fa-solid fa-floppy-disk"></i> Salvar Alterações</button>
+                    
+                    <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px; margin-top: 25px;">
+                        <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">ENDEREÇO</h3>
+                    </div>
+                    <div class="evt-grid-2">
+                        <div class="evt-form-group">
+                            <label>CEP</label>
+                            <input type="text" id="edit-evt-cep" class="evt-form-control" value="${u.cep || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label>Logradouro</label>
+                            <input type="text" id="edit-evt-rua" class="evt-form-control" value="${u.rua || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label>Número</label>
+                            <input type="text" id="edit-evt-numero" class="evt-form-control" value="${u.numero || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label>Bairro</label>
+                            <input type="text" id="edit-evt-bairro" class="evt-form-control" value="${u.bairro || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label>Cidade</label>
+                            <input type="text" id="edit-evt-cidade" class="evt-form-control" value="${u.cidade || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label>UF</label>
+                            <input type="text" id="edit-evt-uf" class="evt-form-control" value="${u.uf || ''}">
+                        </div>
+                        <div class="evt-form-group evt-full-width">
+                            <label>Complemento</label>
+                            <input type="text" id="edit-evt-complemento" class="evt-form-control" value="${u.complemento || ''}">
+                        </div>
+                    </div>
+
+                    ${extraCampos}
+
+                    <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px; margin-top: 25px;">
+                        <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;"><i class="fa-solid fa-lock"></i> ACESSO E SEGURANÇA</h3>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--evt-text-muted); margin-bottom: 15px;">Para alterar sua senha, preencha os campos abaixo. Uma confirmação será enviada para o seu e-mail.</p>
+                    <div class="evt-grid-2">
+                        <div class="evt-form-group">
+                            <label>Nova Senha</label>
+                            <input type="password" id="edit-evt-senha" class="evt-form-control" placeholder="Deixe em branco para não alterar">
+                        </div>
+                        <div class="evt-form-group">
+                            <label>Confirmar Nova Senha</label>
+                            <input type="password" id="edit-evt-senha-conf" class="evt-form-control">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="evt-btn-primary" style="width:auto; margin-top:20px;"><i class="fa-solid fa-floppy-disk"></i> Salvar Alterações</button>
                 </form>
             </div>
         `;
@@ -762,6 +990,31 @@
             e.preventDefault();
             u.nome = document.getElementById('edit-evt-nome').value;
             u.cpf = document.getElementById('edit-evt-cpf').value;
+            u.rg = document.getElementById('edit-evt-rg').value;
+            u.nasc = document.getElementById('edit-evt-nasc').value;
+            u.genero = document.getElementById('edit-evt-genero').value;
+            u.celular = document.getElementById('edit-evt-celular').value;
+            u.fixo = document.getElementById('edit-evt-fixo').value;
+            u.cep = document.getElementById('edit-evt-cep').value;
+            u.rua = document.getElementById('edit-evt-rua').value;
+            u.numero = document.getElementById('edit-evt-numero').value;
+            u.bairro = document.getElementById('edit-evt-bairro').value;
+            u.cidade = document.getElementById('edit-evt-cidade').value;
+            u.uf = document.getElementById('edit-evt-uf').value;
+            u.complemento = document.getElementById('edit-evt-complemento').value;
+            
+            if (isPalestrante) {
+                u.escolaridade = document.getElementById('edit-evt-escolaridade').value;
+                u.area = document.getElementById('edit-evt-area').value;
+                u.profissao = document.getElementById('edit-evt-profissao').value;
+                u.experiencia = document.getElementById('edit-evt-experiencia').value;
+                u.sobre = document.getElementById('edit-evt-sobre').value;
+                u.banco = document.getElementById('edit-evt-banco').value;
+                u.agencia = document.getElementById('edit-evt-agencia').value;
+                u.conta = document.getElementById('edit-evt-conta').value;
+                u.pix = document.getElementById('edit-evt-pix').value;
+            }
+
             localStorage.setItem('sbps_evt_session', JSON.stringify(u));
             showToast('Perfil atualizado com sucesso!');
         };
@@ -1226,11 +1479,24 @@
                 <h3>Faça sua Sugestão</h3>
                 <form id="form-nova-sugestao">
                     <div class="evt-form-group" style="margin-bottom:10px;">
-                        <label>Título</label>
+                        <label>Título <span style="color:red;">*</span></label>
                         <input type="text" id="sug-titulo" class="evt-form-control" required>
                     </div>
                     <div class="evt-form-group" style="margin-bottom:10px;">
-                        <label>Descrição</label>
+                        <label>Tema <span style="color:red;">*</span></label>
+                        <select id="sug-tema" class="evt-form-control" required>
+                            <option value="">Selecione...</option>
+                            <option value="Site">Site</option>
+                            <option value="Área de Eventos">Área de Eventos</option>
+                            <option value="Área do Associado">Área do Associado</option>
+                            <option value="Eventos">Eventos</option>
+                            <option value="Financeiro">Financeiro</option>
+                            <option value="Geral">Geral</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="evt-form-group" style="margin-bottom:10px;">
+                        <label>Descrição <span style="color:red;">*</span></label>
                         <textarea id="sug-descricao" class="evt-form-control" rows="3" required></textarea>
                     </div>
                     <button type="submit" class="evt-btn-primary">Enviar Sugestão</button>
@@ -1244,11 +1510,75 @@
         if (!container) return;
         container.innerHTML = `
             <div class="evt-page-header">
-                <h1 class="evt-page-title"><i class="fa-solid fa-circle-question"></i> Central de Ajuda</h1>
+                <h1 class="evt-page-title"><i class="fa-solid fa-headset"></i> Central de Ajuda & Suporte Técnico</h1>
             </div>
-            <div class="evt-auth-card" style="padding:20px;">
-                <h3>Canais de Atendimento</h3>
-                <p>E-mail: suporte@sbps.org.br | Whats: (00) 90000-0000</p>
+
+            <!-- Seção de FAQ -->
+            <div class="evt-auth-card" style="padding:25px; margin-bottom: 30px;">
+                <h3 style="color: var(--evt-primary); margin-bottom: 15px;"><i class="fa-solid fa-circle-question"></i> Dúvidas Frequentes (FAQ)</h3>
+                <div class="evt-search-box-wrapper" style="margin-bottom: 20px;">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" class="evt-search-input" placeholder="Pesquisar dúvidas, tutoriais e artigos...">
+                </div>
+                <div class="evt-faq-list" style="display:flex; flex-direction:column; gap:10px;">
+                    <details style="background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 15px; border-radius:8px; cursor:pointer;">
+                        <summary style="font-weight:600; color:var(--evt-text-main);">Como me inscrever em um evento?</summary>
+                        <p style="margin-top:10px; font-size:0.85rem; color:var(--evt-text-muted);">Acesse a aba "Eventos", encontre o evento desejado e clique em "Inscrever-se". O evento aparecerá na sua aba "Inscrições".</p>
+                    </details>
+                    <details style="background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 15px; border-radius:8px; cursor:pointer;">
+                        <summary style="font-weight:600; color:var(--evt-text-main);">Como emitir meu certificado?</summary>
+                        <p style="margin-top:10px; font-size:0.85rem; color:var(--evt-text-muted);">Vá até a aba "Participações", encontre o evento concluído e clique em "Emitir Certificado". Você será redirecionado para o formulário oficial de emissão.</p>
+                    </details>
+                    <details style="background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 15px; border-radius:8px; cursor:pointer;">
+                        <summary style="font-weight:600; color:var(--evt-text-main);">Sou Palestrante, como crio um evento?</summary>
+                        <p style="margin-top:10px; font-size:0.85rem; color:var(--evt-text-muted);">Acesse "Criar Eventos" no menu lateral, preencha as informações necessárias (incluindo a imagem de capa) e clique em "Publicar Evento".</p>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Formulário de Suporte Técnico -->
+            <div class="evt-auth-card" style="padding:25px; margin-bottom: 30px;">
+                <h3 style="color: var(--evt-primary); margin-bottom: 5px;">Abrir Chamado com Suporte Técnico</h3>
+                <p style="font-size: 0.85rem; color: var(--evt-text-muted); margin-bottom: 20px;">Limite máximo: até 3 chamados ativos simultâneos por usuário.</p>
+                <form id="form-suporte-tecnico">
+                    <div class="evt-form-group" style="margin-bottom:15px;">
+                        <label>Assunto do Chamado <span style="color:red;">*</span></label>
+                        <input type="text" class="evt-form-control" placeholder="Escreva o assunto..." required>
+                    </div>
+                    <div class="evt-form-group" style="margin-bottom:15px;">
+                        <label>Tema do Problema <span style="color:red;">*</span></label>
+                        <select class="evt-form-control" required>
+                            <option value="Suporte Técnico">Suporte Técnico</option>
+                            <option value="Dúvida Geral">Dúvida Geral</option>
+                            <option value="Financeiro">Financeiro</option>
+                            <option value="Relato de Bug">Relato de Bug</option>
+                        </select>
+                    </div>
+                    <div class="evt-form-group" style="margin-bottom:15px;">
+                        <label>Descrição Detalhada do Problema <span style="color:red;">*</span></label>
+                        <textarea class="evt-form-control" rows="4" placeholder="Descreva o problema com detalhes..." required></textarea>
+                    </div>
+                    <div class="evt-form-group" style="margin-bottom:20px;">
+                        <label>E-mail ou Telefone para Retorno do Suporte <span style="color:red;">*</span></label>
+                        <input type="text" class="evt-form-control" placeholder="Ex: (81) 99999-9999 ou email@exemplo.com" required>
+                    </div>
+                    <button type="submit" class="evt-btn-primary" style="width: auto; background: var(--evt-primary);"><i class="fa-solid fa-paper-plane"></i> Enviar Chamado de Suporte</button>
+                </form>
+
+                <h3 style="color: var(--evt-primary); margin-top: 40px; margin-bottom: 15px;">Meus Chamados de Suporte Abertos</h3>
+                <div style="background:#F8FAFC; border:1px dashed #E2E8F0; padding:20px; text-align:center; border-radius:8px; color:var(--evt-text-muted);">
+                    Você não possui chamados em aberto no momento.
+                </div>
+            </div>
+
+            <!-- Políticas -->
+            <div class="evt-auth-card" style="padding:25px;">
+                <h3 style="color: var(--evt-primary); margin-bottom: 15px;"><i class="fa-solid fa-file-contract"></i> Nossas Políticas</h3>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <a href="#" style="color:var(--evt-secondary); text-decoration:none; font-weight:600; font-size:0.9rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Política de Privacidade</a>
+                    <a href="#" style="color:var(--evt-secondary); text-decoration:none; font-weight:600; font-size:0.9rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Política de Inscrição em Eventos</a>
+                    <a href="#" style="color:var(--evt-secondary); text-decoration:none; font-weight:600; font-size:0.9rem;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Política de Cancelamento e Reembolso</a>
+                </div>
             </div>
         `;
     }
@@ -1268,6 +1598,7 @@
         const palavra = document.getElementById('create-evt-palavra').value;
         const local = document.getElementById('create-evt-local').value;
         const taxas = document.getElementById('create-evt-taxas').value;
+        const imgPos = document.getElementById('create-evt-imgpos') ? document.getElementById('create-evt-imgpos').value : 'center';
         
         // 2. Formatar a data se vier YYYY-MM-DD para DD/MM/YYYY
         let dataFormatada = dataStr;
@@ -1322,7 +1653,8 @@
                     tipo: 'curso presencial',
                     resumo: 'Novo evento publicado e sincronizado.',
                     local: local,
-                    valor: taxas === '0' || taxas === '0.00' ? 'Gratuito' : 'R$ ' + taxas
+                    valor: taxas === '0' || taxas === '0.00' ? 'Gratuito' : 'R$ ' + taxas,
+                    imgPos: imgPos
                 };
                 state.events.push(novo);
                 saveData();

@@ -463,6 +463,19 @@
                                 <label>Nome do Evento <span style="color:red;">*</span></label>
                                 <input type="text" id="create-evt-titulo" class="evt-form-control" placeholder="Ex: Curso Prático de Recursos Previdenciários" required>
                             </div>
+                            <div class="evt-form-group evt-full-width">
+                                <label>Imagem de Capa do Evento <span style="color:red;">*</span></label>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="file" id="create-evt-capa" class="evt-form-control" accept="image/*" required style="flex: 1;">
+                                    <select id="create-evt-imgpos" class="evt-form-control" style="width: 150px;" title="Posicionamento da imagem">
+                                        <option value="center">Centralizado</option>
+                                        <option value="top">Superior</option>
+                                        <option value="bottom">Inferior</option>
+                                        <option value="left">Esquerda</option>
+                                        <option value="right">Direita</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="evt-form-group">
                                 <label>Carga Horária <span style="color:red;">*</span></label>
                                 <input type="number" id="create-evt-carga" class="evt-form-control" placeholder="Ex: 20" required>
@@ -524,6 +537,9 @@
 
             <!-- ABA AJUDA -->
             <div id="panel-ajuda" class="evt-tab-panel" style="display:none;"></div>
+
+            <!-- ABA VISUALIZAR EVENTO (DETALHES) -->
+            <div id="panel-visualizar-evento" class="evt-tab-panel" style="display:none;"></div>
 
         </main>
     </div>
