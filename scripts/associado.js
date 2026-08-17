@@ -2190,7 +2190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (formTicket) {
-            formTicket.addEventListener('submit', (e) => {
+            formTicket.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 // Verifica o limite de 3 chamados abertos
@@ -2200,25 +2200,62 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
+                const btnSubmit = document.getElementById('btn-submit-ticket');
+                if (btnSubmit) {
+                    btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+                    btnSubmit.disabled = true;
+                }
+
                 const assunto = document.getElementById('ticket-assunto').value;
                 const tema = document.getElementById('ticket-tema').value;
                 const desc = document.getElementById('ticket-desc').value;
                 const contato = document.getElementById('ticket-contato').value;
+                const canal = document.querySelector('input[name="ticket-canal"]:checked').value;
 
-                activeTickets.push({
-                    id: Date.now(),
-                    assunto,
-                    tema,
-                    desc,
-                    contato,
-                    status: 'Em Análise',
-                    data: new Date().toLocaleDateString('pt-BR')
-                });
+                const payload = {
+                    Canal: canal,
+                    tema: tema + ' - ' + assunto,
+                    id: contato,
+                    Mensagem: desc
+                };
 
-                localStorage.setItem(STORAGE_KEY_TICKETS, JSON.stringify(activeTickets));
-                renderAjudaSupport();
-                formTicket.reset();
-                showToastMessage('Chamado de suporte aberto com sucesso!');
+                try {
+                    const response = await fetch("https://n8n-motaadv.duckdns.org/webhook/suporte", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Erro na requisição para o webhook');
+                    }
+
+                    activeTickets.push({
+                        id: Date.now(),
+                        assunto,
+                        tema,
+                        desc,
+                        contato,
+                        status: 'Em Análise',
+                        data: new Date().toLocaleDateString('pt-BR')
+                    });
+
+                    localStorage.setItem(STORAGE_KEY_TICKETS, JSON.stringify(activeTickets));
+                    renderAjudaSupport();
+                    formTicket.reset();
+                    showToastMessage('Chamado de suporte aberto com sucesso!');
+
+                } catch (err) {
+                    console.error('Erro ao enviar o chamado:', err);
+                    alert('Ocorreu um erro ao enviar o seu chamado. Tente novamente mais tarde.');
+                } finally {
+                    if (btnSubmit) {
+                        btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Chamado de Suporte';
+                        btnSubmit.disabled = false;
+                    }
+                }
             });
         }
     }

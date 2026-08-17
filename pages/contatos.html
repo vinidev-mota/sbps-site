@@ -159,8 +159,13 @@
                     </div>
             
                     <div class="form-group" style="margin-bottom: 20px;">
-                        <label for="assunto" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-text);">Assunto</label>
-                        <input type="text" id="assunto" name="assunto" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 1rem;">
+                        <label for="assunto" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-text);">Assunto / Tema</label>
+                        <select id="assunto" name="assunto" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 1rem; background-color: #fff;">
+                            <option value="">Selecione o tema</option>
+                            <option value="Dúvida">Dúvida</option>
+                            <option value="Suporte">Suporte</option>
+                            <option value="Outros">Outros</option>
+                        </select>
                     </div>
             
                     <div class="form-group" style="margin-bottom: 25px;">
@@ -187,6 +192,56 @@
                         inputField.value = ''; // Limpa o campo ao trocar
                     }
                 }
+
+                document.getElementById('contactForm').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const btnSubmit = this.querySelector('button[type="submit"]');
+                    const originalText = btnSubmit.innerHTML;
+                    btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+                    btnSubmit.disabled = true;
+
+                    const contactType = document.querySelector('input[name="contactType"]:checked').value;
+                    const contactValue = document.getElementById('contactValue').value;
+                    const tema = document.getElementById('assunto').value;
+                    const mensagem = document.getElementById('mensagem').value;
+
+                    const payload = {
+                        Canal: contactType === 'whatsapp' ? 'WhatsApp' : 'Email',
+                        tema: tema,
+                        id: contactValue,
+                        Mensagem: mensagem
+                    };
+
+                    try {
+                        const response = await fetch("https://n8n-motaadv.duckdns.org/webhook/suporte", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (response.ok) {
+                            if (typeof showToastMessage === 'function') {
+                                showToastMessage('Solicitação enviada com sucesso!');
+                            } else {
+                                alert('Solicitação enviada com sucesso!');
+                            }
+                            this.reset();
+                            // Volta placeholder para o padrão de email
+                            document.getElementById('contactValue').placeholder = 'Seu endereço de e-mail';
+                        } else {
+                            throw new Error('Erro ao enviar solicitação');
+                        }
+                    } catch (error) {
+                        console.error('Erro:', error);
+                        alert('Ocorreu um erro ao enviar sua solicitação. Tente novamente mais tarde.');
+                    } finally {
+                        btnSubmit.innerHTML = originalText;
+                        btnSubmit.disabled = false;
+                    }
+                });
             </script>
 
         </div>
