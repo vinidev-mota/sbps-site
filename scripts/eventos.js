@@ -108,6 +108,20 @@
                 created_at: 'Há 2 dias'
             }
         ],
+        members: [
+            { email: 'roberto.mota@sbps.org.br', nome: 'Dr. Roberto Mota', role: 'palestrante', bio: 'Advogado previdenciarista com 12 anos de experiência.', interesses: 'RPPS, Cálculos, Planejamento', linkedin: 'linkedin.com/in/robertomota', instagram: '@robertomota', exibirLocal: true, lat: -8.047562, lng: -34.877002 },
+            { email: 'ana.silveira@adv.com.br', nome: 'Dra. Ana Silveira', role: 'participante', bio: 'Foco em perícias médicas e benefícios por incapacidade.', interesses: 'BPC, Perícia Médica', linkedin: '', instagram: '@anasilveira.adv', exibirLocal: true, lat: -23.550520, lng: -46.633308 }
+        ],
+        groups: [
+            { id: 'grp-1', nome: 'Jovem Advocacia', descricao: 'Espaço para advogados iniciantes trocarem dicas.', membrosCount: 45 },
+            { id: 'grp-2', nome: 'Especialistas em RPPS', descricao: 'Discussões avançadas sobre Regimes Próprios.', membrosCount: 12 }
+        ],
+        notices: [
+            { id: 'not-1', titulo: 'Edital para Novos Artigos', data: '15/08/2026', conteudo: 'A Revista Científica da SBPS está aceitando novos artigos até o dia 30/09.' }
+        ],
+        chats: [
+            { id: 'msg-1', tipo: 'group', targetId: 'grp-1', remetente: 'Dr. Roberto Mota', mensagem: 'Sejam bem-vindos ao grupo!', timestamp: '10:00' }
+        ],
         userVotes: {},
         tabFilters: {
             'eventos': { search: '', tema: '', area: '', valorModo: '', valorMin: '', valorMax: '', carga: '', shift: '', dataPer: '', dateExact: '' },
@@ -147,6 +161,18 @@
 
         const storedVotes = localStorage.getItem('sbps_evt_votes');
         if (storedVotes) state.userVotes = JSON.parse(storedVotes);
+
+        const storedMembers = localStorage.getItem('sbps_evt_members');
+        if (storedMembers) state.members = JSON.parse(storedMembers);
+
+        const storedGroups = localStorage.getItem('sbps_evt_groups');
+        if (storedGroups) state.groups = JSON.parse(storedGroups);
+
+        const storedNotices = localStorage.getItem('sbps_evt_notices');
+        if (storedNotices) state.notices = JSON.parse(storedNotices);
+
+        const storedChats = localStorage.getItem('sbps_evt_chats');
+        if (storedChats) state.chats = JSON.parse(storedChats);
     }
 
     function saveData() {
@@ -155,6 +181,10 @@
         localStorage.setItem('sbps_evt_participations', JSON.stringify(state.participations));
         localStorage.setItem('sbps_evt_suggestions', JSON.stringify(state.suggestions));
         localStorage.setItem('sbps_evt_votes', JSON.stringify(state.userVotes));
+        localStorage.setItem('sbps_evt_members', JSON.stringify(state.members));
+        localStorage.setItem('sbps_evt_groups', JSON.stringify(state.groups));
+        localStorage.setItem('sbps_evt_notices', JSON.stringify(state.notices));
+        localStorage.setItem('sbps_evt_chats', JSON.stringify(state.chats));
     }
 
     // Suporte ao Botão Voltar do Navegador (History PopState)
@@ -224,9 +254,7 @@
             });
         }
 
-        // Formulários de Sugestão e Suporte
-        const formSugestao = document.getElementById('form-nova-sugestao');
-        if (formSugestao) formSugestao.addEventListener('submit', handleNovaSugestao);
+        // Formulários de Suporte
 
         const formCriarEvt = document.getElementById('form-criar-evento-palestrante');
         if (formCriarEvt) formCriarEvt.addEventListener('submit', handleCriarEvento);
@@ -964,6 +992,32 @@
                         </div>
                     </div>
 
+                    <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px; margin-top: 25px;">
+                        <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;"><i class="fa-solid fa-users"></i> PERFIL DA COMUNIDADE</h3>
+                    </div>
+                    <div class="evt-grid-2">
+                        <div class="evt-form-group evt-full-width">
+                            <label>Biografia / Sobre Mim (Visível na Comunidade)</label>
+                            <textarea id="edit-evt-bio" class="evt-form-control" rows="3">${u.bio || ''}</textarea>
+                        </div>
+                        <div class="evt-form-group evt-full-width">
+                            <label>Áreas de Interesse (Ex: RPPS, BPC, Cálculos)</label>
+                            <input type="text" id="edit-evt-interesses" class="evt-form-control" value="${u.interesses || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label><i class="fa-brands fa-linkedin"></i> Link do LinkedIn</label>
+                            <input type="url" id="edit-evt-linkedin" class="evt-form-control" placeholder="https://linkedin.com/in/seu-perfil" value="${u.linkedin || ''}">
+                        </div>
+                        <div class="evt-form-group">
+                            <label><i class="fa-brands fa-instagram"></i> Usuário Instagram</label>
+                            <input type="text" id="edit-evt-instagram" class="evt-form-control" placeholder="@seuperfil" value="${u.instagram || ''}">
+                        </div>
+                        <div class="evt-form-group evt-full-width" style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+                            <input type="checkbox" id="edit-evt-exibirlocal" style="width:20px; height:20px;" ${u.exibirLocal ? 'checked' : ''}>
+                            <label style="margin:0; font-weight:600;">Exibir minha localização no mapa da comunidade</label>
+                        </div>
+                    </div>
+
                     ${extraCampos}
 
                     <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px; margin-top: 25px;">
@@ -1002,6 +1056,11 @@
             u.cidade = document.getElementById('edit-evt-cidade').value;
             u.uf = document.getElementById('edit-evt-uf').value;
             u.complemento = document.getElementById('edit-evt-complemento').value;
+            u.bio = document.getElementById('edit-evt-bio').value;
+            u.interesses = document.getElementById('edit-evt-interesses').value;
+            u.linkedin = document.getElementById('edit-evt-linkedin').value;
+            u.instagram = document.getElementById('edit-evt-instagram').value;
+            u.exibirLocal = document.getElementById('edit-evt-exibirlocal').checked;
             
             if (isPalestrante) {
                 u.escolaridade = document.getElementById('edit-evt-escolaridade').value;
@@ -1018,6 +1077,28 @@
             localStorage.setItem('sbps_evt_session', JSON.stringify(u));
             showToast('Perfil atualizado com sucesso!');
         };
+    }
+
+    function calculateReputation(email) {
+        if (!email) return 0;
+        let points = 0;
+        
+        // 1pt por like recebido
+        const myPosts = state.communityPosts.filter(p => p.email === email);
+        points += myPosts.reduce((acc, p) => acc + (p.likes || 0), 0) * 1;
+        
+        // 2pt por evento participado
+        if (state.currentUser && state.currentUser.email === email) {
+            points += state.participations.length * 2;
+        } else {
+            // Check global members list if available, or assume static
+        }
+
+        // 3pt por evento realizado (palestrante)
+        const realizedEvents = state.events.filter(e => e.status === 'Realizado' && e.palestrante_email === email);
+        points += realizedEvents.length * 3;
+
+        return points;
     }
 
     /* ==========================================================================
@@ -1456,16 +1537,297 @@
     function renderComunidadeTab() {
         const container = document.getElementById('panel-comunidade');
         if (!container) return;
+        
+        const rep = calculateReputation(state.currentUser ? state.currentUser.email : null);
+
         container.innerHTML = `
             <div class="evt-page-header">
                 <h1 class="evt-page-title"><i class="fa-solid fa-users"></i> Comunidade Previdenciária</h1>
-                <div class="evt-reputation-badge"><i class="fa-solid fa-star"></i> Reputação: 12 Pontos</div>
+                <div class="evt-reputation-badge"><i class="fa-solid fa-star"></i> Reputação: ${rep} Pontos</div>
             </div>
-            <div class="evt-auth-card" style="padding:20px;">
-                <h3><i class="fa-solid fa-comments"></i> Fórum da Comunidade</h3>
-                <p style="font-size:0.85rem; color:var(--evt-text-muted);">Troca de experiências e debates práticos entre membros e palestrantes.</p>
+            
+            <div class="evt-subtabs-nav" style="margin-bottom: 20px;">
+                <button type="button" class="evt-subtab-btn active" onclick="window.switchCommunitySubTab('forum', this)"><i class="fa-solid fa-comments"></i> Fórum</button>
+                <button type="button" class="evt-subtab-btn" onclick="window.switchCommunitySubTab('mural', this)"><i class="fa-solid fa-bullhorn"></i> Mural</button>
+                <button type="button" class="evt-subtab-btn" onclick="window.switchCommunitySubTab('grupos', this)"><i class="fa-brands fa-whatsapp"></i> Grupos & Chat</button>
+                <button type="button" class="evt-subtab-btn" onclick="window.switchCommunitySubTab('diretorio', this)"><i class="fa-solid fa-map-location-dot"></i> Diretório & Mapa</button>
+                <button type="button" class="evt-subtab-btn" onclick="window.switchCommunitySubTab('agenda', this)"><i class="fa-regular fa-calendar-days"></i> Agenda</button>
+            </div>
+            
+            <div id="com-subpanel-forum" class="com-subpanel" style="display:block;">
+                ${renderForumHTML()}
+            </div>
+            <div id="com-subpanel-mural" class="com-subpanel" style="display:none;">
+                ${renderMuralHTML()}
+            </div>
+            <div id="com-subpanel-grupos" class="com-subpanel" style="display:none;">
+                ${renderChatGruposHTML()}
+            </div>
+            <div id="com-subpanel-diretorio" class="com-subpanel" style="display:none;">
+                ${renderDiretorioHTML()}
+            </div>
+            <div id="com-subpanel-agenda" class="com-subpanel" style="display:none;">
+                ${renderAgendaHTML()}
             </div>
         `;
+
+        attachCommunityListeners(container);
+    }
+
+    window.switchCommunitySubTab = function(subtab, btn) {
+        document.querySelectorAll('.com-subpanel').forEach(p => p.style.display = 'none');
+        const activePanel = document.getElementById('com-subpanel-' + subtab);
+        if (activePanel) activePanel.style.display = 'block';
+
+        if (btn) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.evt-subtab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        if (subtab === 'diretorio') {
+            initCommunityMap();
+        }
+    };
+
+    function renderForumHTML() {
+        return `
+            <div class="evt-auth-card" style="padding:20px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-solid fa-comment-dots"></i> Fóruns de Discussão</h3>
+                    <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Espaço para troca de ideias, dúvidas e teses jurídicas.</p>
+                </div>
+                <button class="evt-btn-primary" style="width:auto; margin:0;" onclick="showToast('Em breve: Criar novo tópico')"><i class="fa-solid fa-plus"></i> Novo Tópico</button>
+            </div>
+            <div class="evt-cards-grid">
+                ${state.communityPosts.map(p => `
+                    <div class="evt-auth-card" style="padding:20px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span class="evt-badge-tag">${p.categoria}</span>
+                            <span style="font-size:0.8rem; color:var(--evt-text-muted);">${p.created_at}</span>
+                        </div>
+                        <h4 style="color:var(--evt-primary); margin-bottom:10px;">${p.titulo}</h4>
+                        <p style="font-size:0.9rem; color:var(--evt-text-muted); margin-bottom:15px;">${p.conteudo}</p>
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:10px;">
+                            <div style="font-size:0.85rem; font-weight:600; color:#334155;"><i class="fa-solid fa-user-circle"></i> ${p.autor}</div>
+                            <div style="display:flex; gap:10px;">
+                                <button class="evt-btn-icon-secondary btn-like-post" data-id="${p.id}" title="Curtir e dar +1 ponto de reputação"><i class="fa-regular fa-thumbs-up"></i> ${p.likes || 0}</button>
+                                <button class="evt-btn-icon-danger btn-report-post" data-id="${p.id}" title="Denunciar conteúdo impróprio"><i class="fa-solid fa-flag"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function renderMuralHTML() {
+        return `
+            <div class="evt-auth-card" style="padding:20px; margin-bottom: 20px;">
+                <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-solid fa-clipboard-list"></i> Mural de Avisos</h3>
+                <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Notícias oficiais, editais e informes da diretoria SBPS.</p>
+            </div>
+            <div class="evt-cards-grid">
+                ${state.notices.map(n => `
+                    <div class="evt-auth-card" style="padding:20px; border-left: 4px solid var(--evt-primary);">
+                        <div style="font-size:0.8rem; color:var(--evt-text-muted); margin-bottom:5px;"><i class="fa-solid fa-calendar"></i> ${n.data}</div>
+                        <h4 style="color:var(--evt-primary); margin-bottom:10px;">${n.titulo}</h4>
+                        <p style="font-size:0.9rem; color:#475569;">${n.conteudo}</p>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function renderChatGruposHTML() {
+        return `
+            <div class="com-chat-layout">
+                <div class="com-chat-sidebar">
+                    <div class="com-chat-sidebar-header">
+                        <h3 style="margin:0; font-size:1rem;"><i class="fa-solid fa-users-rays"></i> Meus Grupos</h3>
+                    </div>
+                    <div class="com-chat-list">
+                        ${state.groups.map(g => `
+                            <div class="com-chat-item" onclick="window.loadChatGroup('${g.id}')">
+                                <div class="com-chat-avatar"><i class="fa-solid fa-user-group"></i></div>
+                                <div class="com-chat-info">
+                                    <h4>${g.nome}</h4>
+                                    <p>${g.membrosCount} membros</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="com-chat-main">
+                    <div id="com-active-chat-area" style="display:flex; flex-direction:column; height:100%; justify-content:center; align-items:center; color:var(--evt-text-muted);">
+                        <i class="fa-brands fa-whatsapp" style="font-size:3rem; margin-bottom:15px; color:#cbd5e1;"></i>
+                        <p>Selecione um grupo para iniciar a conversa.</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    window.loadChatGroup = function(groupId) {
+        const area = document.getElementById('com-active-chat-area');
+        if (!area) return;
+        const group = state.groups.find(g => g.id === groupId);
+        const msgs = state.chats.filter(c => c.targetId === groupId);
+        
+        area.innerHTML = `
+            <div class="com-chat-main-header">
+                <div class="com-chat-avatar"><i class="fa-solid fa-user-group"></i></div>
+                <div>
+                    <h3 style="margin:0; font-size:1rem;">${group.nome}</h3>
+                    <p style="margin:0; font-size:0.8rem; color:var(--evt-text-muted);">${group.membrosCount} membros - ${group.descricao}</p>
+                </div>
+            </div>
+            <div class="com-chat-messages-container" id="com-group-messages-container">
+                ${msgs.map(m => `
+                    <div class="com-chat-message ${m.remetente === (state.currentUser ? state.currentUser.nome : '') ? 'sent' : 'received'}">
+                        <span class="com-chat-sender">${m.remetente}</span>
+                        <p>${m.mensagem}</p>
+                        <span class="com-chat-time">${m.timestamp}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <form id="form-send-group-chat" class="com-chat-input-area" onsubmit="window.sendGroupMessage(event, '${groupId}')">
+                <input type="text" id="group-msg-input" class="evt-form-control" placeholder="Digite uma mensagem..." required>
+                <button type="submit" class="evt-btn-primary" style="width:auto; margin:0; padding:10px 18px;"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        `;
+        const msgsContainer = document.getElementById('com-group-messages-container');
+        if(msgsContainer) msgsContainer.scrollTop = msgsContainer.scrollHeight;
+    };
+
+    window.sendGroupMessage = function(e, groupId) {
+        e.preventDefault();
+        const input = document.getElementById('group-msg-input');
+        if (!input.value.trim()) return;
+        
+        const now = new Date();
+        const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        
+        state.chats.push({
+            id: 'msg-' + Date.now(),
+            tipo: 'group',
+            targetId: groupId,
+            remetente: state.currentUser ? state.currentUser.nome : 'Você',
+            mensagem: input.value.trim(),
+            timestamp: timeStr
+        });
+        saveData();
+        input.value = '';
+        window.loadChatGroup(groupId);
+    };
+
+    function renderDiretorioHTML() {
+        return `
+            <div class="evt-auth-card" style="padding:20px; margin-bottom: 20px;">
+                <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-solid fa-map-location-dot"></i> Diretório de Membros</h3>
+                <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Encontre profissionais, faça parcerias e veja quem está perto de você.</p>
+            </div>
+            
+            <div style="height: 400px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; margin-bottom: 25px; background: #f1f5f9; display: flex; align-items:center; justify-content:center;" id="community-map">
+                Carregando mapa...
+            </div>
+
+            <div class="evt-cards-grid">
+                ${state.members.map(m => `
+                    <div class="evt-auth-card" style="padding:20px; text-align:center;">
+                        <div style="width:60px; height:60px; border-radius:50%; background:var(--evt-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 15px auto; font-weight:700;">
+                            ${m.nome.charAt(0)}
+                        </div>
+                        <h4 style="color:var(--evt-primary); margin-bottom:5px;">${m.nome}</h4>
+                        <span class="evt-badge-tag" style="margin-bottom:10px;">${m.role === 'palestrante' ? 'Palestrante' : 'Membro'}</span>
+                        <p style="font-size:0.85rem; color:#475569; margin-bottom:10px;">${m.bio || 'Sem biografia disponível.'}</p>
+                        <p style="font-size:0.8rem; color:var(--evt-secondary); margin-bottom:15px; font-weight:600;"><i class="fa-solid fa-tags"></i> ${m.interesses || 'Interesses gerais'}</p>
+                        
+                        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+                            ${m.linkedin ? `<a href="${m.linkedin}" target="_blank" style="color:#0A66C2; font-size:1.2rem;"><i class="fa-brands fa-linkedin"></i></a>` : ''}
+                            ${m.instagram ? `<a href="https://instagram.com/${m.instagram.replace('@', '')}" target="_blank" style="color:#E1306C; font-size:1.2rem;"><i class="fa-brands fa-instagram"></i></a>` : ''}
+                        </div>
+                        
+                        <button class="evt-btn-primary" style="width:100%; padding:8px;" onclick="showToast('Em breve: Chat Privado')"><i class="fa-regular fa-comment"></i> Mensagem</button>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    let comMapInstance = null;
+    function initCommunityMap() {
+        if (!window.L) {
+            document.getElementById('community-map').innerHTML = "Biblioteca do mapa não carregada.";
+            return;
+        }
+        
+        const mapContainer = document.getElementById('community-map');
+        if (!mapContainer || comMapInstance) return;
+        
+        mapContainer.innerHTML = ''; // clear loading text
+        
+        comMapInstance = L.map('community-map').setView([-14.235, -51.925], 4); // Centro do Brasil
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(comMapInstance);
+        
+        const mapMembers = state.members.filter(m => m.exibirLocal && m.lat && m.lng);
+        mapMembers.forEach(m => {
+            const marker = L.marker([m.lat, m.lng]).addTo(comMapInstance);
+            marker.bindPopup(`<b>${m.nome}</b><br>${m.interesses || m.role}`);
+        });
+        
+        // Se houver membros no mapa, ajustar o zoom para caber todos
+        if (mapMembers.length > 0) {
+            const group = new L.featureGroup(mapMembers.map(m => L.marker([m.lat, m.lng])));
+            comMapInstance.fitBounds(group.getBounds().pad(0.5));
+        }
+    }
+
+    function renderAgendaHTML() {
+        // Aproveitar os eventos já criados mas exibi-los como agenda simplificada
+        return `
+            <div class="evt-auth-card" style="padding:20px; margin-bottom: 20px;">
+                <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-regular fa-calendar-days"></i> Agenda de Encontros</h3>
+                <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Próximos eventos, palestras e reuniões da comunidade.</p>
+            </div>
+            <div class="evt-card-row-single">
+                ${state.events.filter(e => e.status === 'Ativo').slice(0, 5).map(e => `
+                    <div class="evt-auth-card" style="padding:15px; border-left: 4px solid var(--evt-secondary);">
+                        <h4 style="color:var(--evt-primary); margin-bottom:5px;">${e.titulo}</h4>
+                        <p style="font-size:0.85rem; color:#475569; margin-bottom:8px;"><i class="fa-solid fa-clock"></i> ${e.dateStr} | ${e.local || 'Online'}</p>
+                        <span class="evt-badge-tag">${e.tipo}</span>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function attachCommunityListeners(container) {
+        if(!container) return;
+        
+        container.querySelectorAll('.btn-like-post').forEach(btn => {
+            btn.onclick = () => {
+                const id = btn.getAttribute('data-id');
+                const post = state.communityPosts.find(p => p.id === id);
+                if (post) {
+                    post.likes = (post.likes || 0) + 1;
+                    saveData();
+                    btn.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${post.likes}`;
+                    btn.classList.remove('evt-btn-icon-secondary');
+                    btn.classList.add('evt-btn-icon-primary');
+                    showToast('+1 Ponto de reputação concedido!');
+                }
+            };
+        });
+
+        container.querySelectorAll('.btn-report-post').forEach(btn => {
+            btn.onclick = () => {
+                showToast('Conteúdo denunciado e enviado para moderação.');
+            };
+        });
     }
 
     function renderSugestoesTab() {
@@ -1503,6 +1865,11 @@
                 </form>
             </div>
         `;
+        
+        const formSugestao = document.getElementById('form-nova-sugestao');
+        if (formSugestao) {
+            formSugestao.addEventListener('submit', handleNovaSugestao);
+        }
     }
 
     function renderAjudaTab() {
@@ -1583,9 +1950,28 @@
         `;
     }
 
-    function handleNovaSugestao(e) {
+    async function handleNovaSugestao(e) {
         e.preventDefault();
-        showToast('Sugestão enviada!');
+        
+        const titulo = document.getElementById('sug-titulo').value;
+        const tema = document.getElementById('sug-tema').value;
+        const sugestao = document.getElementById('sug-descricao').value;
+        const email = state.currentUser ? state.currentUser.email : 'anonimo@sbps.org.br';
+        
+        const payload = { tema, titulo, sugestao, email };
+        
+        try {
+            await fetch('https://n8n-motaadv.duckdns.org/webhook/sugestoes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            showToast('Sugestão enviada com sucesso!');
+            e.target.reset();
+        } catch (error) {
+            console.error('Erro ao enviar sugestão:', error);
+            showToast('Erro ao enviar sugestão.');
+        }
     }
 
     function handleCriarEvento(e) {
