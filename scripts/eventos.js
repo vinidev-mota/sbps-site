@@ -1961,7 +1961,7 @@
         const payload = { tema, titulo, sugestao, email };
         
         try {
-            await fetch('https://n8n-motaadv.duckdns.org/webhook/sugestoes', {
+            await fetch('https://n8n.motaadv.net/webhook/sugestoes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -2022,7 +2022,7 @@
             };
             
             try {
-                await fetch('https://n8n-motaadv.duckdns.org/webhook/cria-evento', {
+                await fetch('https://n8n.motaadv.net/webhook/cria-evento', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -2102,7 +2102,7 @@
         if (currentUser.email) payload.user_email = currentUser.email;
 
         try {
-            const response = await fetch('https://n8n-motaadv.duckdns.org/webhook/mensagem-de-entrada', {
+            const response = await fetch('https://n8n.motaadv.net/webhook/mensagem-de-entrada', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
