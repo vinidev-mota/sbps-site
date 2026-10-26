@@ -610,6 +610,43 @@
         </div>
     </footer>
 
+    <!-- MODAL NOVO TÓPICO DA COMUNIDADE -->
+    <div id="com-modal-novo-topico" class="evt-modal" style="display: none;">
+        <div class="evt-modal-content" style="max-width: 600px;">
+            <div class="evt-modal-header">
+                <h2><i class="fa-solid fa-comment-medical"></i> Criar Novo Tópico</h2>
+                <button type="button" class="btn-fechar-modal" onclick="window.closeNewTopicModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-novo-topico" onsubmit="window.submitNewCommunityTopic(event)">
+                <div class="evt-modal-body">
+                    <div class="evt-form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:600; color:var(--evt-text-main);">Título da Discussão <span style="color:red;">*</span></label>
+                        <input type="text" id="topico-titulo" class="evt-form-control" placeholder="Ex: Aplicação da Revisão da Vida Toda em 2026" required>
+                    </div>
+                    <div class="evt-form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:600; color:var(--evt-text-main);">Categoria <span style="color:red;">*</span></label>
+                        <select id="topico-categoria" class="evt-form-control" required>
+                            <option value="Jurisprudência">Jurisprudência & Tribunais Superiores</option>
+                            <option value="Teses Previdenciárias">Teses Previdenciárias</option>
+                            <option value="Prática Administrativa INSS">Prática Administrativa INSS</option>
+                            <option value="Regimes Próprios (RPPS)">Regimes Próprios (RPPS)</option>
+                            <option value="Gestão & Honorários">Gestão & Honorários Advocatícios</option>
+                            <option value="Dúvidas Gerais">Dúvidas Gerais & Networking</option>
+                        </select>
+                    </div>
+                    <div class="evt-form-group" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:600; color:var(--evt-text-main);">Conteúdo / Explicação <span style="color:red;">*</span></label>
+                        <textarea id="topico-conteudo" class="evt-form-control" rows="5" placeholder="Descreva sua tese, dúvida prática ou caso para debate com os colegas..." required></textarea>
+                    </div>
+                </div>
+                <div class="evt-modal-footer">
+                    <button type="button" class="evt-btn-card-secondary" onclick="window.closeNewTopicModal()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                    <button type="submit" class="evt-btn-primary" style="width: auto; margin: 0;"><i class="fa-solid fa-paper-plane"></i> Publicar Tópico</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL DE CONFIRMAÇÃO DE EVENTO -->
     <div id="evt-modal-confirmar-evento" class="evt-modal" style="display: none;">
         <div class="evt-modal-content">

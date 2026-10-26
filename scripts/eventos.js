@@ -6,6 +6,16 @@
 (function () {
     'use strict';
 
+    function escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     // Mock Database Inicial
     const INITIAL_EVENTS = [
         {
@@ -173,6 +183,9 @@
 
         const storedChats = localStorage.getItem('sbps_evt_chats');
         if (storedChats) state.chats = JSON.parse(storedChats);
+
+        const storedPosts = localStorage.getItem('sbps_evt_community_posts');
+        if (storedPosts) state.communityPosts = JSON.parse(storedPosts);
     }
 
     function saveData() {
@@ -185,6 +198,7 @@
         localStorage.setItem('sbps_evt_groups', JSON.stringify(state.groups));
         localStorage.setItem('sbps_evt_notices', JSON.stringify(state.notices));
         localStorage.setItem('sbps_evt_chats', JSON.stringify(state.chats));
+        localStorage.setItem('sbps_evt_community_posts', JSON.stringify(state.communityPosts));
     }
 
     // Suporte ao Botão Voltar do Navegador (History PopState)
@@ -266,6 +280,8 @@
 
         const formAi = document.getElementById('form-ai-chat');
         if (formAi) formAi.addEventListener('submit', handleAiSubmit);
+
+        setupPrivateChatForm();
 
         // Logout Modal Trigger
         const btnLogoutSidebar = document.getElementById('btn-logout-workspace');
@@ -357,23 +373,58 @@
     async function handleLogin(e, role) {
         e.preventDefault();
         const userInput = (e.target.querySelector('input[type="text"]') || e.target.querySelector('input[type="email"]')).value.trim();
+        const passInput = (e.target.querySelector('input[type="password"]')) ? e.target.querySelector('input[type="password"]').value : '';
 
-        let assocProfile = null;
-        if (window.SBPS_Supabase) {
-            assocProfile = await window.SBPS_Supabase.checkAssociadoByEmail(userInput);
+        if (!userInput || !passInput) {
+            alert('Por favor, informe seu e-mail e sua senha cadastrada.');
+            return;
         }
 
-        let userObj = {
-            email: assocProfile ? assocProfile.email : userInput,
-            nome: assocProfile ? assocProfile.nome : userInput.split('@')[0],
-            role: role,
-            isAssociado: !!assocProfile
-        };
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+        if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Autenticando...';
 
-        state.currentUser = userObj;
-        state.userRole = role;
-        localStorage.setItem('sbps_evt_session', JSON.stringify(userObj));
-        renderWorkspace();
+        try {
+            if (window.SBPS_Supabase && typeof window.SBPS_Supabase.loginEventoUser === 'function') {
+                const res = await window.SBPS_Supabase.loginEventoUser(userInput, passInput, role);
+                if (res && res.success) {
+                    const prof = res.profile || {};
+                    let userObj = {
+                        email: prof.email || userInput,
+                        nome: prof.nome || (userInput.includes('@') ? userInput.split('@')[0] : userInput),
+                        role: role,
+                        isAssociado: !!prof.cpf
+                    };
+                    state.currentUser = userObj;
+                    state.userRole = role;
+                    localStorage.setItem('sbps_evt_session', JSON.stringify(userObj));
+                    renderWorkspace();
+                    return;
+                } else {
+                    alert(res.error || 'Credenciais inválidas. Verifique seu e-mail e senha.');
+                    return;
+                }
+            } else {
+                // Modo fallback se Supabase SDK offline
+                const storedKey = 'sbps_' + role + '_user';
+                const localUser = localStorage.getItem(storedKey);
+                if (localUser) {
+                    try {
+                        const parsed = JSON.parse(localUser);
+                        if (parsed.email && parsed.email.toLowerCase() === userInput.toLowerCase()) {
+                            state.currentUser = { email: parsed.email, nome: parsed.nome || userInput, role: role, isAssociado: true };
+                            state.userRole = role;
+                            localStorage.setItem('sbps_evt_session', JSON.stringify(state.currentUser));
+                            renderWorkspace();
+                            return;
+                        }
+                    } catch(err) {}
+                }
+                alert('Credenciais não localizadas ou serviço de autenticação temporariamente indisponível.');
+            }
+        } finally {
+            if (submitBtn) submitBtn.innerHTML = origBtnText;
+        }
     }
 
     async function handleRegisterParticipante(e) {
@@ -1083,8 +1134,9 @@
         if (!email) return 0;
         let points = 0;
         
-        // 1pt por like recebido
+        // 5pt por tópico publicado + 1pt por like recebido
         const myPosts = state.communityPosts.filter(p => p.email === email);
+        points += myPosts.length * 5;
         points += myPosts.reduce((acc, p) => acc + (p.likes || 0), 0) * 1;
         
         // 2pt por evento participado
@@ -1592,27 +1644,27 @@
 
     function renderForumHTML() {
         return `
-            <div class="evt-auth-card" style="padding:20px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
+            <div class="evt-auth-card" style="padding:20px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
                 <div>
-                    <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-solid fa-comment-dots"></i> Fóruns de Discussão</h3>
-                    <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Espaço para troca de ideias, dúvidas e teses jurídicas.</p>
+                    <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-solid fa-comment-dots"></i> Fóruns de Discussão & Teses Jurídicas</h3>
+                    <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Espaço para debate entre associados, troca de experiências práticas e teses previdenciárias.</p>
                 </div>
-                <button class="evt-btn-primary" style="width:auto; margin:0;" onclick="showToast('Em breve: Criar novo tópico')"><i class="fa-solid fa-plus"></i> Novo Tópico</button>
+                <button type="button" class="evt-btn-primary" style="width:auto; margin:0;" onclick="window.openNewTopicModal()"><i class="fa-solid fa-plus"></i> Novo Tópico</button>
             </div>
-            <div class="evt-cards-grid">
+            <div class="evt-cards-grid" id="com-forum-grid">
                 ${state.communityPosts.map(p => `
                     <div class="evt-auth-card" style="padding:20px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                            <span class="evt-badge-tag">${p.categoria}</span>
-                            <span style="font-size:0.8rem; color:var(--evt-text-muted);">${p.created_at}</span>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px; align-items:center;">
+                            <span class="evt-badge-tag">${escapeHTML(p.categoria)}</span>
+                            <span style="font-size:0.8rem; color:var(--evt-text-muted);"><i class="fa-regular fa-clock"></i> ${escapeHTML(p.created_at)}</span>
                         </div>
-                        <h4 style="color:var(--evt-primary); margin-bottom:10px;">${p.titulo}</h4>
-                        <p style="font-size:0.9rem; color:var(--evt-text-muted); margin-bottom:15px;">${p.conteudo}</p>
+                        <h4 style="color:var(--evt-primary); margin-bottom:10px; font-size:1.05rem;">${escapeHTML(p.titulo)}</h4>
+                        <p style="font-size:0.9rem; color:var(--evt-text-muted); margin-bottom:15px; line-height:1.5;">${escapeHTML(p.conteudo)}</p>
                         <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:10px;">
-                            <div style="font-size:0.85rem; font-weight:600; color:#334155;"><i class="fa-solid fa-user-circle"></i> ${p.autor}</div>
+                            <div style="font-size:0.85rem; font-weight:600; color:#334155;"><i class="fa-solid fa-user-circle"></i> ${escapeHTML(p.autor)}</div>
                             <div style="display:flex; gap:10px;">
-                                <button class="evt-btn-icon-secondary btn-like-post" data-id="${p.id}" title="Curtir e dar +1 ponto de reputação"><i class="fa-regular fa-thumbs-up"></i> ${p.likes || 0}</button>
-                                <button class="evt-btn-icon-danger btn-report-post" data-id="${p.id}" title="Denunciar conteúdo impróprio"><i class="fa-solid fa-flag"></i></button>
+                                <button type="button" class="evt-btn-icon-secondary btn-like-post" data-id="${p.id}" title="Curtir e dar +1 ponto de reputação"><i class="fa-regular fa-thumbs-up"></i> <span>${p.likes || 0}</span></button>
+                                <button type="button" class="evt-btn-icon-danger btn-report-post" data-id="${p.id}" title="Denunciar conteúdo"><i class="fa-solid fa-flag"></i></button>
                             </div>
                         </div>
                     </div>
@@ -1621,18 +1673,77 @@
         `;
     }
 
+    window.openNewTopicModal = function() {
+        const modal = document.getElementById('com-modal-novo-topico');
+        if (modal) {
+            modal.style.display = 'flex';
+            const input = document.getElementById('topico-titulo');
+            if (input) setTimeout(() => input.focus(), 100);
+        }
+    };
+
+    window.closeNewTopicModal = function() {
+        const modal = document.getElementById('com-modal-novo-topico');
+        if (modal) modal.style.display = 'none';
+    };
+
+    window.submitNewCommunityTopic = function(e) {
+        e.preventDefault();
+        const tit = document.getElementById('topico-titulo').value.trim();
+        const cat = document.getElementById('topico-categoria').value;
+        const cont = document.getElementById('topico-conteudo').value.trim();
+
+        if (!tit || !cont) {
+            alert('Por favor, preencha o título e o conteúdo do tópico.');
+            return;
+        }
+
+        const authorName = state.currentUser ? state.currentUser.nome : 'Membro Associado';
+        const authorEmail = state.currentUser ? state.currentUser.email : '';
+
+        const newPost = {
+            id: 'post-' + Date.now(),
+            autor: authorName,
+            email: authorEmail,
+            categoria: cat,
+            titulo: tit,
+            conteudo: cont,
+            likes: 0,
+            created_at: 'Hoje'
+        };
+
+        state.communityPosts.unshift(newPost);
+        saveData();
+        window.closeNewTopicModal();
+
+        document.getElementById('topico-titulo').value = '';
+        document.getElementById('topico-conteudo').value = '';
+
+        const forumPanel = document.getElementById('com-subpanel-forum');
+        if (forumPanel) forumPanel.innerHTML = renderForumHTML();
+        attachCommunityListeners(forumPanel);
+
+        const repBadge = document.querySelector('.evt-reputation-badge');
+        if (repBadge) {
+            const rep = calculateReputation(authorEmail);
+            repBadge.innerHTML = `<i class="fa-solid fa-star"></i> Reputação: ${rep} Pontos`;
+        }
+
+        showToast('Tópico publicado com sucesso no fórum! (+5 Pontos de reputação)');
+    };
+
     function renderMuralHTML() {
         return `
             <div class="evt-auth-card" style="padding:20px; margin-bottom: 20px;">
-                <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-solid fa-clipboard-list"></i> Mural de Avisos</h3>
-                <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Notícias oficiais, editais e informes da diretoria SBPS.</p>
+                <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-solid fa-clipboard-list"></i> Mural de Avisos Oficiais</h3>
+                <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Notícias oficiais, editais e comunicados institucionais da diretoria SBPS.</p>
             </div>
             <div class="evt-cards-grid">
                 ${state.notices.map(n => `
                     <div class="evt-auth-card" style="padding:20px; border-left: 4px solid var(--evt-primary);">
-                        <div style="font-size:0.8rem; color:var(--evt-text-muted); margin-bottom:5px;"><i class="fa-solid fa-calendar"></i> ${n.data}</div>
-                        <h4 style="color:var(--evt-primary); margin-bottom:10px;">${n.titulo}</h4>
-                        <p style="font-size:0.9rem; color:#475569;">${n.conteudo}</p>
+                        <div style="font-size:0.8rem; color:var(--evt-text-muted); margin-bottom:5px;"><i class="fa-solid fa-calendar"></i> ${escapeHTML(n.data)}</div>
+                        <h4 style="color:var(--evt-primary); margin-bottom:10px;">${escapeHTML(n.titulo)}</h4>
+                        <p style="font-size:0.9rem; color:#475569; line-height:1.5;">${escapeHTML(n.conteudo)}</p>
                     </div>
                 `).join('')}
             </div>
@@ -1644,14 +1755,14 @@
             <div class="com-chat-layout">
                 <div class="com-chat-sidebar">
                     <div class="com-chat-sidebar-header">
-                        <h3 style="margin:0; font-size:1rem;"><i class="fa-solid fa-users-rays"></i> Meus Grupos</h3>
+                        <h3 style="margin:0; font-size:1rem;"><i class="fa-solid fa-users-rays"></i> Grupos Temáticos</h3>
                     </div>
                     <div class="com-chat-list">
                         ${state.groups.map(g => `
                             <div class="com-chat-item" onclick="window.loadChatGroup('${g.id}')">
                                 <div class="com-chat-avatar"><i class="fa-solid fa-user-group"></i></div>
                                 <div class="com-chat-info">
-                                    <h4>${g.nome}</h4>
+                                    <h4>${escapeHTML(g.nome)}</h4>
                                     <p>${g.membrosCount} membros</p>
                                 </div>
                             </div>
@@ -1659,9 +1770,10 @@
                     </div>
                 </div>
                 <div class="com-chat-main">
-                    <div id="com-active-chat-area" style="display:flex; flex-direction:column; height:100%; justify-content:center; align-items:center; color:var(--evt-text-muted);">
+                    <div id="com-active-chat-area" style="display:flex; flex-direction:column; height:100%; justify-content:center; align-items:center; color:var(--evt-text-muted); padding:30px; text-align:center;">
                         <i class="fa-brands fa-whatsapp" style="font-size:3rem; margin-bottom:15px; color:#cbd5e1;"></i>
-                        <p>Selecione um grupo para iniciar a conversa.</p>
+                        <h4 style="margin:0 0 5px 0; color:var(--evt-primary);">Salas de Discussão em Grupo</h4>
+                        <p style="font-size:0.85rem; max-width:320px;">Selecione um dos grupos temáticos à esquerda para interagir com advogados e especialistas em tempo real.</p>
                     </div>
                 </div>
             </div>
@@ -1672,38 +1784,42 @@
         const area = document.getElementById('com-active-chat-area');
         if (!area) return;
         const group = state.groups.find(g => g.id === groupId);
-        const msgs = state.chats.filter(c => c.targetId === groupId);
+        if (!group) return;
+        const msgs = (state.chats || []).filter(c => c.tipo === 'group' && c.targetId === groupId);
+        const myName = state.currentUser ? state.currentUser.nome : 'Você';
         
         area.innerHTML = `
             <div class="com-chat-main-header">
                 <div class="com-chat-avatar"><i class="fa-solid fa-user-group"></i></div>
                 <div>
-                    <h3 style="margin:0; font-size:1rem;">${group.nome}</h3>
-                    <p style="margin:0; font-size:0.8rem; color:var(--evt-text-muted);">${group.membrosCount} membros - ${group.descricao}</p>
+                    <h3 style="margin:0; font-size:1rem;">${escapeHTML(group.nome)}</h3>
+                    <p style="margin:0; font-size:0.8rem; color:var(--evt-text-muted);">${group.membrosCount} membros - ${escapeHTML(group.descricao)}</p>
                 </div>
             </div>
             <div class="com-chat-messages-container" id="com-group-messages-container">
                 ${msgs.map(m => `
-                    <div class="com-chat-message ${m.remetente === (state.currentUser ? state.currentUser.nome : '') ? 'sent' : 'received'}">
-                        <span class="com-chat-sender">${m.remetente}</span>
-                        <p>${m.mensagem}</p>
-                        <span class="com-chat-time">${m.timestamp}</span>
+                    <div class="com-chat-message ${m.remetente === myName ? 'sent' : 'received'}">
+                        <span class="com-chat-sender">${escapeHTML(m.remetente)}</span>
+                        <p style="margin:4px 0;">${escapeHTML(m.mensagem)}</p>
+                        <span class="com-chat-time">${escapeHTML(m.timestamp)}</span>
                     </div>
                 `).join('')}
             </div>
             <form id="form-send-group-chat" class="com-chat-input-area" onsubmit="window.sendGroupMessage(event, '${groupId}')">
-                <input type="text" id="group-msg-input" class="evt-form-control" placeholder="Digite uma mensagem..." required>
+                <input type="text" id="group-msg-input" class="evt-form-control" placeholder="Escreva uma mensagem para o grupo..." required>
                 <button type="submit" class="evt-btn-primary" style="width:auto; margin:0; padding:10px 18px;"><i class="fa-solid fa-paper-plane"></i></button>
             </form>
         `;
         const msgsContainer = document.getElementById('com-group-messages-container');
         if(msgsContainer) msgsContainer.scrollTop = msgsContainer.scrollHeight;
+        const input = document.getElementById('group-msg-input');
+        if (input) input.focus();
     };
 
     window.sendGroupMessage = function(e, groupId) {
         e.preventDefault();
         const input = document.getElementById('group-msg-input');
-        if (!input.value.trim()) return;
+        if (!input || !input.value.trim()) return;
         
         const now = new Date();
         const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
@@ -1722,72 +1838,225 @@
     };
 
     function renderDiretorioHTML() {
+        const membersList = state.members || [];
         return `
             <div class="evt-auth-card" style="padding:20px; margin-bottom: 20px;">
-                <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-solid fa-map-location-dot"></i> Diretório de Membros</h3>
-                <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Encontre profissionais, faça parcerias e veja quem está perto de você.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <div>
+                        <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-solid fa-map-location-dot"></i> Diretório & Mapa de Membros</h3>
+                        <p style="font-size:0.85rem; color:var(--evt-text-muted); margin-top:5px;">Encontre profissionais da previdência em todo o Brasil para parcerias e conexões.</p>
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <input type="text" id="com-member-search" class="evt-form-control" placeholder="Buscar por nome ou área..." oninput="window.filterCommunityMembers(this.value)" style="width:230px; margin:0; padding:8px 12px; font-size:0.85rem;">
+                    </div>
+                </div>
             </div>
             
-            <div style="height: 400px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; margin-bottom: 25px; background: #f1f5f9; display: flex; align-items:center; justify-content:center;" id="community-map">
+            <div style="height: 380px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; margin-bottom: 25px; background: #f1f5f9; display: flex; align-items:center; justify-content:center;" id="community-map">
                 Carregando mapa...
             </div>
 
-            <div class="evt-cards-grid">
-                ${state.members.map(m => `
-                    <div class="evt-auth-card" style="padding:20px; text-align:center;">
-                        <div style="width:60px; height:60px; border-radius:50%; background:var(--evt-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 15px auto; font-weight:700;">
-                            ${m.nome.charAt(0)}
-                        </div>
-                        <h4 style="color:var(--evt-primary); margin-bottom:5px;">${m.nome}</h4>
-                        <span class="evt-badge-tag" style="margin-bottom:10px;">${m.role === 'palestrante' ? 'Palestrante' : 'Membro'}</span>
-                        <p style="font-size:0.85rem; color:#475569; margin-bottom:10px;">${m.bio || 'Sem biografia disponível.'}</p>
-                        <p style="font-size:0.8rem; color:var(--evt-secondary); margin-bottom:15px; font-weight:600;"><i class="fa-solid fa-tags"></i> ${m.interesses || 'Interesses gerais'}</p>
-                        
-                        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
-                            ${m.linkedin ? `<a href="${m.linkedin}" target="_blank" style="color:#0A66C2; font-size:1.2rem;"><i class="fa-brands fa-linkedin"></i></a>` : ''}
-                            ${m.instagram ? `<a href="https://instagram.com/${m.instagram.replace('@', '')}" target="_blank" style="color:#E1306C; font-size:1.2rem;"><i class="fa-brands fa-instagram"></i></a>` : ''}
-                        </div>
-                        
-                        <button class="evt-btn-primary" style="width:100%; padding:8px;" onclick="showToast('Em breve: Chat Privado')"><i class="fa-regular fa-comment"></i> Mensagem</button>
-                    </div>
-                `).join('')}
+            <div class="evt-cards-grid" id="com-members-grid">
+                ${renderMemberCardsHTML(membersList)}
             </div>
         `;
     }
 
+    function renderMemberCardsHTML(list) {
+        if (!list || list.length === 0) {
+            return `<div class="evt-empty-results" style="grid-column: 1 / -1;"><p>Nenhum membro encontrado.</p></div>`;
+        }
+        return list.map(m => `
+            <div class="evt-auth-card" style="padding:20px; text-align:center;">
+                <div style="width:60px; height:60px; border-radius:50%; background:var(--evt-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 15px auto; font-weight:700;">
+                    ${(m.nome || 'M').charAt(0)}
+                </div>
+                <h4 style="color:var(--evt-primary); margin-bottom:5px;">${escapeHTML(m.nome)}</h4>
+                <span class="evt-badge-tag" style="margin-bottom:10px;">${m.role === 'palestrante' ? 'Palestrante' : 'Membro Associado'}</span>
+                <p style="font-size:0.85rem; color:#475569; margin-bottom:10px; min-height:36px;">${escapeHTML(m.bio || 'Advogado(a) previdenciarista atuante.')}</p>
+                <p style="font-size:0.8rem; color:var(--evt-secondary); margin-bottom:15px; font-weight:600;"><i class="fa-solid fa-tags"></i> ${escapeHTML(m.interesses || 'Direito Previdenciário')}</p>
+                
+                <div style="display:flex; justify-content:center; gap:12px; margin-bottom:15px;">
+                    ${m.linkedin ? `<a href="${encodeURI(m.linkedin.startsWith('http') ? m.linkedin : 'https://' + m.linkedin)}" target="_blank" rel="noopener" style="color:#0A66C2; font-size:1.2rem;"><i class="fa-brands fa-linkedin"></i></a>` : ''}
+                    ${m.instagram ? `<a href="https://instagram.com/${encodeURIComponent(m.instagram.replace('@', ''))}" target="_blank" rel="noopener" style="color:#E1306C; font-size:1.2rem;"><i class="fa-brands fa-instagram"></i></a>` : ''}
+                </div>
+                
+                <button type="button" class="evt-btn-primary" style="width:100%; padding:8px;" onclick="window.openPrivateChat('${escapeHTML(m.nome)}', '${escapeHTML(m.email || m.nome)}')"><i class="fa-regular fa-comment"></i> Mensagem Privada</button>
+            </div>
+        `).join('');
+    }
+
+    window.filterCommunityMembers = function(term) {
+        const clean = (term || '').toLowerCase().trim();
+        const filtered = (state.members || []).filter(m => {
+            return (m.nome && m.nome.toLowerCase().includes(clean)) ||
+                   (m.bio && m.bio.toLowerCase().includes(clean)) ||
+                   (m.interesses && m.interesses.toLowerCase().includes(clean));
+        });
+        const grid = document.getElementById('com-members-grid');
+        if (grid) grid.innerHTML = renderMemberCardsHTML(filtered);
+    };
+
     let comMapInstance = null;
     function initCommunityMap() {
         if (!window.L) {
-            document.getElementById('community-map').innerHTML = "Biblioteca do mapa não carregada.";
+            const mc = document.getElementById('community-map');
+            if (mc) mc.innerHTML = "<p style='color:var(--evt-text-muted); padding:20px; text-align:center;'>Biblioteca do mapa não carregada.</p>";
             return;
         }
         
         const mapContainer = document.getElementById('community-map');
-        if (!mapContainer || comMapInstance) return;
+        if (!mapContainer) return;
+
+        if (comMapInstance) {
+            setTimeout(() => {
+                if (comMapInstance) comMapInstance.invalidateSize();
+            }, 100);
+            return;
+        }
         
-        mapContainer.innerHTML = ''; // clear loading text
+        mapContainer.innerHTML = '';
         
-        comMapInstance = L.map('community-map').setView([-14.235, -51.925], 4); // Centro do Brasil
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(comMapInstance);
-        
-        const mapMembers = state.members.filter(m => m.exibirLocal && m.lat && m.lng);
-        mapMembers.forEach(m => {
-            const marker = L.marker([m.lat, m.lng]).addTo(comMapInstance);
-            marker.bindPopup(`<b>${m.nome}</b><br>${m.interesses || m.role}`);
-        });
-        
-        // Se houver membros no mapa, ajustar o zoom para caber todos
-        if (mapMembers.length > 0) {
-            const group = new L.featureGroup(mapMembers.map(m => L.marker([m.lat, m.lng])));
-            comMapInstance.fitBounds(group.getBounds().pad(0.5));
+        setTimeout(() => {
+            try {
+                comMapInstance = L.map('community-map').setView([-14.235, -51.925], 4);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+                    maxZoom: 18
+                }).addTo(comMapInstance);
+                
+                const mapMembers = (state.members || []).filter(m => m.exibirLocal && m.lat && m.lng);
+                const markers = [];
+                mapMembers.forEach(m => {
+                    const safeName = escapeHTML(m.nome);
+                    const safeRole = escapeHTML(m.role === 'palestrante' ? 'Palestrante' : 'Membro Associado');
+                    const safeBio = escapeHTML(m.bio || m.interesses || '');
+                    const marker = L.marker([m.lat, m.lng]).addTo(comMapInstance);
+                    marker.bindPopup(`
+                        <div style="font-family:inherit; min-width:160px;">
+                            <strong style="color:#0f172a; font-size:0.95rem;">${safeName}</strong><br>
+                            <span style="display:inline-block; font-size:0.75rem; background:#1e3a8a; color:#fff; padding:2px 6px; border-radius:4px; margin:4px 0;">${safeRole}</span>
+                            <p style="font-size:0.8rem; color:#475569; margin:4px 0 0 0;">${safeBio}</p>
+                        </div>
+                    `);
+                    markers.push(marker);
+                });
+                
+                if (markers.length > 0) {
+                    const group = new L.featureGroup(markers);
+                    comMapInstance.fitBounds(group.getBounds().pad(0.5));
+                }
+                
+                comMapInstance.invalidateSize();
+            } catch (err) {
+                console.warn('Erro ao inicializar mapa da comunidade:', err);
+            }
+        }, 150);
+    }
+
+    window.openPrivateChat = function(targetName, targetId) {
+        const drawer = document.getElementById('chat-private-drawer');
+        if (!drawer) return;
+
+        state.activePrivateTarget = { name: targetName, id: targetId };
+
+        const headerTitle = drawer.querySelector('.evt-chat-header span');
+        if (headerTitle) {
+            headerTitle.innerHTML = `<i class="fa-solid fa-user-circle"></i> Chat: ${escapeHTML(targetName)}`;
+        }
+
+        drawer.classList.add('open');
+        renderPrivateChatMessages();
+
+        const input = document.getElementById('chat-privado-input');
+        if (input) setTimeout(() => input.focus(), 150);
+    };
+
+    function renderPrivateChatMessages() {
+        const box = document.getElementById('chat-privado-box');
+        if (!box || !state.activePrivateTarget) return;
+
+        const myName = state.currentUser ? state.currentUser.nome : 'Você';
+        const targetId = state.activePrivateTarget.id;
+        const targetName = state.activePrivateTarget.name;
+
+        const msgs = (state.chats || []).filter(c => 
+            c.tipo === 'private' && (
+                (c.targetId === targetId) || 
+                (c.targetName === targetName) ||
+                (c.remetente === targetName)
+            )
+        );
+
+        if (msgs.length === 0) {
+            box.innerHTML = `
+                <div class="evt-chat-msg received">
+                    Olá, ${escapeHTML(myName)}! Inicie uma conversa com <strong>${escapeHTML(targetName)}</strong> para trocar ideias, jurisprudência e contatos de parceria.
+                </div>
+            `;
+        } else {
+            box.innerHTML = msgs.map(m => `
+                <div class="evt-chat-msg ${m.remetente === myName ? 'sent' : 'received'}">
+                    <div style="font-size:0.7rem; font-weight:700; opacity:0.8; margin-bottom:2px;">${escapeHTML(m.remetente)}</div>
+                    <div>${escapeHTML(m.mensagem)}</div>
+                    <div style="font-size:0.65rem; text-align:right; opacity:0.7; margin-top:3px;">${escapeHTML(m.timestamp)}</div>
+                </div>
+            `).join('');
+        }
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function setupPrivateChatForm() {
+        const form = document.getElementById('form-chat-privado');
+        const input = document.getElementById('chat-privado-input');
+        if (form && !form.dataset.bound) {
+            form.dataset.bound = 'true';
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!input || !input.value.trim() || !state.activePrivateTarget) return;
+
+                const myName = state.currentUser ? state.currentUser.nome : 'Você';
+                const now = new Date();
+                const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+                const msgObj = {
+                    id: 'msg-priv-' + Date.now(),
+                    tipo: 'private',
+                    targetId: state.activePrivateTarget.id,
+                    targetName: state.activePrivateTarget.name,
+                    remetente: myName,
+                    mensagem: input.value.trim(),
+                    timestamp: timeStr
+                };
+
+                state.chats.push(msgObj);
+                saveData();
+                input.value = '';
+                renderPrivateChatMessages();
+
+                const recipientName = state.activePrivateTarget.name;
+                setTimeout(() => {
+                    if (state.activePrivateTarget && state.activePrivateTarget.name === recipientName) {
+                        const reply = {
+                            id: 'msg-priv-' + Date.now(),
+                            tipo: 'private',
+                            targetId: state.currentUser ? state.currentUser.email : 'me',
+                            targetName: myName,
+                            remetente: recipientName,
+                            mensagem: `Olá, ${myName}! Agradeço a mensagem. Estou acompanhando as novidades da SBPS e retorno assim que possível. Forte abraço!`,
+                            timestamp: timeStr
+                        };
+                        state.chats.push(reply);
+                        saveData();
+                        renderPrivateChatMessages();
+                    }
+                }, 1800);
+            });
         }
     }
 
     function renderAgendaHTML() {
-        // Aproveitar os eventos já criados mas exibi-los como agenda simplificada
         return `
             <div class="evt-auth-card" style="padding:20px; margin-bottom: 20px;">
                 <h3 style="margin:0; color:var(--evt-primary);"><i class="fa-regular fa-calendar-days"></i> Agenda de Encontros</h3>
@@ -1796,9 +2065,9 @@
             <div class="evt-card-row-single">
                 ${state.events.filter(e => e.status === 'Ativo').slice(0, 5).map(e => `
                     <div class="evt-auth-card" style="padding:15px; border-left: 4px solid var(--evt-secondary);">
-                        <h4 style="color:var(--evt-primary); margin-bottom:5px;">${e.titulo}</h4>
-                        <p style="font-size:0.85rem; color:#475569; margin-bottom:8px;"><i class="fa-solid fa-clock"></i> ${e.dateStr} | ${e.local || 'Online'}</p>
-                        <span class="evt-badge-tag">${e.tipo}</span>
+                        <h4 style="color:var(--evt-primary); margin-bottom:5px;">${escapeHTML(e.titulo)}</h4>
+                        <p style="font-size:0.85rem; color:#475569; margin-bottom:8px;"><i class="fa-solid fa-clock"></i> ${escapeHTML(e.dateStr)} | ${escapeHTML(e.local || 'Online')}</p>
+                        <span class="evt-badge-tag">${escapeHTML(e.tipo)}</span>
                     </div>
                 `).join('')}
             </div>
@@ -1815,17 +2084,18 @@
                 if (post) {
                     post.likes = (post.likes || 0) + 1;
                     saveData();
-                    btn.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${post.likes}`;
+                    const span = btn.querySelector('span');
+                    if (span) span.textContent = post.likes;
                     btn.classList.remove('evt-btn-icon-secondary');
                     btn.classList.add('evt-btn-icon-primary');
-                    showToast('+1 Ponto de reputação concedido!');
+                    showToast('+1 Ponto de reputação concedido ao autor!');
                 }
             };
         });
 
         container.querySelectorAll('.btn-report-post').forEach(btn => {
             btn.onclick = () => {
-                showToast('Conteúdo denunciado e enviado para moderação.');
+                showToast('Conteúdo denunciado com sucesso e encaminhado para moderação.');
             };
         });
     }

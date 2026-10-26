@@ -10,7 +10,9 @@
 
     function getSupabaseClient() {
         if (!_supabase && window.supabase && typeof window.supabase.createClient === 'function') {
-            _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                db: { schema: 'sbps' }
+            });
         }
         return _supabase;
     }
@@ -251,15 +253,34 @@
         getCertificates: async function (email, cpf) {
             const client = getSupabaseClient();
             if (!client) return null;
+            if (!email && !cpf) return [];
 
             try {
-                const { data, error } = await client
-                    .from('certificados')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                let query = client.from('certificados').select('*');
+                const cleanEmail = (email || '').toLowerCase().trim();
+                const cleanCpf = (cpf || '').replace(/\D/g, '');
+
+                if (cleanEmail && cleanCpf) {
+                    query = query.or(`email.ilike.${cleanEmail},cpf.eq.${cleanCpf}`);
+                } else if (cleanEmail) {
+                    query = query.ilike('email', cleanEmail);
+                } else if (cleanCpf) {
+                    query = query.eq('cpf', cleanCpf);
+                }
+
+                const { data, error } = await query.order('created_at', { ascending: false });
 
                 if (error) {
-                    console.warn('Erro ao consultar certificados no Supabase:', error);
+                    console.warn('Erro ao consultar certificados no Supabase (tentando fallback):', error);
+                    // Fallback: se o filtro OR falhou, busca diretamente pelo e-mail
+                    if (cleanEmail) {
+                        const { data: fbData, error: fbErr } = await client
+                            .from('certificados')
+                            .select('*')
+                            .ilike('email', cleanEmail)
+                            .order('created_at', { ascending: false });
+                        if (!fbErr && fbData) return fbData;
+                    }
                     return null;
                 }
                 return data || [];
@@ -374,6 +395,66 @@
                 }
             }
             return { success: true, profile: payload };
+        },
+
+        /**
+         * Realiza login autenticado de participante, palestrante ou associado no Supabase
+         */
+        loginEventoUser: async function (email, password, role) {
+            const client = getSupabaseClient();
+            const targetEmail = (email || '').trim().toLowerCase();
+            if (!targetEmail || !password) {
+                return { success: false, error: 'Informe e-mail e senha.' };
+            }
+
+            if (!client) {
+                // Modo fallback offline (apenas se Supabase não estiver carregado)
+                const stored = localStorage.getItem('sbps_' + role + '_user');
+                if (stored) {
+                    try {
+                        const parsed = JSON.parse(stored);
+                        if (parsed.email && parsed.email.toLowerCase() === targetEmail) {
+                            return { success: true, profile: parsed, offline: true };
+                        }
+                    } catch (e) {}
+                }
+                return { success: false, error: 'Serviço de autenticação temporariamente indisponível.' };
+            }
+
+            try {
+                const { data: authData, error: authError } = await client.auth.signInWithPassword({
+                    email: targetEmail,
+                    password: password
+                });
+
+                if (authError) {
+                    // Fallback para verificar no localStorage caso tenha sido cadastrado localmente
+                    const localKey = 'sbps_' + role + '_user';
+                    const localData = localStorage.getItem(localKey);
+                    if (localData) {
+                        const parsed = JSON.parse(localData);
+                        if (parsed.email && parsed.email.toLowerCase() === targetEmail) {
+                            return { success: true, profile: parsed, localOnly: true };
+                        }
+                    }
+                    return { success: false, error: 'Credenciais inválidas. Verifique seu e-mail e senha.' };
+                }
+
+                const table = role === 'palestrante' ? 'palestrantes' : (role === 'associado' ? 'associados' : 'participantes');
+                let { data: profile } = await client.from(table).select('*').eq('email', targetEmail).maybeSingle();
+
+                if (!profile) {
+                    profile = {
+                        email: targetEmail,
+                        nome: authData.user?.user_metadata?.nome || targetEmail.split('@')[0],
+                        role: role
+                    };
+                }
+
+                return { success: true, authUser: authData.user, profile };
+            } catch (err) {
+                return { success: false, error: err.message || 'Erro de autenticação.' };
+            }
         }
     };
 })();

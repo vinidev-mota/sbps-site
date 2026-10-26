@@ -3,9 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Determine base path to handle root vs subfolder
     const isSubfolder = window.location.pathname.includes('/pages/');
     const basePath = isSubfolder ? '../' : './';
+    const cacheBust = Math.floor(Date.now() / 300000); // 5 min cache bucket
+
+    function escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 
     // 1. Fetch News from local JSON file
-    fetch(basePath + 'data/noticias.json?t=' + new Date().getTime())
+    fetch(basePath + 'data/noticias.json?t=' + cacheBust)
         .then(response => response.json())
         .then(data => {
             if (data && data.length > 0) {
@@ -27,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const newsItems = allNewsGrid ? items : items.slice(0, 10);
 
         newsItems.forEach(item => {
-            let imageUrl = (item.image && item.image !== "[empty]") ? item.image : basePath + 'images/capa-noticias.png';
+            const imageUrl = basePath + 'images/capa-noticias.png';
 
             // Formatar data (assumindo formato YYYY-MM-DD ou similar)
             const dateObj = new Date(item.date);
@@ -38,11 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'news-card';
 
-            let cleanContent = item.description || "Nenhum resumo disponível.";
-
             card.innerHTML = `
                 <div class="news-img">
-                    <img src="${imageUrl}" alt="${item.title}" onerror="this.src='${basePath}images/capa-noticias.png'">
+                    <img src="${imageUrl}" alt="${escapeHTML(item.title)}">
                     <span class="badge">destaque</span>
                 </div>
                 <div class="news-content">
@@ -222,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const articleId = urlParams.get('id');
         
         if (articleId) {
-            fetch(basePath + 'data/noticias.json?t=' + new Date().getTime())
+            fetch(basePath + 'data/noticias.json?t=' + cacheBust)
                 .then(response => response.json())
                 .then(data => {
                     const item = data.find(n => n.id == articleId);
@@ -238,20 +247,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.getElementById('page-article-meta').innerHTML = `<i class="fa-regular fa-calendar"></i> ${dateStr}`;
                         
                         const imgWrapper = document.querySelector('.article-image-wrapper');
-                        
-                        let imageUrl = (item.image && item.image !== "[empty]") ? item.image : basePath + "images/capa-noticias.png";
-                        imgWrapper.innerHTML = `<img id="page-article-image" src="${imageUrl}" alt="Capa da notícia" style="width: 100%; height: 350px; object-fit: cover; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">
+                        const defaultImageUrl = basePath + "images/capa-noticias.png";
+
+                        imgWrapper.innerHTML = `<img id="page-article-image" src="${defaultImageUrl}" alt="Capa da notícia" style="width: 100%; height: 350px; object-fit: cover; border-radius: 8px 8px 0 0; display: block; max-width: 800px; margin: 0 auto;">
                         <p style="text-align: center; font-size: 0.8rem; color: #666; margin-top: 8px; font-style: italic;">Foto: Edifício sede da Previdência Social/Agência Brasil</p>`;
-                        const img = document.getElementById('page-article-image');
-                        img.onerror = function() {
-                            if (!this.src.includes('capa-noticias.png')) {
-                                this.src = basePath + 'images/capa-noticias.png';
-                            } else {
-                                imgWrapper.style.display = 'none';
-                            }
-                        };
                         
-                        document.getElementById('page-article-body').innerHTML = item.description || "Conteúdo não disponível.";
+                        let cleanBody = item.description || "Conteúdo não disponível.";
+                        // Limpa tags corrompidas de blob/editor local se houver
+                        cleanBody = cleanBody.replace(/<img[^>]*src=["']blob:[^"']*["'][^>]*>/gi, '');
+                        cleanBody = cleanBody.replace(/<img[^>]*alt=["'][^"']*Click e arraste[^"']*["'][^>]*>/gi, '');
+                        document.getElementById('page-article-body').innerHTML = cleanBody;
                         
                         const sourceLink = document.getElementById('page-article-link');
                         if (item.link && item.link !== '#') {
@@ -359,12 +364,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        searchStatus.innerHTML = `Buscando resultados para: <strong>"${query}"</strong>...`;
+        searchStatus.innerHTML = `Buscando resultados para: <strong>"${escapeHTML(query)}"</strong>...`;
         
         // Buscar o índice estático e as notícias
         Promise.all([
-            fetch(basePath + 'data/search-index.json?t=' + new Date().getTime()).then(r => r.json()).catch(() => []),
-            fetch(basePath + 'data/noticias.json?t=' + new Date().getTime()).then(r => r.json()).catch(() => [])
+            fetch(basePath + 'data/search-index.json?t=' + cacheBust).then(r => r.json()).catch(() => []),
+            fetch(basePath + 'data/noticias.json?t=' + cacheBust).then(r => r.json()).catch(() => [])
         ]).then(([staticIndex, noticias]) => {
             // Unificar dados
             const allItems = [...staticIndex];
@@ -374,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     id: noticia.id,
                     type: 'Notícia',
                     title: noticia.title,
-                    url: `noticia.html?id=${noticia.id}`,
+                    url: `pages/noticia.html?id=${encodeURIComponent(noticia.id)}`,
                     content: noticia.description || "",
                     keywords: ""
                 });
@@ -417,9 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
             results.sort((a, b) => b.score - a.score);
             
             if (results.length === 0) {
-                searchStatus.innerHTML = `Não encontramos nenhum resultado para <strong>"${query}"</strong>. Tente usar outras palavras-chave.`;
+                searchStatus.innerHTML = `Não encontramos nenhum resultado para <strong>"${escapeHTML(query)}"</strong>. Tente usar outras palavras-chave.`;
             } else {
-                searchStatus.innerHTML = `Encontramos ${results.length} resultado(s) para <strong>"${query}"</strong>:`;
+                searchStatus.innerHTML = `Encontramos ${results.length} resultado(s) para <strong>"${escapeHTML(query)}"</strong>:`;
                 
                 results.forEach(res => {
                     const { item } = res;
@@ -429,12 +434,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         excerpt = excerpt.substring(0, 200) + "...";
                     }
                     
+                    let targetUrl = item.url || '';
+                    if (isSubfolder && targetUrl.startsWith('pages/')) {
+                        targetUrl = targetUrl.replace(/^pages\//, '');
+                    } else if (!isSubfolder && !targetUrl.startsWith('pages/') && !targetUrl.startsWith('http') && !targetUrl.startsWith('/')) {
+                        targetUrl = 'pages/' + targetUrl;
+                    }
+                    const safeType = escapeHTML(item.type || 'Página');
+                    const safeTitle = escapeHTML(item.title || '');
+                    const safeExcerpt = escapeHTML(excerpt);
+                    const safeUrl = encodeURI(targetUrl);
+
                     const resultHtml = `
                         <div class="post-item">
-                            <span class="badge" style="background-color: var(--color-primary); color: #fff; display: inline-block; margin-bottom: 10px;">${item.type}</span>
-                            <h3>${item.title}</h3>
-                            <p class="post-excerpt">${excerpt}</p>
-                            <a href="${isSubfolder ? '../' : ''}${item.url}" class="post-link">Acessar página <i class="fa-solid fa-arrow-right"></i></a>
+                            <span class="badge" style="background-color: var(--color-primary); color: #fff; display: inline-block; margin-bottom: 10px;">${safeType}</span>
+                            <h3>${safeTitle}</h3>
+                            <p class="post-excerpt">${safeExcerpt}</p>
+                            <a href="${safeUrl}" class="post-link">Acessar página <i class="fa-solid fa-arrow-right"></i></a>
                         </div>
                     `;
                     searchResultsContainer.insertAdjacentHTML('beforeend', resultHtml);

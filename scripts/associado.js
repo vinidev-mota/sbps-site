@@ -360,20 +360,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (btn) btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Acessar Portal';
 
                 if (!loginSuccess) {
-                    // Se não autenticou no Supabase, cria a sessão ativa para teste
-                    ensureActiveSession();
-                    if (userInput) {
-                        currentUser.email = userInput.includes('@') ? userInput : `${userInput}@sbps.org.br`;
-                        if (!userInput.includes('@') && !/^\d+$/.test(userInput)) {
-                            currentUser.login_usuario = userInput;
+                    const localRaw = localStorage.getItem(STORAGE_KEY_USER);
+                    if (localRaw) {
+                        try {
+                            const localUser = JSON.parse(localRaw);
+                            const cleanInput = userInput.trim().toLowerCase();
+                            const cleanCpf = userInput.replace(/\D/g, '');
+                            const matchEmail = (localUser.email || '').toLowerCase() === cleanInput;
+                            const matchUser = (localUser.login_usuario || '').toLowerCase() === cleanInput;
+                            const matchCpf = cleanCpf.length === 11 && (localUser.cpf || '').replace(/\D/g, '') === cleanCpf;
+
+                            if (matchEmail || matchUser || matchCpf) {
+                                currentUser = localUser;
+                                if (authContainer) authContainer.style.display = 'none';
+                                if (memberContent) memberContent.style.display = 'block';
+                                updateUserBadges();
+                                renderUserData();
+                                renderCertificates();
+                                if (typeof showDashboard === 'function') showDashboard();
+                                loginSuccess = true;
+                            }
+                        } catch (err) {
+                            console.warn('Erro ao ler usuário local:', err);
                         }
                     }
-                    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
-                    if (authContainer) authContainer.style.display = 'none';
-                    if (memberContent) memberContent.style.display = 'block';
-                    updateUserBadges();
-                    renderUserData();
-                    if (typeof showDashboard === 'function') showDashboard();
+
+                    if (!loginSuccess) {
+                        alert('E-mail, usuário ou senha incorretos. Por favor, verifique seus dados ou realize seu cadastro de associado.');
+                    }
                 }
             });
         }
@@ -897,9 +911,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     const reader = new FileReader();
                     reader.onload = (event) => {
-                        const base64 = event.target.result;
-                        fotoPreview.innerHTML = `<img src="${base64}" alt="Foto de Perfil">`;
-                        fotoPreview.dataset.photoUrl = base64;
+                        const img = new Image();
+                        img.onload = () => {
+                            const maxDim = 400;
+                            let w = img.width;
+                            let h = img.height;
+                            if (w > maxDim || h > maxDim) {
+                                if (w > h) {
+                                    h = Math.round((h * maxDim) / w);
+                                    w = maxDim;
+                                } else {
+                                    w = Math.round((w * maxDim) / h);
+                                    h = maxDim;
+                                }
+                            }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = w;
+                            canvas.height = h;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, w, h);
+                            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.82);
+                            fotoPreview.innerHTML = `<img src="${compressedBase64}" alt="Foto de Perfil">`;
+                            fotoPreview.dataset.photoUrl = compressedBase64;
+                        };
+                        img.src = event.target.result;
                     };
                     reader.readAsDataURL(file);
                 }
@@ -911,26 +946,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function isValidRG(rg) {
         if (!rg) return false;
         const clean = rg.toUpperCase().replace(/[^0-9X]/g, '');
-        if (clean.length < 7 || clean.length > 9) return false;
-        if (/^(\w)\1+$/.test(clean)) return false; // Rejeita sequências repetidas (000000000, 111111111, etc.)
-
-        // Validação matemática para RG padrão de 9 dígitos (8 dígitos base com pesos 2..9 + dígito verificador)
-        if (clean.length === 9) {
-            let sum = 0;
-            for (let i = 0; i < 8; i++) {
-                sum += parseInt(clean[i], 10) * (2 + i);
-            }
-            const remainder = sum % 11;
-            let expectedDigit = 11 - remainder;
-            if (expectedDigit === 11) expectedDigit = '0';
-            else if (expectedDigit === 10) expectedDigit = 'X';
-            else expectedDigit = String(expectedDigit);
-
-            const lastChar = clean[8];
-            return lastChar === expectedDigit;
-        }
-
-        return clean.length >= 7;
+        // O Brasil possui diferentes padrões estaduais de RG (entre 6 e 12 dígitos alfanuméricos)
+        if (clean.length < 6 || clean.length > 12) return false;
+        if (/^(\w)\1+$/.test(clean)) return false; // Rejeita sequências repetidas (00000000, 11111111, etc.)
+        return true;
     }
 
     // Validação de CPF (Módulo 11 real)
@@ -1808,8 +1827,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }));
 
                     certsToDisplay = mappedCerts.filter(c => 
-                        (userEmail && c.email === userEmail) || 
-                        (userCpf && c.cpf === userCpf)
+                        (userEmail && c.email.toLowerCase() === userEmail.toLowerCase()) || 
+                        (userCpf && c.cpf && c.cpf === userCpf)
                     );
                 }
             } catch (err) {
@@ -1876,7 +1895,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function downloadCertificadoPDF(certId, email, btnElement) {
         if (!certId || !email) return;
         const originalHtml = btnElement ? btnElement.innerHTML : '';
-        const webhookUrl = `https://n8n-motaadv.duckdns.org/webhook/download-certificado?id=${encodeURIComponent(certId)}&email=${encodeURIComponent(email)}`;
+        const webhookUrl = `https://n8n.motaadv.net/webhook/download-certificado?id=${encodeURIComponent(certId)}&email=${encodeURIComponent(email)}`;
 
         try {
             if (btnElement) {
@@ -1920,6 +1939,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         filename = match[1].trim();
                     }
                 }
+            }
+
+            const defaultName = (currentUser && currentUser.nome) 
+                ? `Certificado - ${currentUser.nome}.pdf` 
+                : 'Certificado - SBPS.pdf';
+
+            if (filename) {
+                // Se o n8n enviou a expressão literal não avaliada {{ $binary... }}, descarta e usa o nome limpo
+                if (filename.includes('{{') || filename.includes('$') || filename.includes('binary')) {
+                    filename = defaultName;
+                } else if (!filename.toLowerCase().endsWith('.pdf')) {
+                    filename += '.pdf';
+                }
+            } else {
+                filename = defaultName;
             }
 
             console.log('Nome do arquivo final extraído:', filename);
@@ -2220,7 +2254,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 try {
-                    const response = await fetch("https://n8n-motaadv.duckdns.org/webhook/suporte", {
+                    const response = await fetch("https://n8n.motaadv.net/webhook/suporte", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
