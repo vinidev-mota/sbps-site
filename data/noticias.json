@@ -32,6 +32,14 @@
     "image": "http://www.bing.com/previc/pt-br/noticias/plano-nacional-de-fomento-entra-em-vigor-com-publicacao-da-portaria-previc-no-dou/@@images/image-3666-21cd89db51927202a09388a882f1d064.jpeg"
   },
   {
+    "id": "71",
+    "title": "Ministério da Previdência e INSS: Novas Ações para um Atendimento Mais Humano e Acessível",
+    "description": "O Ministério da Previdência Social e o INSS estão implementando uma série de iniciativas para modernizar e humanizar o atendimento aos cidadãos. As medidas incluem a expansão de serviços móveis, aprimoramento da perícia médica, uso de tecnologia e a criação de ambientes inclusivos, visando facilitar o acesso aos benefícios previdenciários em todo o país.",
+    "date": "2026-10-26T14:52:28.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae0cab3f1c24b15864e1b4de02eaecf&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2025%2fmarco%2fministerio-da-previdencia-avanca-em-atendimento-humanizado&c=12819794123161337404&mkt=pt-br",
+    "image": ""
+  },
+  {
     "id": "66",
     "title": "INSS e Ministério da Previdência: Novas Ações para Descentralizar e Humanizar o Atendimento ao Cidadão",
     "description": "O Ministério da Previdência Social e o INSS estão implementando uma série de iniciativas para aprimorar e agilizar o atendimento à população. As medidas incluem a expansão de serviços móveis, digitalização, uso de tecnologia e a criação de ambientes inclusivos, visando maior acessibilidade e humanização.",
@@ -45,14 +53,6 @@
     "description": "O Ministério da Previdência Social e o INSS estão implementando uma série de medidas inovadoras para aprimorar e humanizar o atendimento aos segurados em todo o Brasil. As iniciativas incluem a expansão de serviços itinerantes, uso de tecnologia e novas contratações para reduzir filas e facilitar o acesso aos benefícios.",
     "date": "2026-10-26T14:52:28.000Z",
     "link": "https://www.gov.br/previdencia/pt-br/noticias/2025/marco/ministerio-da-previdencia-avanca-em-atendimento-humanizado",
-    "image": ""
-  },
-  {
-    "id": "71",
-    "title": "Ministério da Previdência e INSS: Novas Ações para um Atendimento Mais Humano e Acessível",
-    "description": "O Ministério da Previdência Social e o INSS estão implementando uma série de iniciativas para modernizar e humanizar o atendimento aos cidadãos. As medidas incluem a expansão de serviços móveis, aprimoramento da perícia médica, uso de tecnologia e a criação de ambientes inclusivos, visando facilitar o acesso aos benefícios previdenciários em todo o país.",
-    "date": "2026-10-26T14:52:28.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae0cab3f1c24b15864e1b4de02eaecf&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2025%2fmarco%2fministerio-da-previdencia-avanca-em-atendimento-humanizado&c=12819794123161337404&mkt=pt-br",
     "image": ""
   },
   {
@@ -112,20 +112,20 @@
     "image": "https://www.ubatuba.sp.gov.br/wp-content/uploads/sites/2/2026/10/WhatsApp-Image-2026-10-23-at-15.24.58-770x416.jpeg"
   },
   {
-    "id": "25",
-    "title": "Proposta de unificação dos Ministérios da Previdência e do Trabalho em novo desenho governamental",
-    "description": "Um possível novo governo planeja a fusão das pastas de Previdência Social e Trabalho, visando reduzir o número de ministérios e otimizar a gestão econômica.",
-    "date": "2026-10-23T04:00:00.000Z",
-    "link": "https://economia.uol.com.br/colunas/jessica-sant-ana/2026/10/23/se-eleito-flavio-quer-unir-previdencia-e-trabalho-planejamento-e-gestao.htm",
-    "image": "https://conteudo.imguol.com.br/c/noticias/32/2026/10/18/o-candidato-a-flavio-bolsonaro-pl-durante-debate-da-band-1792370753076_v2_450x450.png"
-  },
-  {
     "id": "53",
     "title": "IPMU de Ubatuba é Premiado com Nota Máxima em Boas Práticas Previdenciárias Nacionais",
     "description": "O Instituto de Previdência Municipal de Ubatuba (IPMU) conquistou o primeiro lugar no 17º Prêmio Nacional de Boas Práticas da Aneprem. A entidade alcançou a pontuação máxima em critérios de governança, transparência e gestão.",
     "date": "2026-10-23T04:00:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aded06d5dbe49a093ca0b2385074f14&url=https%3a%2f%2fwww.ubatuba.sp.gov.br%2fnoticias%2fipmupremiacao23102026%2f&c=6420781213432457636&mkt=pt-br",
     "image": "https://www.ubatuba.sp.gov.br/wp-content/uploads/sites/2/2026/10/WhatsApp-Image-2026-10-23-at-15.24.58-770x416.jpeg"
+  },
+  {
+    "id": "25",
+    "title": "Proposta de unificação dos Ministérios da Previdência e do Trabalho em novo desenho governamental",
+    "description": "Um possível novo governo planeja a fusão das pastas de Previdência Social e Trabalho, visando reduzir o número de ministérios e otimizar a gestão econômica.",
+    "date": "2026-10-23T04:00:00.000Z",
+    "link": "https://economia.uol.com.br/colunas/jessica-sant-ana/2026/10/23/se-eleito-flavio-quer-unir-previdencia-e-trabalho-planejamento-e-gestao.htm",
+    "image": "https://conteudo.imguol.com.br/c/noticias/32/2026/10/18/o-candidato-a-flavio-bolsonaro-pl-durante-debate-da-band-1792370753076_v2_450x450.png"
   },
   {
     "id": "47",
@@ -168,22 +168,6 @@
     "image": "http://www.bing.com/previc/pt-br/noticias/assinada-portaria-da-previc-que-institui-o-plano-nacional-de-fomento-para-o-setor/@@images/image-3666-e6b53a32f2979c4777a1b69daf5a00af.jpeg"
   },
   {
-    "id": "54",
-    "title": "10º Prêmio PREVIC: Pesquisas Inovadoras sobre Previdência Complementar são Premiadas",
-    "description": "A Superintendência Nacional de Previdência Complementar (PREVIC) entregou a premiação do 10º Prêmio de Monografia, destacando estudos que trazem soluções para a comunicação, investimentos sustentáveis e mediação de conflitos no setor de fundos de pensão.",
-    "date": "2026-10-21T22:25:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aded06d5dbe49a093ca0b2385074f14&url=https%3a%2f%2fwww.gov.br%2fprevic%2fpt-br%2fnoticias%2f10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados&c=4637094083167925053&mkt=pt-br",
-    "image": "http://www.bing.com/previc/pt-br/noticias/10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados/@@images/image-3666-f36346cf426be3ab962e6d1d9f6b5c4e.jpeg"
-  },
-  {
-    "id": "41",
-    "title": "10º Prêmio PREVIC de Monografia: Pesquisas Inovadoras são Premiadas no Setor de Previdência Complementar",
-    "description": "A cerimônia de entrega do 10º Prêmio PREVIC de Monografia destacou trabalhos acadêmicos de excelência que propõem soluções para os desafios da previdência complementar no Brasil.",
-    "date": "2026-10-21T22:25:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adcd62cfc4f4f9a99972d28391fbdc0&url=https%3a%2f%2fwww.gov.br%2fprevic%2fpt-br%2fnoticias%2f10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados&c=4637094083167925053&mkt=pt-br",
-    "image": "http://www.bing.com/previc/pt-br/noticias/10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados/@@images/image-3666-f36346cf426be3ab962e6d1d9f6b5c4e.jpeg"
-  },
-  {
     "id": "20",
     "title": "Inovação e Futuro da Previdência Complementar: PREVIC Premia as Melhores Monografias do Brasil",
     "description": "A Superintendência Nacional de Previdência Complementar (PREVIC) celebrou a 10ª edição de seu Prêmio de Monografia, reconhecendo pesquisas que impulsionam a inovação e o aprimoramento do setor de previdência complementar fechada no Brasil. Os trabalhos vencedores abordam temas cruciais como comunicação estratégica, investimentos ASG e resolução de conflitos, contribuindo significativamente para o futuro do segmento.",
@@ -197,6 +181,22 @@
     "description": "A Superintendência Nacional de Previdência Complementar (PREVIC) realizou a cerimônia de premiação do seu 10º Prêmio de Monografia, reconhecendo pesquisas inovadoras. O evento destacou trabalhos cruciais em comunicação, investimentos ESG e resolução de conflitos em fundos de pensão. Os estudos premiados já estão disponíveis, oferecendo soluções estratégicas para o aprimoramento do setor de previdência complementar fechada no Brasil.",
     "date": "2026-10-21T22:25:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adb84adf0664de2a6022e21e5e59f1d&url=https%3a%2f%2fwww.gov.br%2fprevic%2fpt-br%2fnoticias%2f10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados&c=4637094083167925053&mkt=pt-br",
+    "image": "http://www.bing.com/previc/pt-br/noticias/10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados/@@images/image-3666-f36346cf426be3ab962e6d1d9f6b5c4e.jpeg"
+  },
+  {
+    "id": "54",
+    "title": "10º Prêmio PREVIC: Pesquisas Inovadoras sobre Previdência Complementar são Premiadas",
+    "description": "A Superintendência Nacional de Previdência Complementar (PREVIC) entregou a premiação do 10º Prêmio de Monografia, destacando estudos que trazem soluções para a comunicação, investimentos sustentáveis e mediação de conflitos no setor de fundos de pensão.",
+    "date": "2026-10-21T22:25:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aded06d5dbe49a093ca0b2385074f14&url=https%3a%2f%2fwww.gov.br%2fprevic%2fpt-br%2fnoticias%2f10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados&c=4637094083167925053&mkt=pt-br",
+    "image": "http://www.bing.com/previc/pt-br/noticias/10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados/@@images/image-3666-f36346cf426be3ab962e6d1d9f6b5c4e.jpeg"
+  },
+  {
+    "id": "41",
+    "title": "10º Prêmio PREVIC de Monografia: Pesquisas Inovadoras são Premiadas no Setor de Previdência Complementar",
+    "description": "A cerimônia de entrega do 10º Prêmio PREVIC de Monografia destacou trabalhos acadêmicos de excelência que propõem soluções para os desafios da previdência complementar no Brasil.",
+    "date": "2026-10-21T22:25:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adcd62cfc4f4f9a99972d28391fbdc0&url=https%3a%2f%2fwww.gov.br%2fprevic%2fpt-br%2fnoticias%2f10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados&c=4637094083167925053&mkt=pt-br",
     "image": "http://www.bing.com/previc/pt-br/noticias/10o-premio-previc-de-monografia-vencedores-premiados-e-trabalhos-publicados/@@images/image-3666-f36346cf426be3ab962e6d1d9f6b5c4e.jpeg"
   },
   {
@@ -256,14 +256,6 @@
     "image": ""
   },
   {
-    "id": "49",
-    "title": "Ministro da Previdência Reforça a Essencialidade da Vinculação de Benefícios ao Salário Mínimo",
-    "description": "O Ministro da Previdência Social, Wolney Queiroz, enfatizou a importância de manter aposentadorias e pensões atreladas ao salário mínimo para evitar o empobrecimento da população idosa. Durante o 47º Congresso Brasileiro de Previdência Privada, ele alertou sobre as consequências negativas da desvinculação, usando Chile e Argentina como exemplos de países que enfrentaram problemas sociais. O debate sobre essa política fundamental exige um olhar atento e dedicado de todos os setores.",
-    "date": "2026-10-21T09:07:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adcd94997d94533b00da6e23c74ee0c&url=https%3a%2f%2feconomia.uol.com.br%2fnoticias%2festadao-conteudo%2f2026%2f10%2f21%2fministro-defende-manutencao-da-vinculacao-dos-beneficios-previdenciarios-ao-ajuste-do-minimo.htm&c=4624532663987100830&mkt=pt-br",
-    "image": ""
-  },
-  {
     "id": "30",
     "title": "Benefícios Previdenciários: Ministro Defende Manutenção da Vinculação ao Salário Mínimo e Alerta para Riscos Sociais",
     "description": "O Ministro da Previdência Social, Wolney Queiroz, enfatizou a importância de manter aposentadorias e pensões atreladas ao salário mínimo, alertando que a desvinculação poderia levar ao empobrecimento de idosos e à piora de indicadores sociais. Ele citou exemplos de outros países que enfrentaram consequências negativas, reforçando a necessidade de um olhar cuidadoso e dedicado sobre o tema no Brasil.",
@@ -272,19 +264,19 @@
     "image": ""
   },
   {
+    "id": "49",
+    "title": "Ministro da Previdência Reforça a Essencialidade da Vinculação de Benefícios ao Salário Mínimo",
+    "description": "O Ministro da Previdência Social, Wolney Queiroz, enfatizou a importância de manter aposentadorias e pensões atreladas ao salário mínimo para evitar o empobrecimento da população idosa. Durante o 47º Congresso Brasileiro de Previdência Privada, ele alertou sobre as consequências negativas da desvinculação, usando Chile e Argentina como exemplos de países que enfrentaram problemas sociais. O debate sobre essa política fundamental exige um olhar atento e dedicado de todos os setores.",
+    "date": "2026-10-21T09:07:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adcd94997d94533b00da6e23c74ee0c&url=https%3a%2f%2feconomia.uol.com.br%2fnoticias%2festadao-conteudo%2f2026%2f10%2f21%2fministro-defende-manutencao-da-vinculacao-dos-beneficios-previdenciarios-ao-ajuste-do-minimo.htm&c=4624532663987100830&mkt=pt-br",
+    "image": ""
+  },
+  {
     "id": "60",
     "title": "Proposta de Reforma da Previdência: Entenda o modelo de Renda Básica aos 70 anos",
     "description": "O professor Hélio Zylberstajn apresentou uma proposta de \"reforma radical\" para o sistema previdenciário brasileiro. O plano sugere a unificação de regimes e a criação de uma renda básica para todos os cidadãos ao completarem 70 anos.",
     "date": "2026-10-21T04:00:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aded4df4a92465d90fd96c8030542af&url=https%3a%2f%2feconomia.uol.com.br%2fnoticias%2festadao-conteudo%2f2026%2f10%2f21%2fzylberstajn-propoe-reforma-radical-da-previdencia-com-renda-basica-aos-70-anos.htm&c=2304171120094401509&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "46",
-    "title": "Ministro da Previdência defende autonomia da pasta e destaca peso de R$ 1,2 trilhão no orçamento",
-    "description": "O ministro Wolney Queiroz reforçou a importância do Ministério da Previdência Social como pilar de proteção social e centralidade orçamentária no Brasil. Durante evento, ele defendeu a manutenção da estrutura própria e a integração com a previdência complementar.",
-    "date": "2026-10-21T04:00:00.000Z",
-    "link": "https://economia.uol.com.br/noticias/estadao-conteudo/2026/10/21/previdencia-nao-pode-ser-coadjuvante-e-reforca-centralidade-orcamentaria-da-pasta-diz-wolney.htm",
     "image": ""
   },
   {
@@ -312,20 +304,20 @@
     "image": "https://s2-g1.glbimg.com/g_lnyCnQpc4JSVX1Yg7f3EDWb88=/0x0:1280x960/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2019/c/W/T4ZnpeQuOqmGZZQAac2w/predio-camprev.jpg"
   },
   {
-    "id": "23",
-    "title": "Reforma Previdenciária em Campinas: Entenda as Novas Regras de Aposentadoria para Servidores Públicos",
-    "description": "A Prefeitura de Campinas enviou à Câmara um projeto de lei que propõe significativas alterações nas regras de aposentadoria para seus servidores, visando adequar o regime municipal à legislação federal e combater um déficit atuarial. As mudanças incluem o aumento da idade mínima e novas condições de tempo de contribuição, impactando diretamente a vida funcional dos funcionários públicos da cidade.",
-    "date": "2026-10-20T10:39:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adb70d6c2f745e4aa9af65acb9bf961&url=https%3a%2f%2fg1.globo.com%2fsp%2fcampinas-regiao%2fnoticia%2f2026%2f10%2f20%2freforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml&c=13580720519065973160&mkt=pt-br",
-    "image": "https://s2-g1.glbimg.com/g_lnyCnQpc4JSVX1Yg7f3EDWb88=/0x0:1280x960/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2019/c/W/T4ZnpeQu0qmGZZQAac2w/predio-camprev.jpg"
-  },
-  {
     "id": "58",
     "title": "Reforma da Previdência em Campinas: Entenda as Novas Regras de Aposentadoria para Servidores Municipais",
     "description": "A Prefeitura de Campinas propõe uma reforma em seu regime previdenciário, buscando aumentar a idade mínima para aposentadoria de servidores públicos. As novas regras preveem idades de 62 anos para mulheres e 65 para homens, além de alterar o tempo de contribuição e as formas de cálculo dos benefícios, alinhando-se à legislação federal.",
     "date": "2026-10-20T10:39:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aded43d50834509a9a4306603a923a9&url=https%3a%2f%2fg1.globo.com%2fsp%2fcampinas-regiao%2fnoticia%2f2026%2f10%2f20%2freforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml&c=13580720519065973160&mkt=pt-br",
     "image": "https://s2-g1.glbimg.com/g_lnyCnQpc4JSVX1Yg7f3EDWb88=/0x0:1280x960/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2019/c/W/T4ZnpeQuOqmGZZQAac2w/predio-camprev.jpg"
+  },
+  {
+    "id": "23",
+    "title": "Reforma Previdenciária em Campinas: Entenda as Novas Regras de Aposentadoria para Servidores Públicos",
+    "description": "A Prefeitura de Campinas enviou à Câmara um projeto de lei que propõe significativas alterações nas regras de aposentadoria para seus servidores, visando adequar o regime municipal à legislação federal e combater um déficit atuarial. As mudanças incluem o aumento da idade mínima e novas condições de tempo de contribuição, impactando diretamente a vida funcional dos funcionários públicos da cidade.",
+    "date": "2026-10-20T10:39:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adb70d6c2f745e4aa9af65acb9bf961&url=https%3a%2f%2fg1.globo.com%2fsp%2fcampinas-regiao%2fnoticia%2f2026%2f10%2f20%2freforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml&c=13580720519065973160&mkt=pt-br",
+    "image": "https://s2-g1.glbimg.com/g_lnyCnQpc4JSVX1Yg7f3EDWb88=/0x0:1280x960/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2019/c/W/T4ZnpeQu0qmGZZQAac2w/predio-camprev.jpg"
   },
   {
     "id": "15",
@@ -360,11 +352,11 @@
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/mutirao-da-previdencia-social-disponibiliza-12-7-mil-vagas-de-atendimento-em-17-estados-pelo-brasil/atendimentos-inss.jpeg/@@images/59018f27-400e-4dc4-b2c3-ba5afc31ca1c.jpeg"
   },
   {
-    "id": "22",
-    "title": "Força-Tarefa Previdenciária Atua em Recife e Prende Mulheres por Fraude em Benefício do BPC/LOAS",
-    "description": "Uma operação da Força-Tarefa Previdenciária em Pernambuco resultou na prisão em flagrante de duas mulheres envolvidas em um esquema de fraude contra o BPC/LOAS. A ação, conduzida pela Polícia Federal em conjunto com o Ministério da Previdência Social, preveniu um prejuízo futuro significativo aos cofres públicos. O caso reforça o combate contínuo às irregularidades no sistema previdenciário brasileiro.",
+    "id": "5",
+    "title": "Combate à Fraude no BPC/LOAS: Força-Tarefa Previdenciária Prende Golpistas em Recife",
+    "description": "Uma ação conjunta da Força-Tarefa Previdenciária em Pernambuco resultou na prisão em flagrante de duas mulheres que tentavam sacar um benefício fraudulento do BPC/LOAS. A operação, que impediu um prejuízo ainda maior aos cofres públicos, destaca a vigilância contínua contra esquemas ilícitos. Estima-se que a fraude já havia gerado um dano superior a R$ 300 mil desde 2008.",
     "date": "2026-10-16T13:53:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adb6e5b2bf746318da3efdaf9bf4039&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fforca-tarefa-prende-mulheres-sacando-beneficio-fraudulento-do-inss-em-recife&c=16189994148089741718&mkt=pt-br",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ad92263c9a24c3e97ac9e9d43559aa2&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fforca-tarefa-prende-mulheres-sacando-beneficio-fraudulento-do-inss-em-recife&c=16189994148089741718&mkt=pt-br",
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/forca-tarefa-prende-mulheres-sacando-beneficio-fraudulento-do-inss-em-recife/00-tamanho-capa4.jpeg/@@images/5b3b1837-403e-4369-ac9a-c34189254171.jpeg"
   },
   {
@@ -376,11 +368,11 @@
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/forca-tarefa-prende-mulheres-sacando-beneficio-fraudulento-do-inss-em-recife/00-tamanho-capa4.jpeg/@@images/5b3b1837-403e-4369-ac9a-c34189254171.jpeg"
   },
   {
-    "id": "5",
-    "title": "Combate à Fraude no BPC/LOAS: Força-Tarefa Previdenciária Prende Golpistas em Recife",
-    "description": "Uma ação conjunta da Força-Tarefa Previdenciária em Pernambuco resultou na prisão em flagrante de duas mulheres que tentavam sacar um benefício fraudulento do BPC/LOAS. A operação, que impediu um prejuízo ainda maior aos cofres públicos, destaca a vigilância contínua contra esquemas ilícitos. Estima-se que a fraude já havia gerado um dano superior a R$ 300 mil desde 2008.",
+    "id": "22",
+    "title": "Força-Tarefa Previdenciária Atua em Recife e Prende Mulheres por Fraude em Benefício do BPC/LOAS",
+    "description": "Uma operação da Força-Tarefa Previdenciária em Pernambuco resultou na prisão em flagrante de duas mulheres envolvidas em um esquema de fraude contra o BPC/LOAS. A ação, conduzida pela Polícia Federal em conjunto com o Ministério da Previdência Social, preveniu um prejuízo futuro significativo aos cofres públicos. O caso reforça o combate contínuo às irregularidades no sistema previdenciário brasileiro.",
     "date": "2026-10-16T13:53:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ad92263c9a24c3e97ac9e9d43559aa2&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fforca-tarefa-prende-mulheres-sacando-beneficio-fraudulento-do-inss-em-recife&c=16189994148089741718&mkt=pt-br",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adb6e5b2bf746318da3efdaf9bf4039&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fforca-tarefa-prende-mulheres-sacando-beneficio-fraudulento-do-inss-em-recife&c=16189994148089741718&mkt=pt-br",
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/forca-tarefa-prende-mulheres-sacando-beneficio-fraudulento-do-inss-em-recife/00-tamanho-capa4.jpeg/@@images/5b3b1837-403e-4369-ac9a-c34189254171.jpeg"
   },
   {
@@ -390,6 +382,14 @@
     "date": "2026-10-16T10:59:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adcd62cfc4f4f9a99972d28391fbdc0&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fmutirao-da-previdencia-social-disponibiliza-12-7-mil-vagas-de-atendimento-em-17-estados-pelo-brasil&c=10663845467682488853&mkt=pt-br",
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/mutirao-da-previdencia-social-disponibiliza-12-7-mil-vagas-de-atendimento-em-17-estados-pelo-brasil/atendimentos-inss.jpeg/@@images/59018f27-400e-4dc4-b2c3-ba5afc31ca1c.jpeg"
+  },
+  {
+    "id": "59",
+    "title": "Mutirão do INSS na Bahia: 376 Vagas de Perícia Médica e Avaliação Social para Benefícios",
+    "description": "O Ministério da Previdência Social e o INSS promovem um mutirão de atendimento na Bahia neste fim de semana, nos dias 17 e 18 de outubro de 2026. Serão disponibilizadas 376 vagas para perícias médicas e avaliações sociais, essenciais para a análise de diversos benefícios. Os interessados devem agendar o serviço previamente pelo aplicativo Meu INSS ou pela Central 135.",
+    "date": "2026-10-16T08:34:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aded43d50834509a9a4306603a923a9&url=https%3a%2f%2fg1.globo.com%2fba%2fbahia%2fnoticia%2f2026%2f10%2f16%2finss-oferece-376-vagas-para-pericia-medica-e-avaliacao-social-na-bahia-neste-fim-de-semana.ghtml&c=4391215230300956349&mkt=pt-br",
+    "image": "https://s2-g1.glbimg.com/ugHibYbTkG-XogTdqMfWn7fuPJ4=/0x0:768x431/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/N/T/Cz3J3WSBG4ytlZtzJoGA/59018f27-400e-4dc4-b2c3-ba5afc31ca1c.jpeg"
   },
   {
     "id": "45",
@@ -406,22 +406,6 @@
     "date": "2026-10-16T08:34:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adb70d6c2f745e4aa9af65acb9bf961&url=https%3a%2f%2fg1.globo.com%2fba%2fbahia%2fnoticia%2f2026%2f10%2f16%2finss-oferce-376-vagas-para-pericia-medica-e-avaliacao-social-na-bahia-neste-fim-de-semana.ghtml&c=4391215230300956349&mkt=pt-br",
     "image": "https://s2-g1.glbimg.com/ugHibYbTkG-XogTdqMfWn7fuPJ4=/0x0:768x431/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/N/T/Cz3J3WSBG4ytlZtzJoGA/59018f27-400e-4dc4-b2c3-ba5afc31ca1c.jpeg"
-  },
-  {
-    "id": "59",
-    "title": "Mutirão do INSS na Bahia: 376 Vagas de Perícia Médica e Avaliação Social para Benefícios",
-    "description": "O Ministério da Previdência Social e o INSS promovem um mutirão de atendimento na Bahia neste fim de semana, nos dias 17 e 18 de outubro de 2026. Serão disponibilizadas 376 vagas para perícias médicas e avaliações sociais, essenciais para a análise de diversos benefícios. Os interessados devem agendar o serviço previamente pelo aplicativo Meu INSS ou pela Central 135.",
-    "date": "2026-10-16T08:34:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aded43d50834509a9a4306603a923a9&url=https%3a%2f%2fg1.globo.com%2fba%2fbahia%2fnoticia%2f2026%2f10%2f16%2finss-oferece-376-vagas-para-pericia-medica-e-avaliacao-social-na-bahia-neste-fim-de-semana.ghtml&c=4391215230300956349&mkt=pt-br",
-    "image": "https://s2-g1.glbimg.com/ugHibYbTkG-XogTdqMfWn7fuPJ4=/0x0:768x431/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/N/T/Cz3J3WSBG4ytlZtzJoGA/59018f27-400e-4dc4-b2c3-ba5afc31ca1c.jpeg"
-  },
-  {
-    "id": "14",
-    "title": "Mutirão do INSS na Bahia: 376 Vagas para Perícias Médicas e Avaliações Sociais neste Fim de Semana",
-    "description": "O Ministério da Previdência Social e o INSS promovem um mutirão na Bahia neste fim de semana, oferecendo 376 vagas para perícias médicas e avaliações sociais. Os atendimentos, cruciais para a análise de benefícios, serão realizados em cinco cidades baianas. Interessados devem agendar pelo Meu INSS ou Central 135 para garantir sua participação.",
-    "date": "2026-10-16T08:34:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ad928ed17954428956db12e8ac8daef&url=https%3a%2f%2fg1.globo.com%2fba%2fbahia%2fnoticia%2f2026%2f10%2f16%2finss-oferece-376-vagas-para-pericia-medica-e-avaliacao-social-na-bahia-neste-fim-de-semana.ghtml&c=4391215230300956349&mkt=pt-br",
-    "image": "https://s03.video.glbimg.com/x240/15096726.jpg"
   },
   {
     "id": "16",
@@ -472,14 +456,6 @@
     "image": ""
   },
   {
-    "id": "37",
-    "title": "Maceió Previdência convoca segurados para Censo Previdenciário e Prova de Vida",
-    "description": "O Maceió Previdência está convocando segurados com pendências cadastrais para a realização do censo previdenciário e atualização da prova de vida, visando evitar a suspensão de benefícios.",
-    "date": "2026-10-15T07:31:00.000Z",
-    "link": "https://maceio.al.gov.br/imprensa/maceio-previdencia/maceio-previdencia-convoca-segurados-pendentes-para-censo-previdenciario-e-prova-de-vida",
-    "image": ""
-  },
-  {
     "id": "18",
     "title": "Maceió Previdência Alerta: Prazo Final para Censo Previdenciário e Prova de Vida de Segurados",
     "description": "O Maceió Previdência e a Semge convocam servidores ativos, aposentados e pensionistas com pendências no Censo Previdenciário e Prova de Vida de 2026. O prazo para regularização vai de 20 de outubro a 10 de novembro, sendo crucial para evitar a suspensão dos pagamentos a partir de 19 de novembro.",
@@ -504,19 +480,19 @@
     "image": "https://goias.gov.br/goiasprev/wp-content/uploads/sites/36/2025/05/WhatsApp-Image-2025-05-22-at-1.26.27-PM-1200x600-c-default.jpeg"
   },
   {
-    "id": "29",
-    "title": "Pesquisa: 92% dos brasileiros acreditam que o INSS não garantirá estabilidade financeira na aposentadoria",
-    "description": "Um novo estudo revela que a grande maioria da população brasileira não vê o INSS como garantia de conforto financeiro no futuro, destacando a urgência de um planejamento previdenciário complementar.",
-    "date": "2026-10-13T11:12:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adb7129478d4548838f5befe18f55ce&url=https%3a%2f%2feconomia.uol.com.br%2fnoticias%2festadao-conteudo%2f2026%2f10%2f13%2fprevidencia-publica-nao-garantira-estabilidade-financeira-a-92-dos-brasileiros-diz-pesquisa.htm&c=5095440225298615483&mkt=pt-br",
-    "image": ""
-  },
-  {
     "id": "48",
     "title": "Aposentadoria no Brasil: Pesquisa Revela Que 92% dos Cidadãos Não Confiam Apenas no INSS para a Estabilidade Financeira",
     "description": "Um estudo nacional recente da Icatu Seguros e Conversion indica que 92% dos brasileiros acreditam que a aposentadoria do INSS não garantirá sua segurança financeira futura. Apesar dessa percepção, a maioria ainda não possui um plano de previdência privada, sublinhando a urgência de um planejamento mais robusto.",
     "date": "2026-10-13T11:12:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adcd94997d94533b00da6e23c74ee0c&url=https://economia.uol.com.br/noticias/estadao-conteudo/2026/10/13/previdencia-publica-nao-garantira-estabilidade-financeira-a-92-dos-brasileiros-diz-pesquisa.htm&c=5095440225298615483&mkt=pt-br",
+    "image": ""
+  },
+  {
+    "id": "29",
+    "title": "Pesquisa: 92% dos brasileiros acreditam que o INSS não garantirá estabilidade financeira na aposentadoria",
+    "description": "Um novo estudo revela que a grande maioria da população brasileira não vê o INSS como garantia de conforto financeiro no futuro, destacando a urgência de um planejamento previdenciário complementar.",
+    "date": "2026-10-13T11:12:00.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6adb7129478d4548838f5befe18f55ce&url=https%3a%2f%2feconomia.uol.com.br%2fnoticias%2festadao-conteudo%2f2026%2f10%2f13%2fprevidencia-publica-nao-garantira-estabilidade-financeira-a-92-dos-brasileiros-diz-pesquisa.htm&c=5095440225298615483&mkt=pt-br",
     "image": ""
   },
   {
