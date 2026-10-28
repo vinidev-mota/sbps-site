@@ -444,13 +444,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     const safeTitle = escapeHTML(item.title || '');
                     const safeExcerpt = escapeHTML(excerpt);
                     const safeUrl = encodeURI(targetUrl);
+                    const isBlankTarget = safeUrl.includes('associado.html') || safeUrl.includes('eventos.html');
+                    const targetAttr = isBlankTarget ? ' target="_blank" rel="noopener noreferrer"' : '';
 
                     const resultHtml = `
                         <div class="post-item">
                             <span class="badge" style="background-color: var(--color-primary); color: #fff; display: inline-block; margin-bottom: 10px;">${safeType}</span>
                             <h3>${safeTitle}</h3>
                             <p class="post-excerpt">${safeExcerpt}</p>
-                            <a href="${safeUrl}" class="post-link">Acessar página <i class="fa-solid fa-arrow-right"></i></a>
+                            <a href="${safeUrl}" class="post-link"${targetAttr}>Acessar página <i class="fa-solid fa-arrow-right"></i></a>
                         </div>
                     `;
                     searchResultsContainer.insertAdjacentHTML('beforeend', resultHtml);

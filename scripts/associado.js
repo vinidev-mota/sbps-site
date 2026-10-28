@@ -392,15 +392,137 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Estado dos Códigos de Verificação em 2 Etapas
-        const verificationState = {
-            phone: { code: null, verified: false, target: '' },
-            email: { code: null, verified: false, target: '' }
-        };
-        let isUsernameAvailableState = true;
+        // Lista de provedores de e-mail temporários/descartáveis bloqueados
+        const DISPOSABLE_EMAIL_DOMAINS = [
+            'tempmail.com', 'mailinator.com', '10minutemail.com', 'guerrillamail.com',
+            'yopmail.com', 'throwawaymail.com', 'dispostable.com', 'sharklasers.com',
+            'getairmail.com', 'trashmail.com', 'mohmal.com', 'burnermail.io'
+        ];
 
-        // 1. RG: Máscara e Validação com Dígito Verificador
+        // Validador oficial de DDDs brasileiros
+        function isValidDDD(ddd) {
+            const valid = [
+                11, 12, 13, 14, 15, 16, 17, 18, 19, // SP
+                21, 22, 24,                         // RJ
+                27, 28,                             // ES
+                31, 32, 33, 34, 35, 37, 38,         // MG
+                41, 42, 43, 44, 45, 46,             // PR
+                47, 48, 49,                         // SC
+                51, 53, 54, 55,                     // RS
+                61,                                 // DF/GO
+                62, 64,                             // GO
+                63,                                 // TO
+                65, 66,                             // MT
+                67,                                 // MS
+                68,                                 // AC
+                69,                                 // RO
+                71, 73, 74, 75, 77,                 // BA
+                79,                                 // SE
+                81, 87,                             // PE
+                82,                                 // AL
+                83,                                 // PB
+                84,                                 // RN
+                85, 88,                             // CE
+                86, 89,                             // PI
+                91, 93, 94,                         // PA
+                92, 97,                             // AM
+                95,                                 // RR
+                96,                                 // AP
+                98, 99                              // MA
+            ];
+            return valid.includes(Number(ddd));
+        }
+
+        // Estado do cadastro pendente de validação OTP
+        let pendingRegistration = {
+            userData: null,
+            password: '',
+            email: '',
+            currentOtpCode: ''
+        };
+        let otpTimerInterval = null;
+        let isUsernameAvailableState = true;
+        let isEmailAvailableState = true;
+        let isCpfAvailableState = true;
+
+        // 1. CPF: Máscara Automática e Validação Oficial (Módulo 11 + Unicidade Supabase)
+        const cpfInput = document.getElementById('reg-cpf');
+        const cpfFeedback = document.getElementById('cpf-feedback');
+        let cpfDebounce = null;
+
+        if (cpfInput) {
+            cpfInput.addEventListener('input', (e) => {
+                let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+                if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+                else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                e.target.value = v;
+
+                if (v.replace(/\D/g, '').length < 11) {
+                    cpfInput.classList.remove('is-valid', 'is-invalid');
+                    if (cpfFeedback) cpfFeedback.style.display = 'none';
+                }
+            });
+
+            cpfInput.addEventListener('blur', () => {
+                const raw = cpfInput.value.replace(/\D/g, '');
+                if (!raw) {
+                    if (cpfFeedback) cpfFeedback.style.display = 'none';
+                    cpfInput.classList.remove('is-valid', 'is-invalid');
+                    return;
+                }
+
+                if (!isValidCPF(raw)) {
+                    isCpfAvailableState = false;
+                    cpfInput.classList.add('is-invalid');
+                    cpfInput.classList.remove('is-valid');
+                    if (cpfFeedback) {
+                        cpfFeedback.style.display = 'flex';
+                        cpfFeedback.className = 'field-feedback-box invalid';
+                        cpfFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> CPF inválido. Confira os números digitados.';
+                    }
+                    return;
+                }
+
+                if (cpfFeedback) {
+                    cpfFeedback.style.display = 'flex';
+                    cpfFeedback.className = 'field-feedback-box checking';
+                    cpfFeedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando no banco de dados...';
+                }
+
+                clearTimeout(cpfDebounce);
+                cpfDebounce = setTimeout(async () => {
+                    let available = true;
+                    if (window.SBPS_Supabase) {
+                        available = await window.SBPS_Supabase.isCpfAvailable(raw);
+                    }
+
+                    if (!available) {
+                        isCpfAvailableState = false;
+                        cpfInput.classList.add('is-invalid');
+                        cpfInput.classList.remove('is-valid');
+                        if (cpfFeedback) {
+                            cpfFeedback.style.display = 'flex';
+                            cpfFeedback.className = 'field-feedback-box taken';
+                            cpfFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Este CPF já está cadastrado na SBPS.';
+                        }
+                    } else {
+                        isCpfAvailableState = true;
+                        cpfInput.classList.remove('is-invalid');
+                        cpfInput.classList.add('is-valid');
+                        if (cpfFeedback) {
+                            cpfFeedback.style.display = 'flex';
+                            cpfFeedback.className = 'field-feedback-box valid';
+                            cpfFeedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> CPF válido e disponível.';
+                        }
+                    }
+                }, 200);
+            });
+        }
+
+        // 2. RG: Máscara e Validação com Dígito Verificador
         const rgInput = document.getElementById('reg-rg');
+        const rgFeedback = document.getElementById('rg-feedback');
         if (rgInput) {
             rgInput.addEventListener('input', (e) => {
                 let v = e.target.value.toUpperCase().replace(/[^0-9X]/g, '').slice(0, 9);
@@ -411,144 +533,225 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             rgInput.addEventListener('blur', () => {
-                const raw = rgInput.value;
+                const raw = rgInput.value.trim();
                 if (raw && !isValidRG(raw)) {
                     rgInput.classList.add('is-invalid');
                     rgInput.classList.remove('is-valid');
+                    if (rgFeedback) {
+                        rgFeedback.style.display = 'flex';
+                        rgFeedback.className = 'field-feedback-box invalid';
+                        rgFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> RG inválido. Confira o número e o dígito verificador.';
+                    }
                 } else if (raw) {
                     rgInput.classList.remove('is-invalid');
                     rgInput.classList.add('is-valid');
+                    if (rgFeedback) {
+                        rgFeedback.style.display = 'flex';
+                        rgFeedback.className = 'field-feedback-box valid';
+                        rgFeedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> RG válido.';
+                    }
+                } else if (rgFeedback) {
+                    rgFeedback.style.display = 'none';
                 }
             });
         }
 
-        // 2. Celular: Envio e Validação do Código de 6 Dígitos
-        const btnSendPhoneCode = document.getElementById('btn-send-phone-code');
-        const rowPhoneCode = document.getElementById('row-phone-code');
-        const regPhoneCodeInput = document.getElementById('reg-phone-code');
-        const btnVerifyPhoneCode = document.getElementById('btn-verify-phone-code');
-        const badgePhoneStatus = document.getElementById('badge-phone-status');
+        // 3. Data de Nascimento: Limite Oficial 18+ anos e Validação
+        const nascInput = document.getElementById('reg-nasc');
+        const nascFeedback = document.getElementById('nasc-feedback');
+        if (nascInput) {
+            const today = new Date();
+            const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+            nascInput.max = maxDate;
+
+            nascInput.addEventListener('change', () => {
+                const val = nascInput.value;
+                if (!val) {
+                    if (nascFeedback) nascFeedback.style.display = 'none';
+                    nascInput.classList.remove('is-valid', 'is-invalid');
+                    return;
+                }
+
+                if (!isAdult(val)) {
+                    nascInput.classList.add('is-invalid');
+                    nascInput.classList.remove('is-valid');
+                    if (nascFeedback) {
+                        nascFeedback.style.display = 'flex';
+                        nascFeedback.className = 'field-feedback-box invalid';
+                        nascFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> O cadastro na SBPS é restrito a maiores de 18 anos.';
+                    }
+                } else {
+                    nascInput.classList.remove('is-invalid');
+                    nascInput.classList.add('is-valid');
+                    if (nascFeedback) {
+                        nascFeedback.style.display = 'flex';
+                        nascFeedback.className = 'field-feedback-box valid';
+                        nascFeedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Maioridade confirmada (+18 anos).';
+                    }
+                }
+            });
+        }
+
+        // 4. Celular / WhatsApp: Máscara, DDD e 9 Dígitos
         const celularInput = document.getElementById('reg-celular');
+        const celularFeedback = document.getElementById('celular-feedback');
+        if (celularInput) {
+            celularInput.addEventListener('input', (e) => {
+                let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+                if (v.length > 10) v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+                else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+                e.target.value = v;
 
-        if (btnSendPhoneCode && celularInput) {
-            btnSendPhoneCode.addEventListener('click', () => {
-                const rawCelular = celularInput.value.replace(/\D/g, '');
-                if (rawCelular.length < 10) {
-                    alert('Por favor, digite seu número de celular com DDD antes de solicitar o código.');
-                    celularInput.focus();
-                    return;
+                if (v.replace(/\D/g, '').length < 11) {
+                    celularInput.classList.remove('is-valid', 'is-invalid');
+                    if (celularFeedback) celularFeedback.style.display = 'none';
                 }
-
-                // Gerar token de 6 dígitos
-                const code = Math.floor(100000 + Math.random() * 900000).toString();
-                verificationState.phone.code = code;
-                verificationState.phone.verified = false;
-                verificationState.phone.target = rawCelular;
-
-                if (rowPhoneCode) rowPhoneCode.style.display = 'flex';
-                if (regPhoneCodeInput) {
-                    regPhoneCodeInput.value = '';
-                    regPhoneCodeInput.focus();
-                }
-
-                showToastMessage(`📲 Código de Confirmação SMS/WhatsApp: [ ${code} ]`);
-                alert(`📲 CÓDIGO DE CONFIRMAÇÃO DO CELULAR:\n\nSeu código de 6 dígitos é: ${code}\n\nInsira este código no campo abaixo e clique em "Validar Celular" para confirmar.`);
             });
-        }
 
-        if (btnVerifyPhoneCode && regPhoneCodeInput) {
-            btnVerifyPhoneCode.addEventListener('click', () => {
-                const typed = regPhoneCodeInput.value.trim();
-                if (!typed) {
-                    alert('Por favor, informe o código de 6 dígitos recebido.');
-                    regPhoneCodeInput.focus();
+            celularInput.addEventListener('blur', () => {
+                const raw = celularInput.value.replace(/\D/g, '');
+                if (!raw) {
+                    if (celularFeedback) celularFeedback.style.display = 'none';
+                    celularInput.classList.remove('is-valid', 'is-invalid');
                     return;
                 }
 
-                if (typed === verificationState.phone.code) {
-                    verificationState.phone.verified = true;
-                    if (rowPhoneCode) rowPhoneCode.style.display = 'none';
-                    if (badgePhoneStatus) {
-                        badgePhoneStatus.className = 'verification-badge badge-verified';
-                        badgePhoneStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Celular Verificado';
+                const ddd = raw.substring(0, 2);
+                if (raw.length !== 11 || raw.charAt(2) !== '9' || !isValidDDD(ddd)) {
+                    celularInput.classList.add('is-invalid');
+                    celularInput.classList.remove('is-valid');
+                    if (celularFeedback) {
+                        celularFeedback.style.display = 'flex';
+                        celularFeedback.className = 'field-feedback-box invalid';
+                        celularFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Celular inválido. Digite DDD válido e número de 9 dígitos.';
                     }
-                    if (btnSendPhoneCode) {
-                        btnSendPhoneCode.innerHTML = '<i class="fa-solid fa-circle-check"></i> Verificado';
-                        btnSendPhoneCode.disabled = true;
-                    }
-                    if (celularInput) celularInput.readOnly = true;
-                    showToastMessage('Celular/WhatsApp confirmado com sucesso!');
                 } else {
-                    alert('Código de confirmação do celular incorreto! Verifique e tente novamente.');
-                    regPhoneCodeInput.focus();
+                    celularInput.classList.remove('is-invalid');
+                    celularInput.classList.add('is-valid');
+                    if (celularFeedback) {
+                        celularFeedback.style.display = 'flex';
+                        celularFeedback.className = 'field-feedback-box valid';
+                        celularFeedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Número de WhatsApp/Celular válido.';
+                    }
                 }
             });
         }
 
-        // 3. E-mail Principal: Envio e Validação do Código de 6 Dígitos
-        const btnSendEmailCode = document.getElementById('btn-send-email-code');
-        const rowEmailCode = document.getElementById('row-email-code');
-        const regEmailCodeInput = document.getElementById('reg-email-code');
-        const btnVerifyEmailCode = document.getElementById('btn-verify-email-code');
-        const badgeEmailStatus = document.getElementById('badge-email-status');
+        // 5. E-mail Principal: Formato, Filtro Anti-Descartável e Unicidade Supabase
         const emailInput = document.getElementById('reg-email');
+        const emailFeedback = document.getElementById('email-feedback');
+        let emailDebounce = null;
 
-        if (btnSendEmailCode && emailInput) {
-            btnSendEmailCode.addEventListener('click', () => {
+        if (emailInput) {
+            emailInput.addEventListener('blur', () => {
                 const emailVal = emailInput.value.trim().toLowerCase();
+                if (!emailVal) {
+                    if (emailFeedback) emailFeedback.style.display = 'none';
+                    emailInput.classList.remove('is-valid', 'is-invalid');
+                    return;
+                }
+
                 if (!isValidEmail(emailVal)) {
-                    alert('Por favor, informe um E-mail Principal válido antes de solicitar o código.');
-                    emailInput.focus();
+                    isEmailAvailableState = false;
+                    emailInput.classList.add('is-invalid');
+                    emailInput.classList.remove('is-valid');
+                    if (emailFeedback) {
+                        emailFeedback.style.display = 'flex';
+                        emailFeedback.className = 'field-feedback-box invalid';
+                        emailFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Formato de e-mail inválido.';
+                    }
                     return;
                 }
 
-                // Gerar token de 6 dígitos
-                const code = Math.floor(100000 + Math.random() * 900000).toString();
-                verificationState.email.code = code;
-                verificationState.email.verified = false;
-                verificationState.email.target = emailVal;
-
-                if (rowEmailCode) rowEmailCode.style.display = 'flex';
-                if (regEmailCodeInput) {
-                    regEmailCodeInput.value = '';
-                    regEmailCodeInput.focus();
+                const domain = emailVal.split('@')[1];
+                if (DISPOSABLE_EMAIL_DOMAINS.includes(domain)) {
+                    isEmailAvailableState = false;
+                    emailInput.classList.add('is-invalid');
+                    emailInput.classList.remove('is-valid');
+                    if (emailFeedback) {
+                        emailFeedback.style.display = 'flex';
+                        emailFeedback.className = 'field-feedback-box invalid';
+                        emailFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Provedores de e-mail temporários não são aceitos.';
+                    }
+                    return;
                 }
 
-                showToastMessage(`📧 Código de Verificação do E-mail: [ ${code} ]`);
-                alert(`📧 CÓDIGO DE VERIFICAÇÃO DE E-MAIL:\n\nSeu código de 6 dígitos é: ${code}\n\nInsira este código no campo abaixo e clique em "Validar E-mail" para confirmar.`);
+                if (emailFeedback) {
+                    emailFeedback.style.display = 'flex';
+                    emailFeedback.className = 'field-feedback-box checking';
+                    emailFeedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando disponibilidade...';
+                }
+
+                clearTimeout(emailDebounce);
+                emailDebounce = setTimeout(async () => {
+                    let available = true;
+                    if (window.SBPS_Supabase) {
+                        available = await window.SBPS_Supabase.isEmailAvailable(emailVal);
+                    }
+
+                    if (!available) {
+                        isEmailAvailableState = false;
+                        emailInput.classList.add('is-invalid');
+                        emailInput.classList.remove('is-valid');
+                        if (emailFeedback) {
+                            emailFeedback.style.display = 'flex';
+                            emailFeedback.className = 'field-feedback-box taken';
+                            emailFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Este e-mail já está cadastrado. Faça login.';
+                        }
+                    } else {
+                        isEmailAvailableState = true;
+                        emailInput.classList.remove('is-invalid');
+                        emailInput.classList.add('is-valid');
+                        if (emailFeedback) {
+                            emailFeedback.style.display = 'flex';
+                            emailFeedback.className = 'field-feedback-box valid';
+                            emailFeedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> E-mail válido e disponível!';
+                        }
+                    }
+                }, 200);
             });
         }
 
-        if (btnVerifyEmailCode && regEmailCodeInput) {
-            btnVerifyEmailCode.addEventListener('click', () => {
-                const typed = regEmailCodeInput.value.trim();
-                if (!typed) {
-                    alert('Por favor, informe o código de 6 dígitos recebido.');
-                    regEmailCodeInput.focus();
+        // 6. Confirmação do E-mail Principal
+        const emailConfirmInput = document.getElementById('reg-email-confirm');
+        const emailConfirmFeedback = document.getElementById('email-confirm-feedback');
+
+        if (emailConfirmInput && emailInput) {
+            const checkEmailMatch = () => {
+                const em1 = emailInput.value.trim().toLowerCase();
+                const em2 = emailConfirmInput.value.trim().toLowerCase();
+
+                if (!em2) {
+                    if (emailConfirmFeedback) emailConfirmFeedback.style.display = 'none';
+                    emailConfirmInput.classList.remove('is-valid', 'is-invalid');
                     return;
                 }
 
-                if (typed === verificationState.email.code) {
-                    verificationState.email.verified = true;
-                    if (rowEmailCode) rowEmailCode.style.display = 'none';
-                    if (badgeEmailStatus) {
-                        badgeEmailStatus.className = 'verification-badge badge-verified';
-                        badgeEmailStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> E-mail Verificado';
+                if (em1 !== em2) {
+                    emailConfirmInput.classList.add('is-invalid');
+                    emailConfirmInput.classList.remove('is-valid');
+                    if (emailConfirmFeedback) {
+                        emailConfirmFeedback.style.display = 'flex';
+                        emailConfirmFeedback.className = 'field-feedback-box invalid';
+                        emailConfirmFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Os e-mails informados não coincidem.';
                     }
-                    if (btnSendEmailCode) {
-                        btnSendEmailCode.innerHTML = '<i class="fa-solid fa-circle-check"></i> Verificado';
-                        btnSendEmailCode.disabled = true;
-                    }
-                    if (emailInput) emailInput.readOnly = true;
-                    showToastMessage('E-mail principal confirmado com sucesso!');
                 } else {
-                    alert('Código de verificação de e-mail incorreto! Verifique e tente novamente.');
-                    regEmailCodeInput.focus();
+                    emailConfirmInput.classList.remove('is-invalid');
+                    emailConfirmInput.classList.add('is-valid');
+                    if (emailConfirmFeedback) {
+                        emailConfirmFeedback.style.display = 'flex';
+                        emailConfirmFeedback.className = 'field-feedback-box valid';
+                        emailConfirmFeedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> E-mails coincidem perfeitamente!';
+                    }
                 }
-            });
+            };
+
+            emailConfirmInput.addEventListener('input', checkEmailMatch);
+            emailConfirmInput.addEventListener('blur', checkEmailMatch);
         }
 
-        // 4. Nome de Usuário Único (Login): Consulta em Tempo Real no Supabase
+        // 7. Nome de Usuário Único (Login): Consulta em Tempo Real no Supabase
         const loginUserInput = document.getElementById('reg-login-user');
         const usernameFeedback = document.getElementById('username-feedback');
         let usernameDebounceTimer = null;
@@ -565,7 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 usernameFeedback.style.display = 'flex';
-                usernameFeedback.className = 'username-feedback-box checking';
+                usernameFeedback.className = 'field-feedback-box checking';
                 usernameFeedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando disponibilidade...';
 
                 usernameDebounceTimer = setTimeout(async () => {
@@ -576,70 +779,117 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (available) {
                         isUsernameAvailableState = true;
-                        usernameFeedback.className = 'username-feedback-box available';
-                        usernameFeedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> Nome de usuário "${val}" disponível!`;
+                        usernameFeedback.className = 'field-feedback-box valid';
+                        usernameFeedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> Usuário "${val}" disponível!`;
                         loginUserInput.classList.remove('is-invalid');
                         loginUserInput.classList.add('is-valid');
                     } else {
                         isUsernameAvailableState = false;
-                        usernameFeedback.className = 'username-feedback-box taken';
-                        usernameFeedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> O nome de usuário "${val}" já está em uso por outro associado. Escolha outro.`;
+                        usernameFeedback.className = 'field-feedback-box taken';
+                        usernameFeedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> O usuário "${val}" já está em uso.`;
                         loginUserInput.classList.add('is-invalid');
                         loginUserInput.classList.remove('is-valid');
                     }
-                }, 350);
+                }, 300);
             });
         }
 
-        // Submit Cadastro Pessoa Física com Validações Estritas
+        // 8. Confirmação de Senha
+        const regPasswordInput = document.getElementById('reg-password');
+        const regPasswordConfirmInput = document.getElementById('reg-password-confirm');
+        if (regPasswordConfirmInput && regPasswordInput) {
+            const checkPassMatch = () => {
+                const p1 = regPasswordInput.value;
+                const p2 = regPasswordConfirmInput.value;
+                if (!p2) {
+                    regPasswordConfirmInput.classList.remove('is-valid', 'is-invalid');
+                    return;
+                }
+                if (p1 !== p2) {
+                    regPasswordConfirmInput.classList.add('is-invalid');
+                    regPasswordConfirmInput.classList.remove('is-valid');
+                } else {
+                    regPasswordConfirmInput.classList.remove('is-invalid');
+                    regPasswordConfirmInput.classList.add('is-valid');
+                }
+            };
+            regPasswordConfirmInput.addEventListener('input', checkPassMatch);
+            regPasswordConfirmInput.addEventListener('blur', checkPassMatch);
+        }
+
+        // Inicializar listeners do Modal OTP de E-mail
+        setupOtpModalEvents();
+
+        // 9. SUBMIT CADASTRO: Validação Estrita Completa e Disparo do Modal OTP
         if (registerForm) {
             registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                // 1. Informações Pessoais
+                // A. Nome Completo
                 const nomeInput = document.getElementById('reg-nome');
-                const nome = nomeInput.value.trim();
+                const nome = nomeInput ? nomeInput.value.trim() : '';
                 const nomeWords = nome.split(/\s+/).filter(w => w.length > 0);
                 if (nomeWords.length < 2) {
                     alert('Por favor, informe seu Nome Completo (nome e sobrenome).');
-                    nomeInput.focus();
+                    if (nomeInput) {
+                        nomeInput.classList.add('is-invalid');
+                        nomeInput.focus();
+                    }
                     return;
                 }
 
-                const cpfInput = document.getElementById('reg-cpf');
-                const rawCpf = cpfInput.value.replace(/\D/g, '');
+                // B. CPF Oficial
+                const rawCpf = cpfInput ? cpfInput.value.replace(/\D/g, '') : '';
                 if (!isValidCPF(rawCpf)) {
                     alert('CPF inválido! Por favor, confira os números digitados.');
-                    cpfInput.focus();
+                    if (cpfInput) {
+                        cpfInput.classList.add('is-invalid');
+                        cpfInput.focus();
+                    }
                     return;
                 }
 
+                if (!isCpfAvailableState) {
+                    alert('Este CPF já está cadastrado na SBPS. Por favor, acerte os dados ou faça login.');
+                    if (cpfInput) cpfInput.focus();
+                    return;
+                }
+
+                // C. RG
                 const rawRg = rgInput ? rgInput.value.trim() : '';
                 if (!isValidRG(rawRg)) {
-                    alert('RG inválido! O número do RG ou o dígito verificador está incorreto.');
-                    if (rgInput) rgInput.focus();
+                    alert('RG inválido! O número do RG ou dígito verificador está incorreto.');
+                    if (rgInput) {
+                        rgInput.classList.add('is-invalid');
+                        rgInput.focus();
+                    }
                     return;
                 }
 
-                const nascInput = document.getElementById('reg-nasc');
-                const birthDate = nascInput.value;
+                // D. Data de Nascimento (18+)
+                const birthDate = nascInput ? nascInput.value : '';
                 if (!birthDate || !isAdult(birthDate)) {
-                    alert('O cadastro na SBPS é permitido apenas para maiores de 18 anos. Verifique a data de nascimento.');
-                    nascInput.focus();
+                    alert('O cadastro na SBPS é restrito para maiores de 18 anos. Verifique a data de nascimento.');
+                    if (nascInput) {
+                        nascInput.classList.add('is-invalid');
+                        nascInput.focus();
+                    }
                     return;
                 }
 
+                // E. Gênero
                 const generoInput = document.getElementById('reg-genero');
-                if (!generoInput.value) {
+                if (!generoInput || !generoInput.value) {
                     alert('Por favor, selecione seu Gênero.');
-                    generoInput.focus();
+                    if (generoInput) generoInput.focus();
                     return;
                 }
 
+                // F. Origem
                 const origemInput = document.getElementById('reg-origem');
-                if (!origemInput.value) {
+                if (!origemInput || !origemInput.value) {
                     alert('Por favor, informe como você conheceu a SBPS.');
-                    origemInput.focus();
+                    if (origemInput) origemInput.focus();
                     return;
                 }
 
@@ -654,39 +904,53 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // 2. Informações de Contato & Verificações em 2 Etapas
+                // G. Celular / WhatsApp
                 const rawCelular = celularInput ? celularInput.value.replace(/\D/g, '') : '';
-                if (rawCelular.length < 10) {
-                    alert('Por favor, informe um número de celular válido com DDD.');
-                    if (celularInput) celularInput.focus();
+                const ddd = rawCelular.substring(0, 2);
+                if (rawCelular.length !== 11 || rawCelular.charAt(2) !== '9' || !isValidDDD(ddd)) {
+                    alert('Por favor, informe um Celular/WhatsApp válido no formato com DDD (11 dígitos, iniciando com 9).');
+                    if (celularInput) {
+                        celularInput.classList.add('is-invalid');
+                        celularInput.focus();
+                    }
                     return;
                 }
 
-                if (!verificationState.phone.verified) {
-                    alert('Por favor, confirme seu Celular/WhatsApp clicando no botão "Enviar Código" e inserindo os 6 dígitos de validação.');
-                    if (btnSendPhoneCode) btnSendPhoneCode.focus();
-                    return;
-                }
-
+                // H. E-mail Principal & Confirmação
                 const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
-                const emailConfirmInput = document.getElementById('reg-email-confirm');
                 const emailConfirm = emailConfirmInput ? emailConfirmInput.value.trim().toLowerCase() : '';
 
                 if (!isValidEmail(email)) {
-                    alert('Por favor, informe um E-mail Principal válido.');
-                    if (emailInput) emailInput.focus();
+                    alert('Por favor, informe um E-mail Principal com formato válido.');
+                    if (emailInput) {
+                        emailInput.classList.add('is-invalid');
+                        emailInput.focus();
+                    }
+                    return;
+                }
+
+                const emailDomain = email.split('@')[1];
+                if (DISPOSABLE_EMAIL_DOMAINS.includes(emailDomain)) {
+                    alert('Provedores de e-mail temporários ou descartáveis não são aceitos.');
+                    if (emailInput) {
+                        emailInput.classList.add('is-invalid');
+                        emailInput.focus();
+                    }
                     return;
                 }
 
                 if (email !== emailConfirm) {
-                    alert('A confirmação do e-mail não confere com o E-mail Principal!');
-                    if (emailConfirmInput) emailConfirmInput.focus();
+                    alert('A confirmação de e-mail não confere com o E-mail Principal informado!');
+                    if (emailConfirmInput) {
+                        emailConfirmInput.classList.add('is-invalid');
+                        emailConfirmInput.focus();
+                    }
                     return;
                 }
 
-                if (!verificationState.email.verified) {
-                    alert('Por favor, confirme seu E-mail Principal clicando no botão "Enviar Código" e inserindo os 6 dígitos de validação.');
-                    if (btnSendEmailCode) btnSendEmailCode.focus();
+                if (!isEmailAvailableState) {
+                    alert('Este e-mail já está cadastrado na SBPS. Por favor, acesse a aba de login.');
+                    if (emailInput) emailInput.focus();
                     return;
                 }
 
@@ -698,7 +962,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // 3. Endereço
+                // I. Endereço
                 const cepInput = document.getElementById('reg-cep');
                 const rawCep = cepInput ? cepInput.value.replace(/\D/g, '') : '';
                 if (rawCep.length !== 8) {
@@ -725,7 +989,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const semComplementoChecked = document.getElementById('check-sem-complemento')?.checked;
                 const complemento = semComplementoChecked ? 'Sem complemento' : (complementoInput ? complementoInput.value.trim() : '');
                 if (!complemento) {
-                    alert('Por favor, informe o Complemento ou marque a opção "Sem complemento".');
+                    alert('Por favor, informe o Complemento ou marque "Sem complemento".');
                     if (complementoInput) complementoInput.focus();
                     return;
                 }
@@ -740,40 +1004,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cidadeInput = document.getElementById('reg-cidade');
                 const ufInput = document.getElementById('reg-uf');
                 if (!cidadeInput || !ufInput || !cidadeInput.value.trim() || !ufInput.value.trim()) {
-                    alert('Por favor, informe um CEP válido para preencher Cidade e UF automaticamente.');
+                    alert('Por favor, consulte um CEP válido para preencher Cidade e UF.');
                     if (cepInput) cepInput.focus();
                     return;
                 }
 
-                // 4. Informações de Acesso & Unicidade de Login
+                // J. Login / Usuário
                 const loginUser = loginUserInput ? loginUserInput.value.trim() : '';
                 if (loginUser.length < 3) {
-                    alert('O Login/Usuário deve conter no mínimo 3 caracteres.');
+                    alert('O Nome de Usuário / Login deve conter no mínimo 3 caracteres.');
                     if (loginUserInput) loginUserInput.focus();
                     return;
                 }
 
                 if (!isUsernameAvailableState) {
-                    alert(`O nome de usuário "${loginUser}" já está em uso por outro associado. Por favor, escolha um nome diferente.`);
+                    alert(`O nome de usuário "${loginUser}" já está em uso por outro associado. Escolha outro.`);
                     if (loginUserInput) loginUserInput.focus();
                     return;
                 }
 
-                const passInput = document.getElementById('reg-password');
-                const passConfirmInput = document.getElementById('reg-password-confirm');
-                const pass = passInput ? passInput.value : '';
-                const passConf = passConfirmInput ? passConfirmInput.value : '';
+                // K. Senhas e Checklist de Segurança
+                const pass = regPasswordInput ? regPasswordInput.value : '';
+                const passConf = regPasswordConfirmInput ? regPasswordConfirmInput.value : '';
 
                 const passValidation = validateStrongPassword(pass);
                 if (!passValidation.isValid) {
                     alert('A senha informada não atende a todos os requisitos de segurança:\n' + passValidation.errors.join('\n'));
-                    if (passInput) passInput.focus();
+                    if (regPasswordInput) regPasswordInput.focus();
                     return;
                 }
 
                 if (pass !== passConf) {
                     alert('A confirmação de senha não coincide com a senha digitada!');
-                    if (passConfirmInput) passConfirmInput.focus();
+                    if (regPasswordConfirmInput) regPasswordConfirmInput.focus();
+                    return;
+                }
+
+                // L. Termo de Adesão & LGPD
+                const termoLgpd = document.getElementById('reg-termo-lgpd');
+                if (!termoLgpd || !termoLgpd.checked) {
+                    alert('Você deve aceitar os Termos do Estatuto Social e a Política de Privacidade (LGPD) para prosseguir.');
+                    if (termoLgpd) termoLgpd.focus();
                     return;
                 }
 
@@ -781,13 +1052,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const fotoPreviewEl = document.getElementById('photo-preview');
                 const fotoUrl = fotoPreviewEl ? (fotoPreviewEl.dataset.photoUrl || '') : '';
 
-                // Objeto do Novo Associado
+                // Montar Objeto Completo do Associado
                 const newUser = {
                     nome: nome,
                     cpf: formatCPF(rawCpf),
                     rg: rawRg,
                     nascimento: birthDate,
                     genero: generoInput.value,
+                    tipo_associado: document.getElementById('reg-tipo-assoc')?.value || 'SBPS Pessoa Física',
+                    pessoa_tipo: document.getElementById('reg-juridica-fisica')?.value || 'Pessoa Física',
                     profissao: document.getElementById('reg-profissao')?.value.trim() || '',
                     origem_sbps: origemInput.value,
                     origem_outro_desc: origemOutroDesc,
@@ -805,40 +1078,252 @@ document.addEventListener('DOMContentLoaded', () => {
                     uf: ufInput.value.trim().toUpperCase(),
                     login_usuario: loginUser,
                     foto_url: fotoUrl,
-                    status: 'Ativo'
+                    status: 'Ativo',
+                    email_verificado: false,
+                    termo_lgpd_aceito_em: new Date().toISOString()
                 };
 
-                const btn = registerForm.querySelector('button[type="submit"]');
-                if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando no Supabase...';
+                // Armazenar temporariamente para confirmação pós-código
+                pendingRegistration = {
+                    userData: newUser,
+                    password: pass,
+                    email: email,
+                    currentOtpCode: ''
+                };
 
+                // Botão com estado de carregamento
+                const submitBtn = document.getElementById('btn-submit-register');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando código de segurança...';
+                }
+
+                // Chamar RPC gerar_codigo_otp no Supabase
+                let otpRes = { success: true, codigo: Math.floor(100000 + Math.random() * 900000).toString() };
                 if (window.SBPS_Supabase) {
-                    const res = await window.SBPS_Supabase.registerUser(newUser, pass);
-                    if (!res.success) {
-                        console.warn('Aviso do Supabase:', res.error);
+                    try {
+                        otpRes = await window.SBPS_Supabase.generateOtp(email, 'confirmacao_cadastro');
+                    } catch (err) {
+                        console.warn('Fallback OTP local:', err);
                     }
                 }
 
-                if (btn) btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Concluir Cadastro de Associado';
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-envelope-circle-check"></i> Validar Dados e Enviar Código por E-mail';
+                }
 
-                currentUser = newUser;
-                localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
-                authContainer.style.display = 'none';
-                memberContent.style.display = 'block';
-                updateUserBadges();
-                renderUserData();
-                showToastMessage('Cadastro de Associado realizado e salvo com sucesso no Supabase! Bem-vindo(a) à SBPS.');
+                // Abrir o Modal OTP de 6 Dígitos
+                openOtpModal(email, otpRes.codigo);
             });
         }
 
-        // Celular e Telefone Fixo: Máscaras
-        if (celularInput) {
-            celularInput.addEventListener('input', (e) => {
-                let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-                if (v.length > 10) v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-                else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-                else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
-                e.target.value = v;
+        // Funções do Modal OTP de E-mail
+        function setupOtpModalEvents() {
+            const modal = document.getElementById('modal-otp-cadastro');
+            const digitsContainer = document.getElementById('otp-digits-container');
+            const btnConfirm = document.getElementById('btn-confirm-otp');
+            const errorMsg = document.getElementById('otp-error-msg');
+            if (!digitsContainer) return;
+
+            const digitInputs = Array.from(digitsContainer.querySelectorAll('.otp-digit-input'));
+
+            digitInputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    e.target.value = val ? val.slice(-1) : '';
+                    if (errorMsg) errorMsg.style.display = 'none';
+                    digitInputs.forEach(i => i.classList.remove('is-error'));
+
+                    if (e.target.value && index < digitInputs.length - 1) {
+                        digitInputs[index + 1].focus();
+                    }
+
+                    const code = digitInputs.map(i => i.value).join('');
+                    if (btnConfirm) btnConfirm.disabled = (code.length !== 6);
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        digitInputs[index - 1].focus();
+                        digitInputs[index - 1].value = '';
+                        if (btnConfirm) btnConfirm.disabled = true;
+                    } else if (e.key === 'ArrowLeft' && index > 0) {
+                        digitInputs[index - 1].focus();
+                    } else if (e.key === 'ArrowRight' && index < digitInputs.length - 1) {
+                        digitInputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+                    if (!pasteData) return;
+                    pasteData.split('').forEach((char, i) => {
+                        if (digitInputs[i]) digitInputs[i].value = char;
+                    });
+                    const lastIdx = Math.min(pasteData.length, digitInputs.length) - 1;
+                    if (digitInputs[lastIdx]) digitInputs[lastIdx].focus();
+                    const code = digitInputs.map(i => i.value).join('');
+                    if (btnConfirm) btnConfirm.disabled = (code.length !== 6);
+                });
             });
+
+            if (btnConfirm) {
+                btnConfirm.addEventListener('click', async () => {
+                    const code = digitInputs.map(i => i.value).join('');
+                    if (code.length !== 6) return;
+
+                    btnConfirm.disabled = true;
+                    btnConfirm.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando código...';
+                    if (errorMsg) errorMsg.style.display = 'none';
+
+                    let verifyRes = { success: false };
+                    if (window.SBPS_Supabase) {
+                        verifyRes = await window.SBPS_Supabase.verifyOtp(pendingRegistration.email, code, 'confirmacao_cadastro');
+                    }
+
+                    if (verifyRes.success) {
+                        btnConfirm.innerHTML = '<i class="fa-solid fa-circle-check"></i> E-mail Confirmado!';
+                        btnConfirm.style.background = '#059669';
+
+                        pendingRegistration.userData.email_verificado = true;
+                        if (window.SBPS_Supabase) {
+                            await window.SBPS_Supabase.registerUser(pendingRegistration.userData, pendingRegistration.password);
+                        }
+
+                        currentUser = pendingRegistration.userData;
+                        localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+
+                        if (typeof showToastMessage === 'function') {
+                            showToastMessage('E-mail confirmado com sucesso! Cadastro realizado na SBPS.');
+                        }
+
+                        setTimeout(() => {
+                            window.closeOtpModal();
+                            if (authContainer) authContainer.style.display = 'none';
+                            if (memberContent) memberContent.style.display = 'block';
+                            updateUserBadges();
+                            renderUserData();
+                        }, 1000);
+                    } else {
+                        btnConfirm.disabled = false;
+                        btnConfirm.innerHTML = '<i class="fa-solid fa-check"></i> Validar Código';
+                        digitInputs.forEach(i => i.classList.add('is-error'));
+                        if (errorMsg) {
+                            errorMsg.style.display = 'flex';
+                            errorMsg.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${verifyRes.error || 'Código incorreto ou expirado. Tente novamente.'}`;
+                        }
+                        digitInputs[0].focus();
+                    }
+                });
+            }
+        }
+
+        function openOtpModal(email, code) {
+            const modal = document.getElementById('modal-otp-cadastro');
+            if (!modal) return;
+
+            pendingRegistration.email = email;
+            pendingRegistration.currentOtpCode = code;
+
+            const emailDisplay = document.getElementById('otp-target-email');
+            if (emailDisplay) emailDisplay.textContent = email;
+
+            const codeDisplay = document.getElementById('otp-dev-code-display');
+            if (codeDisplay) codeDisplay.textContent = code;
+
+            const errorMsg = document.getElementById('otp-error-msg');
+            if (errorMsg) errorMsg.style.display = 'none';
+
+            const btnConfirm = document.getElementById('btn-confirm-otp');
+            if (btnConfirm) {
+                btnConfirm.disabled = true;
+                btnConfirm.innerHTML = '<i class="fa-solid fa-check"></i> Validar Código';
+                btnConfirm.style.background = '';
+            }
+
+            const digitInputs = modal.querySelectorAll('.otp-digit-input');
+            digitInputs.forEach(i => {
+                i.value = '';
+                i.classList.remove('is-error');
+            });
+
+            modal.classList.add('active');
+            startOtpCountdown(60);
+
+            setTimeout(() => {
+                if (digitInputs[0]) digitInputs[0].focus();
+            }, 150);
+        }
+
+        window.openOtpModal = openOtpModal;
+
+        window.closeOtpModal = function () {
+            const modal = document.getElementById('modal-otp-cadastro');
+            if (modal) modal.classList.remove('active');
+            if (otpTimerInterval) clearInterval(otpTimerInterval);
+            const btnSubmit = document.getElementById('btn-submit-register');
+            if (btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<i class="fa-solid fa-envelope-circle-check"></i> Validar Dados e Enviar Código por E-mail';
+            }
+        };
+
+        window.fillTestOtp = function () {
+            if (!pendingRegistration.currentOtpCode) return;
+            const modal = document.getElementById('modal-otp-cadastro');
+            if (!modal) return;
+            const digitInputs = modal.querySelectorAll('.otp-digit-input');
+            const chars = pendingRegistration.currentOtpCode.split('');
+            chars.forEach((c, i) => {
+                if (digitInputs[i]) digitInputs[i].value = c;
+            });
+            const btnConfirm = document.getElementById('btn-confirm-otp');
+            if (btnConfirm) btnConfirm.disabled = false;
+            if (digitInputs[5]) digitInputs[5].focus();
+        };
+
+        window.resendOtpCode = async function () {
+            if (!pendingRegistration.email) return;
+            const btnResend = document.getElementById('btn-resend-otp');
+            if (btnResend) btnResend.style.display = 'none';
+
+            let otpRes = { codigo: Math.floor(100000 + Math.random() * 900000).toString() };
+            if (window.SBPS_Supabase) {
+                otpRes = await window.SBPS_Supabase.generateOtp(pendingRegistration.email, 'confirmacao_cadastro');
+            }
+
+            pendingRegistration.currentOtpCode = otpRes.codigo;
+            const codeDisplay = document.getElementById('otp-dev-code-display');
+            if (codeDisplay) codeDisplay.textContent = otpRes.codigo;
+
+            if (typeof showToastMessage === 'function') {
+                showToastMessage(`Novo código enviado para ${pendingRegistration.email}: [ ${otpRes.codigo} ]`);
+            }
+            startOtpCountdown(60);
+        };
+
+        function startOtpCountdown(seconds) {
+            if (otpTimerInterval) clearInterval(otpTimerInterval);
+            let remaining = seconds;
+            const timerText = document.getElementById('otp-countdown-text');
+            const secondsEl = document.getElementById('otp-timer-seconds');
+            const btnResend = document.getElementById('btn-resend-otp');
+
+            if (timerText) timerText.style.display = 'inline';
+            if (btnResend) btnResend.style.display = 'none';
+            if (secondsEl) secondsEl.textContent = remaining + 's';
+
+            otpTimerInterval = setInterval(() => {
+                remaining--;
+                if (secondsEl) secondsEl.textContent = remaining + 's';
+                if (remaining <= 0) {
+                    clearInterval(otpTimerInterval);
+                    if (timerText) timerText.style.display = 'none';
+                    if (btnResend) btnResend.style.display = 'inline-flex';
+                }
+            }, 1000);
         }
 
         const fixoInput = document.getElementById('reg-fixo');
@@ -1499,6 +1984,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (sc.url.startsWith('#')) {
                     const tabId = sc.url.substring(1);
                     switchTab(tabId, sc.title);
+                } else if (sc.url.includes('eventos.html') || sc.url.includes('associado.html')) {
+                    window.open(sc.url, '_blank', 'noopener,noreferrer');
                 } else {
                     window.location.href = sc.url;
                 }

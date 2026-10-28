@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css?v=5">
-    <link rel="stylesheet" href="../style/associado.css?v=14">
+    <link rel="stylesheet" href="../style/associado.css?v=16">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Estilos Adicionais -->
     <style>
@@ -75,7 +75,7 @@
                 </form>
 
                 <!-- Form Cadastro (Exclusivo Pessoa Física) -->
-                <form id="form-register" style="display: none;">
+                <form id="form-register" style="display: none;" novalidate>
                     <div class="associe-header-banner">
                         <h2 class="associe-main-title">Associe-se à SBPS</h2>
                         <p class="associe-subtitle">Preencha o formulário cadastral abaixo com seus dados para concluir seu registro de associado.</p>
@@ -116,18 +116,21 @@
                             <div class="form-group col-span-1">
                                 <label><span class="req-star">*</span> CPF</label>
                                 <input type="text" id="reg-cpf" class="form-control" placeholder="000.000.000-00" maxlength="14" required>
-                                <small class="field-help-hint"><i class="fa-solid fa-shield-halved"></i> Validação com dígitos verificadores</small>
+                                <div id="cpf-feedback" class="field-feedback-box" style="display: none;"></div>
+                                <small class="field-help-hint"><i class="fa-solid fa-shield-halved"></i> Validação oficial (Módulo 11)</small>
                             </div>
 
                             <div class="form-group col-span-1">
                                 <label><span class="req-star">*</span> RG</label>
                                 <input type="text" id="reg-rg" class="form-control" placeholder="00.000.000-0" maxlength="14" required>
+                                <div id="rg-feedback" class="field-feedback-box" style="display: none;"></div>
                                 <small class="field-help-hint"><i class="fa-solid fa-shield-halved"></i> Validação com dígito verificador</small>
                             </div>
 
                             <div class="form-group col-span-1">
                                 <label><span class="req-star">*</span> Data de Nascimento</label>
                                 <input type="date" id="reg-nasc" class="form-control" required>
+                                <div id="nasc-feedback" class="field-feedback-box" style="display: none;"></div>
                                 <small class="field-help-hint"><i class="fa-solid fa-circle-exclamation"></i> Permitido a partir de 18 anos</small>
                             </div>
 
@@ -168,32 +171,19 @@
                         </div>
                     </div>
 
-                    <!-- SEÇÃO 2: Informações de Contato com Códigos de Verificação -->
+                    <!-- SEÇÃO 2: Informações de Contato -->
                     <div class="assoc-section-container">
                         <div class="assoc-section-heading">
-                            <h3>INFORMAÇÕES DE CONTATO (COM VERIFICAÇÃO EM 2 ETAPAS)</h3>
+                            <h3>INFORMAÇÕES DE CONTATO</h3>
                         </div>
 
                         <div class="assoc-form-grid">
-                            <!-- Celular com Código de Confirmação -->
+                            <!-- Celular / WhatsApp -->
                             <div class="form-group col-span-2">
                                 <label><span class="req-star">*</span> Tel. Celular / WhatsApp</label>
-                                <div class="input-with-action-btn">
-                                    <input type="tel" id="reg-celular" class="form-control" placeholder="(00) 90000-0000" maxlength="15" required>
-                                    <button type="button" id="btn-send-phone-code" class="btn-send-code">
-                                        <i class="fa-solid fa-paper-plane"></i> Enviar Código
-                                    </button>
-                                </div>
-                                <div class="code-verification-row" id="row-phone-code" style="display: none;">
-                                    <input type="text" id="reg-phone-code" class="form-control code-input" placeholder="Código (6 dígitos)" maxlength="6">
-                                    <button type="button" id="btn-verify-phone-code" class="btn-verify-code">
-                                        <i class="fa-solid fa-check"></i> Validar Celular
-                                    </button>
-                                </div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
-                                    <small class="field-help-hint"><i class="fa-brands fa-whatsapp"></i> Receba o token no seu celular</small>
-                                    <span id="badge-phone-status" class="verification-badge badge-pending"><i class="fa-solid fa-clock"></i> Não verificado</span>
-                                </div>
+                                <input type="tel" id="reg-celular" class="form-control" placeholder="(00) 90000-0000" maxlength="15" required>
+                                <div id="celular-feedback" class="field-feedback-box" style="display: none;"></div>
+                                <small class="field-help-hint"><i class="fa-brands fa-whatsapp"></i> Celular com DDD para notificações e comunicados</small>
                             </div>
 
                             <div class="form-group col-span-1">
@@ -206,30 +196,18 @@
                                 <input type="tel" id="reg-fixo" class="form-control" placeholder="(00) 0000-0000" maxlength="14">
                             </div>
 
-                            <!-- E-mail Principal com Código de Confirmação -->
+                            <!-- E-mail Principal -->
                             <div class="form-group col-span-2">
                                 <label><span class="req-star">*</span> E-mail Principal</label>
-                                <div class="input-with-action-btn">
-                                    <input type="email" id="reg-email" class="form-control" placeholder="seu.email@exemplo.com" required>
-                                    <button type="button" id="btn-send-email-code" class="btn-send-code">
-                                        <i class="fa-solid fa-paper-plane"></i> Enviar Código
-                                    </button>
-                                </div>
-                                <div class="code-verification-row" id="row-email-code" style="display: none;">
-                                    <input type="text" id="reg-email-code" class="form-control code-input" placeholder="Código (6 dígitos)" maxlength="6">
-                                    <button type="button" id="btn-verify-email-code" class="btn-verify-code">
-                                        <i class="fa-solid fa-check"></i> Validar E-mail
-                                    </button>
-                                </div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
-                                    <small class="field-help-hint"><i class="fa-solid fa-envelope"></i> E-mail para notificações e acesso</small>
-                                    <span id="badge-email-status" class="verification-badge badge-pending"><i class="fa-solid fa-clock"></i> Não verificado</span>
-                                </div>
+                                <input type="email" id="reg-email" class="form-control" placeholder="seu.email@exemplo.com" required>
+                                <div id="email-feedback" class="field-feedback-box" style="display: none;"></div>
+                                <small class="field-help-hint"><i class="fa-solid fa-shield-halved"></i> Um código de segurança será enviado para confirmação</small>
                             </div>
 
                             <div class="form-group col-span-2">
                                 <label><span class="req-star">*</span> Confirmação do E-mail Principal</label>
                                 <input type="email" id="reg-email-confirm" class="form-control" placeholder="Repita seu e-mail principal" required>
+                                <div id="email-confirm-feedback" class="field-feedback-box" style="display: none;"></div>
                             </div>
 
                             <div class="form-group col-span-4">
@@ -335,12 +313,22 @@
                                     </ul>
                                 </div>
                             </div>
+
+                            <!-- Termo de Adesão ao Estatuto e LGPD -->
+                            <div class="form-group col-span-4" style="margin-top: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px;">
+                                <label class="custom-checkbox-container" style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; margin: 0;">
+                                    <input type="checkbox" id="reg-termo-lgpd" required style="margin-top: 3px; width: 18px; height: 18px; accent-color: var(--assoc-secondary); cursor: pointer;">
+                                    <span style="font-size: 0.88rem; color: #334155; line-height: 1.45;">
+                                        Declaro que todas as informações prestadas são verídicas, que li e concordo com o <a href="estatuto.html" target="_blank" rel="noopener noreferrer" style="color: var(--assoc-primary); font-weight: 600; text-decoration: underline;">Estatuto Social da SBPS</a> e autorizo expressamente o tratamento dos meus dados cadastrais estritamente para finalidades associativas e institucionais, nos termos da <a href="estatuto.html" target="_blank" rel="noopener noreferrer" style="color: var(--assoc-primary); font-weight: 600; text-decoration: underline;">Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)</a>.
+                                    </span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
                     <div class="assoc-form-footer">
-                        <button type="submit" class="btn-assoc-submit">
-                            <i class="fa-solid fa-user-plus"></i> Concluir Cadastro de Associado
+                        <button type="submit" id="btn-submit-register" class="btn-assoc-submit">
+                            <i class="fa-solid fa-envelope-circle-check"></i> Validar Dados e Enviar Código por E-mail
                         </button>
                     </div>
                 </form>
@@ -859,19 +847,149 @@
             <div id="tab-outros" class="tab-panel">
                 <div class="panel-card">
                     <div class="panel-header">
-                        <h2 class="panel-title"><i class="fa-solid fa-folder-open"></i> Documentos Institucionais & Apoio</h2>
+                        <h2 class="panel-title"><i class="fa-solid fa-folder-open"></i> Documentos de Apoio & Atas Oficiais</h2>
                     </div>
+                    <p style="font-size:0.9rem; color:var(--assoc-text-muted); margin-bottom:24px;">
+                        Acesse e faça o download dos atos normativos, atas de assembleias gerais, editais de convocação e certidões de registro público da SBPS.
+                    </p>
 
-                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:20px; margin-bottom:30px;">
-                        <div style="padding:15px; border:1px solid #ddd; border-radius:6px;">
-                            <h4 style="color:var(--assoc-primary);"><i class="fa-solid fa-file-pdf"></i> Atas de Assembleias Antigas</h4>
-                            <p style="font-size:0.85rem; color:#666; margin:6px 0;">Registros históricos oficiais.</p>
-                            <a href="../pages/estatuto.html" style="color:var(--assoc-secondary); font-weight:700; font-size:0.85rem;">Baixar Arquivo PDF</a>
+                    <div class="doc-apoio-grid">
+                        <!-- 1. Ata de Eleição e Posse -->
+                        <div class="doc-apoio-card">
+                            <div>
+                                <div class="doc-apoio-header">
+                                    <span class="doc-badge ata"><i class="fa-solid fa-stamp"></i> Ata Homologada</span>
+                                </div>
+                                <h4 class="doc-apoio-title">Ata da Assembleia Geral Eletiva e Posse da Diretoria Executiva</h4>
+                                <div class="doc-apoio-meta">
+                                    <i class="fa-regular fa-calendar"></i> 10 de fevereiro de 2026 • PDF (178 KB)
+                                </div>
+                                <p class="doc-apoio-desc">
+                                    Homologação oficial dos resultados da Assembleia Geral Ordinária, formalizando a posse da Diretoria Executiva (Gestão 2026–2028) sob presidência do Dr. José Pinto da Mota Filho e composição do Conselho Fiscal.
+                                </p>
+                            </div>
+                            <div class="doc-apoio-actions">
+                                <a href="../documentos/sbps-ata_eleicao-2026.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
+                                    <i class="fa-solid fa-eye"></i> Visualizar Ata
+                                </a>
+                                <a href="../documentos/sbps-ata_eleicao-2026.pdf" download="SBPS-Ata-Eleicao-Posse-2026.pdf" class="btn-doc-download">
+                                    <i class="fa-solid fa-download"></i> Baixar PDF
+                                </a>
+                            </div>
                         </div>
-                        <div style="padding:15px; border:1px solid #ddd; border-radius:6px;">
-                            <h4 style="color:var(--assoc-primary);"><i class="fa-solid fa-file-pdf"></i> Manual de Marca SBPS</h4>
-                            <p style="font-size:0.85rem; color:#666; margin:6px 0;">Logotipos em alta definição para sócios.</p>
-                            <a href="javascript:void(0)" onclick="showToastMessage('Download do Pacote de Logotipos iniciado!')" style="color:var(--assoc-secondary); font-weight:700; font-size:0.85rem;">Baixar Pacote de Mídias</a>
+
+                        <!-- 2. Edital de Convocação -->
+                        <div class="doc-apoio-card">
+                            <div>
+                                <div class="doc-apoio-header">
+                                    <span class="doc-badge edital"><i class="fa-solid fa-bullhorn"></i> Edital de Convocação</span>
+                                </div>
+                                <h4 class="doc-apoio-title">Edital de Convocação – Assembleia Geral Extraordinária</h4>
+                                <div class="doc-apoio-meta">
+                                    <i class="fa-regular fa-calendar"></i> 15 de janeiro de 2026 • PDF (215 KB)
+                                </div>
+                                <p class="doc-apoio-desc">
+                                    Convocação formal de todos os associados da SBPS para deliberação eletiva, prazos de registro de chapas, requisitos estatutários de elegibilidade e critérios de votação presencial e telepresencial.
+                                </p>
+                            </div>
+                            <div class="doc-apoio-actions">
+                                <a href="../documentos/edital-convocacao-2026.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
+                                    <i class="fa-solid fa-eye"></i> Visualizar Edital
+                                </a>
+                                <a href="../documentos/edital-convocacao-2026.pdf" download="SBPS-Edital-Convocacao-2026.pdf" class="btn-doc-download">
+                                    <i class="fa-solid fa-download"></i> Baixar PDF
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 3. Certidão Cartorária Multiplus RCPJ -->
+                        <div class="doc-apoio-card">
+                            <div>
+                                <div class="doc-apoio-header">
+                                    <span class="doc-badge cartorio"><i class="fa-solid fa-building-columns"></i> Registro em Cartório</span>
+                                </div>
+                                <h4 class="doc-apoio-title">Certidão de Registro Civil de Pessoas Jurídicas – RCPJ</h4>
+                                <div class="doc-apoio-meta">
+                                    <i class="fa-regular fa-building"></i> Cartório Multiplus RCPJ / DF • PDF (161 KB)
+                                </div>
+                                <p class="doc-apoio-desc">
+                                    Certidão comprobatória de regularidade registral dos atos constitutivos, atas e representação civil ativa da associação, em conformidade com o Código Civil brasileiro.
+                                </p>
+                            </div>
+                            <div class="doc-apoio-actions">
+                                <a href="../documentos/mutiplus-cartorio.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
+                                    <i class="fa-solid fa-eye"></i> Visualizar Certidão
+                                </a>
+                                <a href="../documentos/mutiplus-cartorio.pdf" download="SBPS-Certidao-Registro-Cartorio.pdf" class="btn-doc-download">
+                                    <i class="fa-solid fa-download"></i> Baixar PDF
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 4. Estatuto Social Oficial -->
+                        <div class="doc-apoio-card">
+                            <div>
+                                <div class="doc-apoio-header">
+                                    <span class="doc-badge estatuto"><i class="fa-solid fa-book"></i> Estatuto Social</span>
+                                </div>
+                                <h4 class="doc-apoio-title">Estatuto Social Oficial da SBPS (Consolidado)</h4>
+                                <div class="doc-apoio-meta">
+                                    <i class="fa-solid fa-scale-balanced"></i> Documento Oficial Registrado
+                                </div>
+                                <p class="doc-apoio-desc">
+                                    Texto integral com as normas institucionais, princípios fundamentais, organização administrativa, direitos e prerrogativas exclusivos dos associados da entidade.
+                                </p>
+                            </div>
+                            <div class="doc-apoio-actions">
+                                <a href="estatuto.html" target="_blank" rel="noopener noreferrer" class="btn-doc-view" style="flex:1;">
+                                    <i class="fa-solid fa-book-open"></i> Acessar Estatuto Completo
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 5. Modelo de Certificação -->
+                        <div class="doc-apoio-card">
+                            <div>
+                                <div class="doc-apoio-header">
+                                    <span class="doc-badge certificado"><i class="fa-solid fa-certificate"></i> Certificação Oficial</span>
+                                </div>
+                                <h4 class="doc-apoio-title">Regulamento e Modelo de Certificação Acadêmica SBPS</h4>
+                                <div class="doc-apoio-meta">
+                                    <i class="fa-solid fa-award"></i> Código de Autenticidade • PDF (471 KB)
+                                </div>
+                                <p class="doc-apoio-desc">
+                                    Regulamento oficial que estabelece os critérios de validação de carga horária para cursos e simpósios, além do espelho padrão de certificação com código verificador.
+                                </p>
+                            </div>
+                            <div class="doc-apoio-actions">
+                                <a href="../documentos/certificado-presenca.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
+                                    <i class="fa-solid fa-eye"></i> Visualizar Modelo
+                                </a>
+                                <a href="../documentos/certificado-presenca.pdf" download="SBPS-Modelo-Certificacao.pdf" class="btn-doc-download">
+                                    <i class="fa-solid fa-download"></i> Baixar PDF
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 6. Manual de Marca e Mídias -->
+                        <div class="doc-apoio-card">
+                            <div>
+                                <div class="doc-apoio-header">
+                                    <span class="doc-badge midia"><i class="fa-solid fa-palette"></i> Identidade Visual</span>
+                                </div>
+                                <h4 class="doc-apoio-title">Manual de Marca e Pacote de Logotipos SBPS</h4>
+                                <div class="doc-apoio-meta">
+                                    <i class="fa-solid fa-file-zipper"></i> Arquivos em Alta Definição (PNG/SVG)
+                                </div>
+                                <p class="doc-apoio-desc">
+                                    Pacote institucional com o manual de uso da marca e logotipos oficiais da SBPS em alta resolução para aplicação em assinaturas, artigos, petições e materiais acadêmicos.
+                                </p>
+                            </div>
+                            <div class="doc-apoio-actions">
+                                <a href="javascript:void(0)" onclick="showToastMessage('Download do Pacote de Logotipos iniciado!')" class="btn-doc-download" style="flex:1;">
+                                    <i class="fa-solid fa-download"></i> Baixar Pacote de Mídias
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -989,9 +1107,9 @@
             <div class="footer-col">
                 <h3>Acesso rápido</h3>
                 <ul>
-                    <li><a href="associado.html">Área do associado</a></li>
+                    <li><a href="associado.html" target="_blank" rel="noopener noreferrer">Área do associado</a></li>
                     <li><a href="noticias.html">Publicações</a></li>
-                    <li><a href="eventos.html">Cursos & Eventos</a></li>
+                    <li><a href="eventos.html" target="_blank" rel="noopener noreferrer">Cursos & Eventos</a></li>
                     <li><a href="notas.html">Notas</a></li>
                 </ul>
             </div>
@@ -1030,11 +1148,65 @@
         </div>
     </div>
 
+    <!-- Modal de Validação de E-mail por Código OTP (6 dígitos) -->
+    <div id="modal-otp-cadastro" class="sbps-modal-overlay">
+        <div class="sbps-modal-card">
+            <button type="button" class="sbps-modal-close" onclick="window.closeOtpModal()">&times;</button>
+            <div class="sbps-modal-icon-header">
+                <div class="otp-icon-bubble">
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+                </div>
+            </div>
+            <h3 class="sbps-modal-title">Confirme seu E-mail</h3>
+            <p class="sbps-modal-desc">
+                Para validar e proteger seu cadastro na SBPS, enviamos um código de segurança de 6 dígitos para:<br>
+                <strong id="otp-target-email" class="otp-highlight-email">seu.email@exemplo.com</strong>
+            </p>
+
+            <!-- Card de Ambiente de Testes / SBPS -->
+            <div id="otp-dev-hint" class="otp-test-hint-box">
+                <div class="hint-header">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Código de Validação (Ambiente de Testes):</span>
+                </div>
+                <div class="hint-body">
+                    <span class="hint-code-val" id="otp-dev-code-display">------</span>
+                    <button type="button" class="btn-copy-test-code" onclick="window.fillTestOtp()">Preencher Código</button>
+                </div>
+                <small>Gravado no banco de dados Supabase e pronto para validação imediata.</small>
+            </div>
+
+            <!-- 6 Dígitos OTP -->
+            <div class="otp-inputs-wrapper" id="otp-digits-container">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-input" data-index="0" autofocus>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-input" data-index="1">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-input" data-index="2">
+                <span class="otp-separator">-</span>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-input" data-index="3">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-input" data-index="4">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-input" data-index="5">
+            </div>
+
+            <div id="otp-error-msg" class="otp-error-feedback" style="display: none;"></div>
+
+            <button type="button" id="btn-confirm-otp" class="btn-otp-action" disabled>
+                <i class="fa-solid fa-check"></i> Validar Código
+            </button>
+
+            <div class="otp-timer-row">
+                <span id="otp-countdown-text">Não recebeu? Reenviar código em <strong id="otp-timer-seconds">60s</strong></span>
+                <button type="button" id="btn-resend-otp" class="btn-link-resend" style="display: none;" onclick="window.resendOtpCode()">
+                    <i class="fa-solid fa-rotate-right"></i> Reenviar novo código
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Supabase JS SDK & Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../scripts/supabase-client.js?v=1"></script>
+    <script src="../scripts/supabase-client.js?v=2"></script>
     <script src="../scripts/script.js?v=9999"></script>
-    <script src="../scripts/associado.js?v=99995"></script>
+    <script src="../scripts/associado.js?v=99996"></script>
 </body>
 
 </html>

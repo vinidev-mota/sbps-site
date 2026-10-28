@@ -1570,3 +1570,492 @@ body.associado-page .main-footer {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* --------------------------------------------------------------------------
+   Seção de Documentos de Apoio e Atas (Aba 9: Outros)
+   -------------------------------------------------------------------------- */
+.doc-apoio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 22px;
+    margin-bottom: 35px;
+}
+
+.doc-apoio-card {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.doc-apoio-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    border-color: #CBD5E1;
+}
+
+.doc-apoio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.doc-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.doc-badge.ata {
+    background: #059669;
+    color: #ffffff;
+}
+
+.doc-badge.edital {
+    background: #005670;
+    color: #ffffff;
+}
+
+.doc-badge.cartorio {
+    background: #1E293B;
+    color: #ffffff;
+}
+
+.doc-badge.estatuto {
+    background: #D97706;
+    color: #ffffff;
+}
+
+.doc-badge.certificado {
+    background: #4F46E5;
+    color: #ffffff;
+}
+
+.doc-badge.midia {
+    background: #0284C7;
+    color: #ffffff;
+}
+
+.doc-apoio-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--assoc-primary);
+    line-height: 1.4;
+    margin: 8px 0;
+}
+
+.doc-apoio-meta {
+    font-size: 0.8rem;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.doc-apoio-desc {
+    font-size: 0.88rem;
+    color: #475569;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    flex-grow: 1;
+}
+
+.doc-apoio-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px solid #F1F5F9;
+}
+
+.btn-doc-view {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 14px;
+    background: #F8FAFC;
+    color: var(--assoc-primary);
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-doc-view:hover {
+    background: var(--assoc-primary);
+    color: #ffffff;
+    border-color: var(--assoc-primary);
+}
+
+.btn-doc-download {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 14px;
+    background: var(--assoc-primary);
+    color: #ffffff;
+    border: 1px solid var(--assoc-primary);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-doc-download:hover {
+    background: var(--assoc-secondary);
+    border-color: var(--assoc-secondary);
+    color: #ffffff;
+}
+
+@media (max-width: 640px) {
+    .doc-apoio-grid {
+        grid-template-columns: 1fr;
+    }
+    .doc-apoio-actions {
+        flex-direction: column;
+    }
+    .btn-doc-view, .btn-doc-download {
+        width: 100%;
+    }
+}
+
+/* ==========================================================================
+   MODAL DE VALIDAÇÃO OTP & FEEDBACKS DE CADASTRO
+   ========================================================================== */
+.sbps-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 24, 54, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.sbps-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.sbps-modal-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 18px;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4);
+    position: relative;
+    padding: 34px 28px;
+    text-align: center;
+    transform: scale(0.92) translateY(15px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sbps-modal-overlay.active .sbps-modal-card {
+    transform: scale(1) translateY(0);
+}
+
+.sbps-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.sbps-modal-close:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.otp-icon-bubble {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #005670 0%, #059669 100%);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    box-shadow: 0 8px 22px rgba(5, 150, 105, 0.3);
+    margin-bottom: 14px;
+}
+
+.sbps-modal-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+}
+
+.sbps-modal-desc {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+.otp-highlight-email {
+    color: #005670;
+    font-weight: 700;
+    word-break: break-all;
+}
+
+.otp-test-hint-box {
+    background: #f0fdf4;
+    border: 1px dashed #86efac;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.hint-header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #166534;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hint-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    gap: 10px;
+}
+
+.hint-code-val {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 5px;
+    color: #15803d;
+    background: #ffffff;
+    padding: 4px 12px;
+    border-radius: 8px;
+    border: 1px solid #bbf7d0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.btn-copy-test-code {
+    background: #059669;
+    color: #ffffff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.btn-copy-test-code:hover {
+    background: #047857;
+}
+
+.otp-test-hint-box small {
+    display: block;
+    font-size: 0.72rem;
+    color: #166534;
+    margin-top: 7px;
+    line-height: 1.35;
+    opacity: 0.9;
+}
+
+.otp-inputs-wrapper {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.otp-digit-input {
+    width: 48px;
+    height: 56px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    text-align: center;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.otp-digit-input:focus {
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.22);
+    background: #ffffff;
+}
+
+.otp-digit-input.is-error {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+.otp-separator {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #94a3b8;
+    user-select: none;
+}
+
+.otp-error-feedback {
+    color: #dc2626;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: -8px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-otp-action {
+    width: 100%;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #005670 0%, #059669 100%);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 86, 112, 0.25);
+}
+
+.btn-otp-action:hover:not(:disabled) {
+    box-shadow: 0 6px 20px rgba(0, 86, 112, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-otp-action:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.otp-timer-row {
+    margin-top: 18px;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.btn-link-resend {
+    background: none;
+    border: none;
+    color: #005670;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-link-resend:hover {
+    color: #059669;
+}
+
+/* Feedback de Validação dos Campos de Cadastro */
+.field-feedback-box {
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+}
+
+.field-feedback-box.checking {
+    color: #0284c7;
+}
+
+.field-feedback-box.available, .field-feedback-box.valid {
+    color: #059669;
+}
+
+.field-feedback-box.taken, .field-feedback-box.invalid {
+    color: #dc2626;
+}
+
+.form-control.is-invalid {
+    border-color: #ef4444 !important;
+    background-color: #fffdfd;
+}
+
+.form-control.is-valid {
+    border-color: #10b981 !important;
+}
+
+@media (max-width: 480px) {
+    .sbps-modal-card {
+        padding: 26px 18px;
+    }
+    .otp-inputs-wrapper {
+        gap: 5px;
+    }
+    .otp-digit-input {
+        width: 38px;
+        height: 48px;
+        font-size: 1.4rem;
+    }
+}
+
+

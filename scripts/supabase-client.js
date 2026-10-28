@@ -39,6 +39,8 @@
                 rg: userData.rg || '',
                 nascimento: userData.nascimento || null,
                 genero: userData.genero || '',
+                tipo_associado: userData.tipo_associado || 'SBPS Pessoa Física',
+                pessoa_tipo: userData.pessoa_tipo || 'Pessoa Física',
                 profissao: userData.profissao || '',
                 origem_sbps: userData.origem_sbps || '',
                 origem_outro_desc: userData.origem_outro_desc || '',
@@ -57,6 +59,8 @@
                 login_usuario: userData.login_usuario || userData.email,
                 foto_url: userData.foto_url || '',
                 status: userData.status || 'Ativo',
+                email_verificado: userData.email_verificado ?? false,
+                termo_lgpd_aceito_em: userData.termo_lgpd_aceito_em || new Date().toISOString(),
                 updated_at: new Date().toISOString()
             };
 
@@ -197,6 +201,59 @@
                 return !(data && data.length > 0);
             } catch (err) {
                 console.error('Erro na checagem de usuário único:', err);
+                return true;
+            }
+        },
+
+        /**
+         * Verifica se o e-mail já está cadastrado no banco Supabase
+         */
+        isEmailAvailable: async function (email) {
+            const client = getSupabaseClient();
+            if (!client || !email) return true;
+
+            try {
+                const cleanEmail = email.trim().toLowerCase();
+                const { data, error } = await client
+                    .from('associados')
+                    .select('id, email')
+                    .eq('email', cleanEmail);
+
+                if (error) {
+                    console.warn('Consulta de e-mail único no Supabase:', error.message);
+                    return true;
+                }
+
+                return !(data && data.length > 0);
+            } catch (err) {
+                console.error('Erro na checagem de e-mail único:', err);
+                return true;
+            }
+        },
+
+        /**
+         * Verifica se o CPF já está cadastrado no banco Supabase
+         */
+        isCpfAvailable: async function (cpf) {
+            const client = getSupabaseClient();
+            if (!client || !cpf) return true;
+
+            try {
+                const cleanCpf = cpf.replace(/\D/g, '');
+                const formattedCpf = cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                const { data, error } = await client
+                    .from('associados')
+                    .select('id, cpf')
+                    .or(`cpf.eq.${cleanCpf},cpf.eq.${formattedCpf}`);
+
+                if (error) {
+                    console.warn('Consulta de CPF único no Supabase:', error.message);
+                    return true;
+                }
+
+                return !(data && data.length > 0);
+            } catch (err) {
+                console.error('Erro na checagem de CPF único:', err);
                 return true;
             }
         },
@@ -454,6 +511,198 @@
                 return { success: true, authUser: authData.user, profile };
             } catch (err) {
                 return { success: false, error: err.message || 'Erro de autenticação.' };
+            }
+        },
+
+        /**
+         * Gera ou recupera o identificador único e persistente do dispositivo atual (Device Fingerprint)
+         */
+        getDeviceToken: function () {
+            let token = localStorage.getItem('sbps_device_token');
+            if (!token) {
+                const entropy = [
+                    navigator.userAgent,
+                    navigator.platform || '',
+                    navigator.language || '',
+                    screen.width + 'x' + screen.height,
+                    new Date().getTimezoneOffset(),
+                    Math.random().toString(36).substring(2),
+                    Date.now().toString(36)
+                ].join('|');
+                let hash = 0;
+                for (let i = 0; i < entropy.length; i++) {
+                    hash = ((hash << 5) - hash) + entropy.charCodeAt(i);
+                    hash |= 0;
+                }
+                token = 'dev_' + Math.abs(hash).toString(36) + '_' + Date.now().toString(36);
+                localStorage.setItem('sbps_device_token', token);
+            }
+            return token;
+        },
+
+        getDeviceName: function () {
+            const ua = navigator.userAgent;
+            let browser = 'Navegador Web';
+            if (ua.includes('Edg/')) browser = 'Edge';
+            else if (ua.includes('Chrome/')) browser = 'Chrome';
+            else if (ua.includes('Firefox/')) browser = 'Firefox';
+            else if (ua.includes('Safari/') && !ua.includes('Chrome/')) browser = 'Safari';
+
+            let os = 'Dispositivo';
+            if (ua.includes('Windows')) os = 'Windows';
+            else if (ua.includes('Android')) os = 'Android';
+            else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+            else if (ua.includes('Macintosh')) os = 'macOS';
+            else if (ua.includes('Linux')) os = 'Linux';
+
+            return `${browser} no ${os}`;
+        },
+
+        /**
+         * Gera código numérico OTP de 6 dígitos no Supabase
+         */
+        generateOtp: async function (email, finalidade = 'confirmacao_cadastro') {
+            const client = getSupabaseClient();
+            if (!client) {
+                const fallbackCode = Math.floor(100000 + Math.random() * 900000).toString();
+                sessionStorage.setItem('sbps_temp_otp_' + email.trim().toLowerCase(), fallbackCode);
+                return { success: true, codigo: fallbackCode, localOnly: true };
+            }
+
+            try {
+                const { data, error } = await client.rpc('gerar_codigo_otp', {
+                    p_email: email.trim().toLowerCase(),
+                    p_finalidade: finalidade
+                });
+                if (error) throw error;
+                return data;
+            } catch (err) {
+                console.warn('Erro ao chamar gerar_codigo_otp no Supabase:', err);
+                const fallbackCode = Math.floor(100000 + Math.random() * 900000).toString();
+                sessionStorage.setItem('sbps_temp_otp_' + email.trim().toLowerCase(), fallbackCode);
+                return { success: true, codigo: fallbackCode, fallback: true };
+            }
+        },
+
+        /**
+         * Valida código numérico OTP de 6 dígitos no Supabase
+         */
+        verifyOtp: async function (email, codigo, finalidade = 'confirmacao_cadastro') {
+            const client = getSupabaseClient();
+            const cleanEmail = email.trim().toLowerCase();
+            const cleanCode = codigo.trim();
+
+            if (!client) {
+                const stored = sessionStorage.getItem('sbps_temp_otp_' + cleanEmail);
+                if (stored === cleanCode) {
+                    sessionStorage.removeItem('sbps_temp_otp_' + cleanEmail);
+                    return { success: true, message: 'Código validado com sucesso (local).' };
+                }
+                return { success: false, error: 'Código inválido ou expirado.' };
+            }
+
+            try {
+                const { data, error } = await client.rpc('validar_codigo_otp', {
+                    p_email: cleanEmail,
+                    p_codigo: cleanCode,
+                    p_finalidade: finalidade
+                });
+                if (error) throw error;
+                return data;
+            } catch (err) {
+                console.warn('Erro ao chamar validar_codigo_otp no Supabase:', err);
+                const stored = sessionStorage.getItem('sbps_temp_otp_' + cleanEmail);
+                if (stored === cleanCode) {
+                    sessionStorage.removeItem('sbps_temp_otp_' + cleanEmail);
+                    return { success: true, message: 'Código validado com sucesso.' };
+                }
+                return { success: false, error: err.message || 'Erro ao validar código.' };
+            }
+        },
+
+        /**
+         * Verifica se o dispositivo atual é confiável para o usuário (regra dos 7 dias e 2FA sempre)
+         */
+        checkTrustedDevice: async function (email) {
+            const client = getSupabaseClient();
+            const cleanEmail = email.trim().toLowerCase();
+            const deviceToken = this.getDeviceToken();
+
+            if (!client) {
+                const localExp = localStorage.getItem('sbps_trusted_' + cleanEmail);
+                if (localExp && Number(localExp) > Date.now()) {
+                    return { confiavel: true };
+                }
+                return { confiavel: false, motivo: 'novo_ou_expirado' };
+            }
+
+            try {
+                const { data, error } = await client.rpc('verificar_dispositivo_confiavel', {
+                    p_email: cleanEmail,
+                    p_device_token: deviceToken
+                });
+                if (error) throw error;
+                return data;
+            } catch (err) {
+                console.warn('Erro ao verificar dispositivo confiável:', err);
+                const localExp = localStorage.getItem('sbps_trusted_' + cleanEmail);
+                if (localExp && Number(localExp) > Date.now()) {
+                    return { confiavel: true };
+                }
+                return { confiavel: false, motivo: 'novo_ou_expirado' };
+            }
+        },
+
+        /**
+         * Registra ou renova o dispositivo atual como confiável por 7 dias
+         */
+        registerTrustedDevice: async function (email) {
+            const client = getSupabaseClient();
+            const cleanEmail = email.trim().toLowerCase();
+            const deviceToken = this.getDeviceToken();
+            const deviceName = this.getDeviceName();
+
+            const expires = Date.now() + 7 * 24 * 60 * 60 * 1000;
+            localStorage.setItem('sbps_trusted_' + cleanEmail, expires.toString());
+
+            if (!client) return { success: true, valid_until: new Date(expires).toISOString() };
+
+            try {
+                const { data, error } = await client.rpc('registrar_ou_renovar_dispositivo', {
+                    p_email: cleanEmail,
+                    p_device_token: deviceToken,
+                    p_device_name: deviceName,
+                    p_ip: ''
+                });
+                if (error) throw error;
+                return data;
+            } catch (err) {
+                console.warn('Erro ao registrar dispositivo confiável no Supabase:', err);
+                return { success: true, valid_until: new Date(expires).toISOString() };
+            }
+        },
+
+        /**
+         * Simula a aprovação do pagamento da taxa de R$ 100 em ambiente de teste
+         */
+        simulatePaymentApproval: async function (email, metodo = 'SIMULADO') {
+            const client = getSupabaseClient();
+            const cleanEmail = email.trim().toLowerCase();
+
+            if (!client) {
+                return { success: true, message: 'Pagamento simulado aprovado com sucesso (local).' };
+            }
+
+            try {
+                const { data, error } = await client.rpc('simular_aprovacao_pagamento', {
+                    p_email: cleanEmail,
+                    p_metodo: metodo
+                });
+                if (error) throw error;
+                return data;
+            } catch (err) {
+                console.warn('Erro ao simular pagamento no Supabase:', err);
+                return { success: true, message: 'Pagamento aprovado em modo de teste.' };
             }
         }
     };
