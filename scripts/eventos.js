@@ -71,6 +71,24 @@
             status: 'Ativo',
             tema: 'RPPS',
             area: 'Direito Público'
+        },
+        {
+            id: 'evt-104',
+            titulo: 'Webinar Introdutório: Prática no INSS Digital e Meu INSS',
+            tipo: 'webinar online',
+            dateStr: '15/09/2026 às 19:30',
+            cargaHoraria: '4h',
+            palavraChave: 'INSS_DIGITAL_2026',
+            local: 'Online via YouTube SBPS',
+            valor: 'Gratuito',
+            resumo: 'Aprenda os primeiros passos para protocolar requerimentos administrativos sem exigências indevidas.',
+            programacao: '19:30 Abertura | 20:00 Acesso ao Meu INSS Gov.br | 21:00 Perguntas e Respostas',
+            palestrante: 'Dr. Roberto Mota',
+            palestrante_email: 'roberto.mota@sbps.org.br',
+            img: '../images/ref1.jpg',
+            status: 'Ativo',
+            tema: 'RGPS',
+            area: 'Direito Previdenciário'
         }
     ];
 
@@ -632,6 +650,8 @@
             renderSugestoesTab();
         } else if (tabId === 'ajuda') {
             renderAjudaTab();
+        } else if (tabId === 'criar-eventos') {
+            atualizarBannerCotaCriarEvento();
         }
     }
 
@@ -698,6 +718,9 @@
                 <h1 class="evt-page-title"><i class="fa-solid fa-house"></i> Dashboard do Palestrante</h1>
             </div>
 
+            <!-- Widget de Cota e Plano Mensal do Palestrante -->
+            <div id="palestrante-dashboard-quota-widget" style="margin-bottom:25px;"></div>
+
             <div class="evt-create-event-banner-card" onclick="window.switchTab('criar-eventos', true)">
                 <div class="evt-create-card-left">
                     <div class="evt-plus-square-icon"><i class="fa-solid fa-plus"></i></div>
@@ -731,6 +754,7 @@
         `;
 
         attachCardActionListeners(container);
+        renderPalestranteDashboardQuotaWidget();
     }
 
     function createEventCardHTML(evt, mode) {
@@ -841,10 +865,7 @@
             const btnInsc = document.getElementById('btn-do-view-inscricao');
             if (btnInsc) {
                 btnInsc.onclick = () => {
-                    state.enrollments.push(evt.id);
-                    saveData();
-                    showToast('Inscrição realizada com sucesso!');
-                    window.switchTab('dashboard', true);
+                    handleEnrollmentClick(evt.id);
                 };
             }
         }
@@ -854,12 +875,7 @@
         container.querySelectorAll('.btn-inscrever').forEach(btn => {
             btn.onclick = () => {
                 const id = btn.getAttribute('data-id');
-                if (!state.enrollments.includes(id)) {
-                    state.enrollments.push(id);
-                    saveData();
-                    showToast('Inscrição realizada com sucesso!');
-                    renderTabContent('dashboard');
-                }
+                handleEnrollmentClick(id);
             };
         });
 
@@ -2244,9 +2260,22 @@
         }
     }
 
-    function handleCriarEvento(e) {
+    async function handleCriarEvento(e) {
         e.preventDefault();
-        
+
+        // 0. Checagem de Cota e Mensalidade do Palestrante
+        const email = state.currentUser ? state.currentUser.email : 'palestrante@sbps.org.br';
+        let quota = { pode_publicar: true };
+        if (window.SBPS_Supabase && typeof window.SBPS_Supabase.getPalestranteQuota === 'function') {
+            quota = await window.SBPS_Supabase.getPalestranteQuota(email);
+        }
+
+        if (quota && !quota.pode_publicar) {
+            window.abrirModalPagamentoPalestrante();
+            showToast('Limite de 5 publicações atingido. Escolha uma opção para continuar publicando.');
+            return;
+        }
+
         // 1. Coletar dados
         const titulo = document.getElementById('create-evt-titulo').value;
         const carga = document.getElementById('create-evt-carga').value;
@@ -2304,7 +2333,8 @@
                     titulo, 
                     dateStr: dataFormatada, 
                     cargaHoraria: carga + 'h',
-                    palestrante: state.currentUser.nome, 
+                    palestrante: state.currentUser ? state.currentUser.nome : 'Palestrante', 
+                    palestrante_email: state.currentUser ? state.currentUser.email : '',
                     status: 'Ativo', 
                     tipo: 'curso presencial',
                     resumo: 'Novo evento publicado e sincronizado.',
@@ -2314,7 +2344,13 @@
                 };
                 state.events.push(novo);
                 saveData();
-                showToast('Evento publicado com sucesso!');
+
+                // Incrementa contador de publicações no Supabase e cache local
+                if (window.SBPS_Supabase && typeof window.SBPS_Supabase.incrementPalestranteQuotaUsage === 'function') {
+                    await window.SBPS_Supabase.incrementPalestranteQuotaUsage(email);
+                }
+
+                showToast('Evento publicado com sucesso! (Cota atualizada)');
                 
                 document.getElementById('evt-modal-confirmar-evento').style.display = 'none';
                 document.getElementById('form-criar-evento-palestrante').reset();
@@ -2481,12 +2517,484 @@
         return escaped;
     }
 
-    function showToast(msg) {
-        const toast = document.createElement('div');
-        toast.style.cssText = 'position:fixed; bottom:25px; left:50%; transform:translateX(-50%); background:#0F3B5F; color:#fff; padding:10px 22px; border-radius:25px; font-weight:700; font-size:0.85rem; z-index:9999; box-shadow:0 8px 20px rgba(0,0,0,0.3);';
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2500);
+    /* ==========================================================================
+       SISTEMA DE PAGAMENTO E GESTÃO DE COTAS (PARTICIPANTE E PALESTRANTE)
+       ========================================================================== */
+
+    // Utilitário para gerar Pix Copia e Cola / Payload
+    function generatePixString(valor, descricao, txid) {
+        const num = typeof valor === 'number' ? valor : parseFloat(valor) || 0;
+        const vStr = num.toFixed(2);
+        return `00020126580014BR.GOV.BCB.PIX0136contato@sbps.org.br520400005303986540${vStr.length < 10 ? '0' + vStr.length : vStr.length}${vStr}5802BR5925SBPS PREVIDENCIA SOCIAL6006RECIFE62190515${txid || 'SBPS' + Date.now().toString().slice(-8)}6304`;
+    }
+
+    // Interceptador Central de Inscrições
+    function handleEnrollmentClick(evtId) {
+        const evt = state.events.find(e => e.id === evtId);
+        if (!evt) return;
+
+        if (state.enrollments.includes(evtId)) {
+            showToast('Você já está inscrito neste evento.');
+            return;
+        }
+
+        const price = parseEventPrice(evt.valor || evt.taxas);
+        if (price <= 0) {
+            // Evento Gratuito: inscrição imediata
+            state.enrollments.push(evtId);
+            saveData();
+            showToast('Inscrição gratuita confirmada com sucesso!');
+            renderTabContent(state.currentTab || 'dashboard');
+        } else {
+            // Evento Pago: abre modal de pagamento com o valor definido pelo palestrante
+            window.abrirModalPagamentoInscricao(evtId);
+        }
+    }
+
+    // 1. Inscrição do Participante em Evento Pago
+    window.abrirModalPagamentoInscricao = function (evtId) {
+        const evt = state.events.find(e => e.id === evtId);
+        if (!evt) return;
+
+        state.pendingInscricao = evt;
+        const modal = document.getElementById('modal-pagamento-inscricao');
+        if (!modal) return;
+
+        const body = document.getElementById('modal-inscricao-body');
+        const success = document.getElementById('modal-inscricao-success');
+        const footer = document.getElementById('modal-inscricao-footer');
+        if (body) body.style.display = 'block';
+        if (success) success.style.display = 'none';
+        if (footer) footer.style.display = 'flex';
+
+        // Preencher dados do evento
+        const elTitulo = document.getElementById('pay-insc-titulo');
+        const elPalestrante = document.getElementById('pay-insc-palestrante');
+        const elData = document.getElementById('pay-insc-data');
+        const elTipo = document.getElementById('pay-insc-tipo');
+        const elValor = document.getElementById('pay-insc-valor');
+
+        if (elTitulo) elTitulo.textContent = evt.titulo;
+        if (elPalestrante) elPalestrante.innerHTML = `<i class="fa-solid fa-user-tie"></i> Palestrante: <strong>${escapeHTML(evt.palestrante || 'SBPS')}</strong>`;
+        if (elData) elData.innerHTML = `<i class="fa-solid fa-calendar"></i> Data: ${escapeHTML(evt.dateStr || 'Em breve')}`;
+        if (elTipo) elTipo.textContent = (evt.tipo || 'Evento').toUpperCase();
+
+        const numPrice = parseEventPrice(evt.valor || evt.taxas);
+        const formattedPrice = `R$ ${numPrice.toFixed(2).replace('.', ',')}`;
+        if (elValor) elValor.textContent = formattedPrice;
+
+        // Gerar QR Code e Copia e Cola
+        const pixPayload = generatePixString(numPrice, evt.titulo, 'INSC' + Date.now().toString().slice(-6));
+        const qrImg = document.getElementById('pay-insc-qr-img');
+        const pixInput = document.getElementById('pay-insc-pix-copia');
+        if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pixPayload)}`;
+        if (pixInput) pixInput.value = pixPayload;
+
+        // Resetar para método PIX
+        window.switchInscricaoPaymentMethod('pix');
+
+        modal.style.display = 'flex';
+    };
+
+    window.fecharModalPagamentoInscricao = function () {
+        const modal = document.getElementById('modal-pagamento-inscricao');
+        if (modal) modal.style.display = 'none';
+        state.pendingInscricao = null;
+    };
+
+    window.switchInscricaoPaymentMethod = function (method) {
+        const btnPix = document.getElementById('tab-btn-pay-pix');
+        const btnCard = document.getElementById('tab-btn-pay-card');
+        const contentPix = document.getElementById('pay-insc-method-pix');
+        const contentCard = document.getElementById('pay-insc-method-card');
+        const btnProcessarCard = document.getElementById('btn-processar-card-inscricao');
+
+        if (method === 'pix') {
+            if (btnPix) btnPix.classList.add('active');
+            if (btnCard) btnCard.classList.remove('active');
+            if (contentPix) contentPix.style.display = 'block';
+            if (contentCard) contentCard.style.display = 'none';
+            if (btnProcessarCard) btnProcessarCard.style.display = 'none';
+        } else {
+            if (btnCard) btnCard.classList.add('active');
+            if (btnPix) btnPix.classList.remove('active');
+            if (contentPix) contentPix.style.display = 'none';
+            if (contentCard) contentCard.style.display = 'block';
+            if (btnProcessarCard) btnProcessarCard.style.display = 'inline-flex';
+        }
+    };
+
+    window.copiarCodigoPixInscricao = function () {
+        const input = document.getElementById('pay-insc-pix-copia');
+        if (!input) return;
+        navigator.clipboard.writeText(input.value).then(() => {
+            showToast('Código Pix copiado para a área de transferência!');
+        }).catch(() => {
+            input.select();
+            document.execCommand('copy');
+            showToast('Código Pix copiado!');
+        });
+    };
+
+    window.simularAprovacaoPagamentoInscricao = async function () {
+        const evt = state.pendingInscricao;
+        if (!evt) return;
+
+        const btnSimular = document.getElementById('btn-simular-pay-inscricao');
+        const origText = btnSimular ? btnSimular.innerHTML : '';
+        if (btnSimular) {
+            btnSimular.disabled = true;
+            btnSimular.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando aprovação...';
+        }
+
+        try {
+            const numPrice = parseEventPrice(evt.valor || evt.taxas);
+            const userEmail = state.currentUser ? state.currentUser.email : 'participante@sbps.org.br';
+            const userName = state.currentUser ? state.currentUser.nome : 'Participante SBPS';
+
+            let receipt = null;
+            if (window.SBPS_Supabase && typeof window.SBPS_Supabase.payEventEnrollment === 'function') {
+                receipt = await window.SBPS_Supabase.payEventEnrollment(userEmail, userName, evt.id, evt.titulo, numPrice, 'SIMULADO');
+            } else {
+                receipt = {
+                    payment_id: 'pay_sim_' + Date.now(),
+                    valor: numPrice
+                };
+            }
+
+            // Confirma inscrição no estado e localStorage
+            if (!state.enrollments.includes(evt.id)) {
+                state.enrollments.push(evt.id);
+                saveData();
+            }
+
+            // Montar comprovante na tela
+            const detailsContainer = document.getElementById('pay-insc-receipt-details');
+            if (detailsContainer) {
+                detailsContainer.innerHTML = `
+                    <div class="evt-receipt-row"><span>ID do Pagamento:</span> <strong>${receipt.payment_id || 'PAY-CONFIRMED'}</strong></div>
+                    <div class="evt-receipt-row"><span>Evento / Curso:</span> <strong>${escapeHTML(evt.titulo)}</strong></div>
+                    <div class="evt-receipt-row"><span>Participante:</span> <strong>${escapeHTML(userName)}</strong></div>
+                    <div class="evt-receipt-row"><span>Método:</span> <strong>PIX Instantâneo (Simulado)</strong></div>
+                    <div class="evt-receipt-row"><span>Status:</span> <strong style="color:#059669;"><i class="fa-solid fa-circle-check"></i> CONFIRMADO / APROVADO</strong></div>
+                    <div class="evt-receipt-row"><span>Valor Pago:</span> <strong>R$ ${numPrice.toFixed(2).replace('.', ',')}</strong></div>
+                `;
+            }
+
+            const body = document.getElementById('modal-inscricao-body');
+            const success = document.getElementById('modal-inscricao-success');
+            const footer = document.getElementById('modal-inscricao-footer');
+            if (body) body.style.display = 'none';
+            if (success) success.style.display = 'block';
+            if (footer) footer.style.display = 'none';
+
+            showToast('Pagamento aprovado e inscrição confirmada!');
+        } catch (err) {
+            console.error('Erro ao aprovar pagamento:', err);
+            showToast('Erro ao processar pagamento simulado.');
+        } finally {
+            if (btnSimular) {
+                btnSimular.disabled = false;
+                btnSimular.innerHTML = origText;
+            }
+        }
+    };
+
+    window.processarCartaoInscricao = function () {
+        const num = (document.getElementById('pay-card-num') || {}).value || '';
+        const nome = (document.getElementById('pay-card-nome') || {}).value || '';
+        if (!num || !nome) {
+            alert('Por favor, preencha os dados do cartão de crédito para prosseguir.');
+            return;
+        }
+        window.simularAprovacaoPagamentoInscricao();
+    };
+
+    window.concluirInscricaoSucesso = function () {
+        window.fecharModalPagamentoInscricao();
+        switchTab('inscricoes', true);
+    };
+
+    // 2. Sistema de Cotas e Pagamento do Palestrante (Mensalidade R$ 50 base / Avulso R$ 10 / Upgrade de Pacotes)
+    let selectedPalestranteOption = 'avulso'; // 'avulso' ou 'upgrade'
+    let selectedPackage = { plan: 'Pacote 10', valor: 90.00, limite: 10 };
+
+    window.abrirModalPagamentoPalestrante = async function () {
+        const modal = document.getElementById('modal-pagamento-palestrante');
+        if (!modal) return;
+
+        const body = document.getElementById('modal-palestrante-body');
+        const success = document.getElementById('modal-palestrante-success');
+        const footer = document.getElementById('modal-palestrante-footer');
+        if (body) body.style.display = 'block';
+        if (success) success.style.display = 'none';
+        if (footer) footer.style.display = 'flex';
+
+        // Carregar cota
+        const email = state.currentUser ? state.currentUser.email : 'palestrante@sbps.org.br';
+        let quota = { plano_tipo: 'Base', plano_limite: 5, publicacoes_count: 0, publicacoes_extras: 0, limite_total: 5, disponiveis: 5 };
+        if (window.SBPS_Supabase && typeof window.SBPS_Supabase.getPalestranteQuota === 'function') {
+            quota = await window.SBPS_Supabase.getPalestranteQuota(email);
+        }
+
+        const elPlano = document.getElementById('quota-banner-plano');
+        const elResumo = document.getElementById('quota-banner-resumo');
+        const elDisp = document.getElementById('quota-disponiveis-num');
+
+        if (elPlano) elPlano.textContent = quota.plano_tipo ? `Plano ${quota.plano_tipo}` : 'Plano Base';
+        if (elResumo) {
+            if (quota.plano_tipo === 'Ilimitado') {
+                elResumo.textContent = `Você possui publicações ilimitadas ativas (${quota.publicacoes_count} publicadas).`;
+            } else {
+                elResumo.textContent = `Você utilizou ${quota.publicacoes_count} de ${quota.limite_total} publicações este mês.`;
+            }
+        }
+        if (elDisp) {
+            elDisp.textContent = quota.plano_tipo === 'Ilimitado' ? '∞' : quota.disponiveis;
+        }
+
+        // Selecionar Opção Padrão (Avulso R$ 10)
+        window.selecionarOpcaoPalestrante('avulso');
+        window.switchPalestrantePaymentMethod('pix');
+
+        modal.style.display = 'flex';
+    };
+
+    window.fecharModalPagamentoPalestrante = function () {
+        const modal = document.getElementById('modal-pagamento-palestrante');
+        if (modal) modal.style.display = 'none';
+    };
+
+    window.selecionarOpcaoPalestrante = function (tipo) {
+        selectedPalestranteOption = tipo;
+        const cardAvulso = document.getElementById('card-choice-avulso');
+        const cardUpgrade = document.getElementById('card-choice-upgrade');
+        const sectionPackages = document.getElementById('section-packages-grid');
+        const itemTitle = document.getElementById('palestrante-selected-item-title');
+        const itemPrice = document.getElementById('palestrante-selected-item-price');
+
+        if (tipo === 'avulso') {
+            if (cardAvulso) cardAvulso.classList.add('active');
+            if (cardUpgrade) cardUpgrade.classList.remove('active');
+            if (sectionPackages) sectionPackages.style.display = 'none';
+            if (itemTitle) itemTitle.textContent = 'Publicação Avulsa (+1 cota para evento ou curso)';
+            if (itemPrice) itemPrice.textContent = 'R$ 10,00';
+            atualizarPixPalestrante(10.00, 'Publicação Avulsa SBPS');
+        } else {
+            if (cardUpgrade) cardUpgrade.classList.add('active');
+            if (cardAvulso) cardAvulso.classList.remove('active');
+            if (sectionPackages) sectionPackages.style.display = 'block';
+            window.escolherPacotePalestrante(selectedPackage.plan, selectedPackage.valor, selectedPackage.limite);
+        }
+    };
+
+    window.escolherPacotePalestrante = function (plano, valor, limite) {
+        selectedPackage = { plan: plano, valor: valor, limite: limite };
+        document.querySelectorAll('.evt-pkg-item').forEach(item => {
+            if (item.getAttribute('data-plan') === plano) item.classList.add('active');
+            else item.classList.remove('active');
+        });
+
+        const itemTitle = document.getElementById('palestrante-selected-item-title');
+        const itemPrice = document.getElementById('palestrante-selected-item-price');
+
+        const limiteTexto = limite === 999999 ? 'Publicações Ilimitadas' : `${limite} publicações por mês`;
+        if (itemTitle) itemTitle.textContent = `Assinatura Mensal: ${plano} (${limiteTexto})`;
+        if (itemPrice) itemPrice.textContent = `R$ ${valor.toFixed(2).replace('.', ',')} / mês`;
+
+        atualizarPixPalestrante(valor, `Plano ${plano} SBPS`);
+    };
+
+    function atualizarPixPalestrante(valor, descricao) {
+        const payload = generatePixString(valor, descricao, 'PAL' + Date.now().toString().slice(-6));
+        const qrImg = document.getElementById('pay-pal-qr-img');
+        const inputPix = document.getElementById('pay-pal-pix-copia');
+        if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(payload)}`;
+        if (inputPix) inputPix.value = payload;
+    }
+
+    window.switchPalestrantePaymentMethod = function (method) {
+        const btnPix = document.getElementById('tab-btn-pal-pix');
+        const btnCard = document.getElementById('tab-btn-pal-card');
+        const contentPix = document.getElementById('pay-pal-method-pix');
+        const contentCard = document.getElementById('pay-pal-method-card');
+
+        if (method === 'pix') {
+            if (btnPix) btnPix.classList.add('active');
+            if (btnCard) btnCard.classList.remove('active');
+            if (contentPix) contentPix.style.display = 'block';
+            if (contentCard) contentCard.style.display = 'none';
+        } else {
+            if (btnCard) btnCard.classList.add('active');
+            if (btnPix) btnPix.classList.remove('active');
+            if (contentPix) contentPix.style.display = 'none';
+            if (contentCard) contentCard.style.display = 'block';
+        }
+    };
+
+    window.copiarCodigoPixPalestrante = function () {
+        const input = document.getElementById('pay-pal-pix-copia');
+        if (!input) return;
+        navigator.clipboard.writeText(input.value).then(() => {
+            showToast('Código Pix copiado para a área de transferência!');
+        }).catch(() => {
+            input.select();
+            document.execCommand('copy');
+            showToast('Código Pix copiado!');
+        });
+    };
+
+    window.simularAprovacaoPagamentoPalestrante = async function () {
+        const btnSimular = document.getElementById('btn-simular-pay-palestrante');
+        const origText = btnSimular ? btnSimular.innerHTML : '';
+        if (btnSimular) {
+            btnSimular.disabled = true;
+            btnSimular.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aprovando pagamento...';
+        }
+
+        try {
+            const email = state.currentUser ? state.currentUser.email : 'palestrante@sbps.org.br';
+            let res = null;
+
+            if (selectedPalestranteOption === 'avulso') {
+                if (window.SBPS_Supabase && typeof window.SBPS_Supabase.buyExtraPublication === 'function') {
+                    res = await window.SBPS_Supabase.buyExtraPublication(email, 'SIMULADO');
+                } else {
+                    res = { success: true, payment_id: 'pay_avulso_' + Date.now() };
+                }
+            } else {
+                if (window.SBPS_Supabase && typeof window.SBPS_Supabase.updatePalestrantePlan === 'function') {
+                    res = await window.SBPS_Supabase.updatePalestrantePlan(email, selectedPackage.plan, 'SIMULADO');
+                } else {
+                    res = { success: true, payment_id: 'pay_plan_' + Date.now() };
+                }
+            }
+
+            // Montar recibo
+            const details = document.getElementById('pay-pal-receipt-details');
+            const valorCobrado = selectedPalestranteOption === 'avulso' ? 10.00 : selectedPackage.valor;
+            const itemNome = selectedPalestranteOption === 'avulso' ? 
+                'Publicação Avulsa (+1 cota extra de evento/curso)' : 
+                `Upgrade Mensal: ${selectedPackage.plan} (${selectedPackage.limite === 999999 ? 'Ilimitado' : selectedPackage.limite + ' publicações/mês'})`;
+
+            if (details) {
+                details.innerHTML = `
+                    <div class="evt-receipt-row"><span>ID da Transação:</span> <strong>${res.payment_id || 'PAY-CONFIRMED'}</strong></div>
+                    <div class="evt-receipt-row"><span>Item Adquirido:</span> <strong>${escapeHTML(itemNome)}</strong></div>
+                    <div class="evt-receipt-row"><span>Palestrante:</span> <strong>${escapeHTML(state.currentUser ? state.currentUser.nome : email)}</strong></div>
+                    <div class="evt-receipt-row"><span>Status:</span> <strong style="color:#059669;"><i class="fa-solid fa-circle-check"></i> ATIVO / APROVADO</strong></div>
+                    <div class="evt-receipt-row"><span>Total Pago:</span> <strong>R$ ${valorCobrado.toFixed(2).replace('.', ',')}</strong></div>
+                `;
+            }
+
+            const body = document.getElementById('modal-palestrante-body');
+            const success = document.getElementById('modal-palestrante-success');
+            const footer = document.getElementById('modal-palestrante-footer');
+            if (body) body.style.display = 'none';
+            if (success) success.style.display = 'block';
+            if (footer) footer.style.display = 'none';
+
+            showToast('Pagamento do palestrante aprovado! Sua cota foi atualizada.');
+        } catch (err) {
+            console.error('Erro na aprovação do palestrante:', err);
+            showToast('Erro ao processar simulação de pagamento.');
+        } finally {
+            if (btnSimular) {
+                btnSimular.disabled = false;
+                btnSimular.innerHTML = origText;
+            }
+        }
+    };
+
+    window.concluirPagamentoPalestranteSucesso = function () {
+        window.fecharModalPagamentoPalestrante();
+        if (state.currentTab === 'criar-eventos') {
+            atualizarBannerCotaCriarEvento();
+        } else {
+            renderPalestranteDashboard();
+        }
+    };
+
+    // Renderiza Widget de Cota no Dashboard do Palestrante
+    async function renderPalestranteDashboardQuotaWidget() {
+        const widget = document.getElementById('palestrante-dashboard-quota-widget');
+        if (!widget || !state.currentUser || state.userRole !== 'palestrante') return;
+
+        let quota = { pode_publicar: true, plano_tipo: 'Base', limite_total: 5, publicacoes_count: 0, disponiveis: 5, plano_valor: 50.00 };
+        if (window.SBPS_Supabase && typeof window.SBPS_Supabase.getPalestranteQuota === 'function') {
+            quota = await window.SBPS_Supabase.getPalestranteQuota(state.currentUser.email);
+        }
+
+        widget.innerHTML = `
+            <div class="evt-quota-status-banner">
+                <div style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="evt-badge-tag" style="background:#0F3B5F; color:#fff; font-weight:700;">Plano ${escapeHTML(quota.plano_tipo || 'Base')} (R$ ${Number(quota.plano_valor || 50).toFixed(2).replace('.', ',')}/mês)</span>
+                        <span class="evt-badge-status-ativo"><i class="fa-solid fa-circle-check"></i> Mensalidade Ativa</span>
+                    </div>
+                    <h3 style="margin:8px 0 4px 0; color:var(--evt-primary); font-size:1.15rem;">
+                        ${quota.plano_tipo === 'Ilimitado' ? 'Publicações Ilimitadas' : `${quota.publicacoes_count} de ${quota.limite_total} publicações utilizadas este mês`}
+                    </h3>
+                    <p style="margin:0; font-size:0.82rem; color:var(--evt-text-muted);">
+                        Seu plano inclui até ${quota.plano_tipo === 'Ilimitado' ? 'infinitas' : quota.limite_total} publicações (eventos ou cursos). Caso precise publicar além da sua cota, você tem 2 opções: comprar avulso (+1 por R$ 10) ou aumentar seu pacote mensal.
+                    </p>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
+                    <div class="evt-quota-progress-circle">
+                        <span>${quota.plano_tipo === 'Ilimitado' ? '∞' : quota.disponiveis}</span>
+                        <small>restantes</small>
+                    </div>
+                    <button type="button" class="evt-btn-card-secondary" style="width:auto; padding:6px 14px; font-size:0.8rem;" onclick="window.abrirModalPagamentoPalestrante()">
+                        <i class="fa-solid fa-crown" style="color:#D97706;"></i> Planos & Avulsos
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    // Atualiza o banner de cota no formulário de Criar Eventos
+    async function atualizarBannerCotaCriarEvento() {
+        const container = document.getElementById('quota-criar-evento-banner-container');
+        if (!container || !state.currentUser || state.userRole !== 'palestrante') return;
+
+        let quota = { pode_publicar: true, plano_tipo: 'Base', limite_total: 5, publicacoes_count: 0, disponiveis: 5, plano_valor: 50.00 };
+        if (window.SBPS_Supabase && typeof window.SBPS_Supabase.getPalestranteQuota === 'function') {
+            quota = await window.SBPS_Supabase.getPalestranteQuota(state.currentUser.email);
+        }
+
+        if (quota.pode_publicar) {
+            container.innerHTML = `
+                <div class="evt-quota-status-banner" style="margin:0; padding:15px 20px;">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="evt-badge-tag" style="background:#0F3B5F; color:#fff; font-weight:700;">Plano ${escapeHTML(quota.plano_tipo || 'Base')}</span>
+                            <span class="evt-badge-status-ativo"><i class="fa-solid fa-circle-check"></i> Cota Disponível</span>
+                        </div>
+                        <h4 style="margin:4px 0 2px 0; color:var(--evt-primary);">
+                            ${quota.plano_tipo === 'Ilimitado' ? 'Publicações Ilimitadas' : `Você utilizou ${quota.publicacoes_count} de ${quota.limite_total} publicações (${quota.disponiveis} restantes)`}
+                        </h4>
+                        <p style="margin:0; font-size:0.78rem; color:var(--evt-text-muted);">
+                            Mensalidade R$ ${Number(quota.plano_valor || 50).toFixed(2).replace('.', ',')}/mês para até ${quota.plano_tipo === 'Ilimitado' ? 'infinitas' : quota.limite_total} publicações (eventos ou cursos).
+                        </p>
+                    </div>
+                    <button type="button" class="evt-btn-card-secondary" style="width:auto; padding:8px 14px; font-size:0.8rem;" onclick="window.abrirModalPagamentoPalestrante()">
+                        <i class="fa-solid fa-sliders"></i> Gerenciar Cota / Upgrade
+                    </button>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <div class="evt-quota-alert-box" style="margin:0;">
+                    <div class="evt-quota-alert-text">
+                        <h4><i class="fa-solid fa-triangle-exclamation"></i> Limite de Publicações Atingido (${quota.publicacoes_count}/${quota.limite_total})</h4>
+                        <p>Você atingiu a cota máxima de 5 publicações deste mês. Para publicar mais, compre uma publicação avulsa por <strong>R$ 10,00</strong> ou aumente seu pacote mensal.</p>
+                    </div>
+                    <button type="button" class="evt-btn-primary" style="width:auto; margin:0; padding:9px 16px; background:#DC2626;" onclick="window.abrirModalPagamentoPalestrante()">
+                        <i class="fa-solid fa-bolt"></i> Liberar Publicação (R$ 10 ou Pacote)
+                    </button>
+                </div>
+            `;
+        }
     }
 
     window.switchTab = switchTab;

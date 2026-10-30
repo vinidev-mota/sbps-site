@@ -669,6 +669,404 @@ CREATE OR REPLACE FUNCTION public.processar_webhook_asaas(p_event TEXT, p_paymen
 RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN RETURN sbps.processar_webhook_asaas(p_event, p_payment_id, p_payload); END; $$;
 
+-- ============================================================================
+-- 5. ÁREA DE EVENTOS: PALESTRANTES, COTAS E PAGAMENTOS (SCHEMA sbps)
+-- ============================================================================
+
+-- Tabela de Palestrantes com Cotas e Assinatura Mensal
+CREATE TABLE IF NOT EXISTS sbps.palestrantes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    nome TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    cpf TEXT,
+    escolaridade TEXT,
+    area TEXT,
+    profissao TEXT,
+    experiencia TEXT,
+    sobre TEXT,
+    pix TEXT,
+    banco TEXT,
+    agencia TEXT,
+    conta TEXT,
+    
+    -- Mensalidade e Cotas de Publicação (Eventos e Cursos)
+    -- Base: R$ 50/mês para até 5 publicações no total
+    -- Pacotes: 10 (R$90), 15 (R$125), 20 (R$155), Ilimitado (R$170)
+    plano_tipo TEXT DEFAULT 'Base', 
+    plano_limite INT DEFAULT 5,
+    publicacoes_count INT DEFAULT 0,
+    publicacoes_extras INT DEFAULT 0,
+    plano_status TEXT DEFAULT 'Ativo',
+    plano_valor NUMERIC(10,2) DEFAULT 50.00,
+    plano_vencimento TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '30 days'),
+    
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Migração de colunas para sbps.palestrantes caso já exista
+ALTER TABLE sbps.palestrantes ADD COLUMN IF NOT EXISTS plano_tipo TEXT DEFAULT 'Base';
+ALTER TABLE sbps.palestrantes ADD COLUMN IF NOT EXISTS plano_limite INT DEFAULT 5;
+ALTER TABLE sbps.palestrantes ADD COLUMN IF NOT EXISTS publicacoes_count INT DEFAULT 0;
+ALTER TABLE sbps.palestrantes ADD COLUMN IF NOT EXISTS publicacoes_extras INT DEFAULT 0;
+ALTER TABLE sbps.palestrantes ADD COLUMN IF NOT EXISTS plano_status TEXT DEFAULT 'Ativo';
+ALTER TABLE sbps.palestrantes ADD COLUMN IF NOT EXISTS plano_valor NUMERIC(10,2) DEFAULT 50.00;
+ALTER TABLE sbps.palestrantes ADD COLUMN IF NOT EXISTS plano_vencimento TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '30 days');
+
+-- Tabela de Participantes de Eventos
+CREATE TABLE IF NOT EXISTS sbps.participantes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    nome TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    cpf TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Tabela de Pagamentos da Área de Eventos (Mensalidades, Avulsas e Inscrições)
+CREATE TABLE IF NOT EXISTS sbps.pagamentos_eventos (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tipo TEXT NOT NULL, -- 'mensalidade_palestrante', 'publicacao_avulsa', 'upgrade_palestrante', 'inscricao_evento'
+    email TEXT NOT NULL,
+    usuario_nome TEXT,
+    referencia_id TEXT, -- ID do evento ou plano
+    descricao TEXT NOT NULL,
+    valor NUMERIC(10,2) NOT NULL,
+    metodo TEXT NOT NULL DEFAULT 'SIMULADO', -- 'PIX', 'CREDIT_CARD', 'SIMULADO'
+    status TEXT NOT NULL DEFAULT 'Aprovado', -- 'Aprovado', 'Pendente', 'Cancelado'
+    asaas_payment_id TEXT,
+    payload JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Tabela de Inscrições de Participantes em Eventos/Cursos
+CREATE TABLE IF NOT EXISTS sbps.inscricoes_eventos (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    evento_id TEXT NOT NULL,
+    evento_titulo TEXT,
+    participante_email TEXT NOT NULL,
+    participante_nome TEXT,
+    valor_pago NUMERIC(10,2) DEFAULT 0.00,
+    status_pagamento TEXT DEFAULT 'Aprovado', -- 'Aprovado', 'Gratuito', 'Pendente'
+    pagamento_id UUID REFERENCES sbps.pagamentos_eventos(id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE (evento_id, participante_email)
+);
+
+-- Habilita RLS
+ALTER TABLE sbps.palestrantes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sbps.participantes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sbps.pagamentos_eventos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sbps.inscricoes_eventos ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Acesso palestrantes" ON sbps.palestrantes;
+CREATE POLICY "Acesso palestrantes" ON sbps.palestrantes FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Acesso participantes" ON sbps.participantes;
+CREATE POLICY "Acesso participantes" ON sbps.participantes FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Acesso pagamentos_eventos" ON sbps.pagamentos_eventos;
+CREATE POLICY "Acesso pagamentos_eventos" ON sbps.pagamentos_eventos FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Acesso inscricoes_eventos" ON sbps.inscricoes_eventos;
+CREATE POLICY "Acesso inscricoes_eventos" ON sbps.inscricoes_eventos FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+-- Permissões
+GRANT ALL ON TABLE sbps.palestrantes TO authenticator, anon, authenticated, service_role;
+GRANT ALL ON TABLE sbps.participantes TO authenticator, anon, authenticated, service_role;
+GRANT ALL ON TABLE sbps.pagamentos_eventos TO authenticator, anon, authenticated, service_role;
+GRANT ALL ON TABLE sbps.inscricoes_eventos TO authenticator, anon, authenticated, service_role;
+
+-- ============================================================================
+-- RPCs PARA REGRAS DE NEGÓCIO DE COTAS E PAGAMENTOS NA ÁREA DE EVENTOS
+-- ============================================================================
+
+-- 1. Verificar Cota do Palestrante
+CREATE OR REPLACE FUNCTION sbps.verificar_cota_palestrante(p_email TEXT)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_clean_email TEXT;
+    v_palestrante RECORD;
+    v_limite_total INT;
+    v_disponiveis INT;
+    v_pode_publicar BOOLEAN;
+BEGIN
+    v_clean_email := LOWER(TRIM(p_email));
+    
+    SELECT * INTO v_palestrante 
+    FROM sbps.palestrantes 
+    WHERE LOWER(email) = v_clean_email;
+
+    -- Se não existe, cria o palestrante com o plano base padrão
+    IF v_palestrante.id IS NULL THEN
+        INSERT INTO sbps.palestrantes (
+            nome, email, plano_tipo, plano_limite, publicacoes_count, publicacoes_extras, plano_status, plano_valor
+        ) VALUES (
+            SPLIT_PART(v_clean_email, '@', 1), v_clean_email, 'Base', 5, 0, 0, 'Ativo', 50.00
+        )
+        RETURNING * INTO v_palestrante;
+    END IF;
+
+    -- Ilimitado tem 999999 de limite
+    IF v_palestrante.plano_tipo = 'Ilimitado' THEN
+        v_limite_total := 999999;
+        v_disponiveis := 999999;
+        v_pode_publicar := (v_palestrante.plano_status = 'Ativo');
+    ELSE
+        v_limite_total := COALESCE(v_palestrante.plano_limite, 5) + COALESCE(v_palestrante.publicacoes_extras, 0);
+        v_disponiveis := GREATEST(0, v_limite_total - COALESCE(v_palestrante.publicacoes_count, 0));
+        v_pode_publicar := (v_disponiveis > 0) AND (v_palestrante.plano_status = 'Ativo');
+    END IF;
+
+    RETURN jsonb_build_object(
+        'success', true,
+        'email', v_clean_email,
+        'pode_publicar', v_pode_publicar,
+        'plano_tipo', v_palestrante.plano_tipo,
+        'plano_limite', v_palestrante.plano_limite,
+        'publicacoes_extras', v_palestrante.publicacoes_extras,
+        'limite_total', v_limite_total,
+        'publicacoes_count', v_palestrante.publicacoes_count,
+        'disponiveis', v_disponiveis,
+        'plano_status', v_palestrante.plano_status,
+        'plano_valor', v_palestrante.plano_valor,
+        'plano_vencimento', v_palestrante.plano_vencimento
+    );
+END;
+$$;
+
+-- 2. Opção 1 do Palestrante: Pagar por Nova Publicação Avulsa (R$ 10,00)
+CREATE OR REPLACE FUNCTION sbps.comprar_publicacao_avulsa(p_email TEXT, p_metodo TEXT DEFAULT 'SIMULADO')
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_clean_email TEXT;
+    v_palestrante RECORD;
+    v_pay_id UUID;
+BEGIN
+    v_clean_email := LOWER(TRIM(p_email));
+
+    SELECT * INTO v_palestrante 
+    FROM sbps.palestrantes 
+    WHERE LOWER(email) = v_clean_email;
+
+    IF v_palestrante.id IS NULL THEN
+        INSERT INTO sbps.palestrantes (
+            nome, email, plano_tipo, plano_limite, publicacoes_count, publicacoes_extras, plano_status, plano_valor
+        ) VALUES (
+            SPLIT_PART(v_clean_email, '@', 1), v_clean_email, 'Base', 5, 0, 0, 'Ativo', 50.00
+        )
+        RETURNING * INTO v_palestrante;
+    END IF;
+
+    -- Registra o pagamento avulso de R$ 10,00
+    INSERT INTO sbps.pagamentos_eventos (
+        tipo, email, usuario_nome, referencia_id, descricao, valor, metodo, status, payload
+    ) VALUES (
+        'publicacao_avulsa', v_clean_email, v_palestrante.nome, 'avulso_10',
+        'Pagamento de publicação avulsa (+1 evento/curso)', 10.00, p_metodo, 'Aprovado',
+        jsonb_build_object('data', NOW(), 'origem', 'modulo_eventos', 'metodo', p_metodo)
+    )
+    RETURNING id INTO v_pay_id;
+
+    -- Concede +1 cota extra
+    UPDATE sbps.palestrantes 
+    SET publicacoes_extras = COALESCE(publicacoes_extras, 0) + 1,
+        updated_at = NOW()
+    WHERE id = v_palestrante.id;
+
+    RETURN jsonb_build_object(
+        'success', true,
+        'message', 'Publicação avulsa de R$ 10,00 aprovada! Cota de +1 publicação adicionada.',
+        'payment_id', v_pay_id,
+        'novas_extras', v_palestrante.publicacoes_extras + 1
+    );
+END;
+$$;
+
+-- 3. Opção 2 do Palestrante: Aumentar o Pacote Mensal (Base R$50, 10 por R$90, 15 por R$125, 20 por R$155, Ilimitado por R$170)
+CREATE OR REPLACE FUNCTION sbps.atualizar_plano_palestrante(p_email TEXT, p_novo_plano TEXT, p_metodo TEXT DEFAULT 'SIMULADO')
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_clean_email TEXT;
+    v_palestrante RECORD;
+    v_limite INT;
+    v_valor NUMERIC(10,2);
+    v_pay_id UUID;
+BEGIN
+    v_clean_email := LOWER(TRIM(p_email));
+
+    IF p_novo_plano = 'Base' THEN
+        v_limite := 5;
+        v_valor := 50.00;
+    ELSIF p_novo_plano = 'Pacote 10' THEN
+        v_limite := 10;
+        v_valor := 90.00;
+    ELSIF p_novo_plano = 'Pacote 15' THEN
+        v_limite := 15;
+        v_valor := 125.00;
+    ELSIF p_novo_plano = 'Pacote 20' THEN
+        v_limite := 20;
+        v_valor := 155.00;
+    ELSIF p_novo_plano = 'Ilimitado' THEN
+        v_limite := 999999;
+        v_valor := 170.00;
+    ELSE
+        RETURN jsonb_build_object('success', false, 'error', 'Pacote inválido. Escolha Base, Pacote 10, Pacote 15, Pacote 20 ou Ilimitado.');
+    END IF;
+
+    SELECT * INTO v_palestrante 
+    FROM sbps.palestrantes 
+    WHERE LOWER(email) = v_clean_email;
+
+    IF v_palestrante.id IS NULL THEN
+        INSERT INTO sbps.palestrantes (
+            nome, email, plano_tipo, plano_limite, publicacoes_count, publicacoes_extras, plano_status, plano_valor
+        ) VALUES (
+            SPLIT_PART(v_clean_email, '@', 1), v_clean_email, p_novo_plano, v_limite, 0, 0, 'Ativo', v_valor
+        )
+        RETURNING * INTO v_palestrante;
+    END IF;
+
+    -- Registra o pagamento do pacote
+    INSERT INTO sbps.pagamentos_eventos (
+        tipo, email, usuario_nome, referencia_id, descricao, valor, metodo, status, payload
+    ) VALUES (
+        'upgrade_palestrante', v_clean_email, v_palestrante.nome, p_novo_plano,
+        'Assinatura/Upgrade ' || p_novo_plano || ' (R$ ' || v_valor || '/mês)', v_valor, p_metodo, 'Aprovado',
+        jsonb_build_object('data', NOW(), 'plano', p_novo_plano, 'limite', v_limite, 'valor', v_valor, 'metodo', p_metodo)
+    )
+    RETURNING id INTO v_pay_id;
+
+    -- Atualiza plano e cota do palestrante
+    UPDATE sbps.palestrantes 
+    SET plano_tipo = p_novo_plano,
+        plano_limite = v_limite,
+        plano_valor = v_valor,
+        plano_status = 'Ativo',
+        plano_vencimento = NOW() + INTERVAL '30 days',
+        updated_at = NOW()
+    WHERE id = v_palestrante.id;
+
+    RETURN jsonb_build_object(
+        'success', true,
+        'message', 'Plano atualizado para ' || p_novo_plano || ' (R$ ' || v_valor || '/mês) com sucesso!',
+        'payment_id', v_pay_id,
+        'plano_tipo', p_novo_plano,
+        'plano_limite', v_limite,
+        'plano_valor', v_valor
+    );
+END;
+$$;
+
+-- 4. Incrementar Contador de Publicações (Chamado após criação bem sucedida)
+CREATE OR REPLACE FUNCTION sbps.incrementar_uso_cota_palestrante(p_email TEXT)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_clean_email TEXT;
+BEGIN
+    v_clean_email := LOWER(TRIM(p_email));
+    
+    UPDATE sbps.palestrantes 
+    SET publicacoes_count = COALESCE(publicacoes_count, 0) + 1,
+        updated_at = NOW()
+    WHERE LOWER(email) = v_clean_email;
+
+    RETURN sbps.verificar_cota_palestrante(v_clean_email);
+END;
+$$;
+
+-- 5. Pagamento de Inscrição em Evento pelo Participante
+CREATE OR REPLACE FUNCTION sbps.pagar_inscricao_evento(
+    p_email TEXT, 
+    p_nome TEXT, 
+    p_evento_id TEXT, 
+    p_evento_titulo TEXT, 
+    p_valor NUMERIC, 
+    p_metodo TEXT DEFAULT 'SIMULADO'
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_clean_email TEXT;
+    v_pay_id UUID;
+    v_insc_id UUID;
+BEGIN
+    v_clean_email := LOWER(TRIM(p_email));
+
+    -- Registra pagamento da inscrição
+    INSERT INTO sbps.pagamentos_eventos (
+        tipo, email, usuario_nome, referencia_id, descricao, valor, metodo, status, payload
+    ) VALUES (
+        'inscricao_evento', v_clean_email, p_nome, p_evento_id,
+        'Inscrição no Evento: ' || COALESCE(p_evento_titulo, p_evento_id), 
+        COALESCE(p_valor, 0.00), p_metodo, 'Aprovado',
+        jsonb_build_object('data', NOW(), 'evento_id', p_evento_id, 'titulo', p_evento_titulo, 'metodo', p_metodo)
+    )
+    RETURNING id INTO v_pay_id;
+
+    -- Registra inscrição
+    INSERT INTO sbps.inscricoes_eventos (
+        evento_id, evento_titulo, participante_email, participante_nome, valor_pago, status_pagamento, pagamento_id
+    ) VALUES (
+        p_evento_id, p_evento_titulo, v_clean_email, p_nome, COALESCE(p_valor, 0.00), 'Aprovado', v_pay_id
+    )
+    ON CONFLICT (evento_id, participante_email) DO UPDATE 
+    SET status_pagamento = 'Aprovado',
+        valor_pago = COALESCE(p_valor, 0.00),
+        pagamento_id = v_pay_id
+    RETURNING id INTO v_insc_id;
+
+    RETURN jsonb_build_object(
+        'success', true,
+        'message', 'Pagamento de inscrição de R$ ' || COALESCE(p_valor, 0.00) || ' aprovado com sucesso!',
+        'payment_id', v_pay_id,
+        'inscricao_id', v_insc_id,
+        'evento_id', p_evento_id
+    );
+END;
+$$;
+
+-- ALIAS NO SCHEMA PUBLIC PARA COMPATIBILIDADE .rpc()
+CREATE OR REPLACE FUNCTION public.verificar_cota_palestrante(p_email TEXT)
+RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN RETURN sbps.verificar_cota_palestrante(p_email); END; $$;
+
+CREATE OR REPLACE FUNCTION public.comprar_publicacao_avulsa(p_email TEXT, p_metodo TEXT DEFAULT 'SIMULADO')
+RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN RETURN sbps.comprar_publicacao_avulsa(p_email, p_metodo); END; $$;
+
+CREATE OR REPLACE FUNCTION public.atualizar_plano_palestrante(p_email TEXT, p_novo_plano TEXT, p_metodo TEXT DEFAULT 'SIMULADO')
+RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN RETURN sbps.atualizar_plano_palestrante(p_email, p_novo_plano, p_metodo); END; $$;
+
+CREATE OR REPLACE FUNCTION public.incrementar_uso_cota_palestrante(p_email TEXT)
+RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN RETURN sbps.incrementar_uso_cota_palestrante(p_email); END; $$;
+
+CREATE OR REPLACE FUNCTION public.pagar_inscricao_evento(p_email TEXT, p_nome TEXT, p_evento_id TEXT, p_evento_titulo TEXT, p_valor NUMERIC, p_metodo TEXT DEFAULT 'SIMULADO')
+RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN RETURN sbps.pagar_inscricao_evento(p_email, p_nome, p_evento_id, p_evento_titulo, p_valor, p_metodo); END; $$;
 
 -- Notifica a API do Supabase (PostgREST) para recarregar o cache de schemas imediatamente
 NOTIFY pgrst, 'reload schema';

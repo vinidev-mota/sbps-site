@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css?v=5">
-    <link rel="stylesheet" href="../style/associado.css?v=16">
+    <link rel="stylesheet" href="../style/associado.css?v=20">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Estilos Adicionais -->
     <style>
@@ -257,12 +257,12 @@
 
                             <div class="form-group col-span-1">
                                 <div class="label-with-checkbox">
-                                    <label for="reg-complemento"><span class="req-star">*</span> Complemento</label>
+                                    <label for="reg-complemento">Complemento</label>
                                     <label for="check-sem-complemento" class="check-inline-label">
                                         <input type="checkbox" id="check-sem-complemento"> Sem complemento
                                     </label>
                                 </div>
-                                <input type="text" id="reg-complemento" class="form-control" placeholder="Apto, Sala, Bloco..." required>
+                                <input type="text" id="reg-complemento" class="form-control" placeholder="Apto, Sala, Bloco (Opcional)">
                             </div>
                         </div>
                     </div>
@@ -682,6 +682,55 @@
                             </div>
                         </div>
 
+                        <!-- SEÇÃO 5: Segurança & Dispositivos (2FA e Regra dos 7 Dias) -->
+                        <div class="assoc-section-container">
+                            <div class="assoc-section-heading">
+                                <h3>SEGURANÇA & DISPOSITIVOS (2FA)</h3>
+                            </div>
+                            <div class="assoc-form-grid">
+                                <!-- Card de Toggle 2FA Permanente -->
+                                <div class="form-group col-span-4" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap;">
+                                        <div style="flex: 1; min-width: 250px;">
+                                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                                <i class="fa-solid fa-shield-halved" style="color: #005670; font-size: 1.1rem;"></i>
+                                                <strong style="color: #0f172a; font-size: 0.95rem;">Exigir Código 2FA em Todos os Logins</strong>
+                                            </div>
+                                            <p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.4;">
+                                                Ao ativar, ignora a regra dos 7 dias e exige envio de código de 6 dígitos no e-mail em qualquer acesso.
+                                            </p>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <span id="label-2fa-status" style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Padrão (7 Dias)</span>
+                                            <label class="switch-toggle">
+                                                <input type="checkbox" id="toggle-dois-fatores-sempre" onchange="window.toggleTwoFactorPreference(this.checked)">
+                                                <span class="switch-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card do Dispositivo Atual -->
+                                <div class="form-group col-span-4" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                        <div>
+                                            <div style="font-size: 0.78rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-bottom: 2px;">Dispositivo Conectado</div>
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <i class="fa-solid fa-laptop" style="color: #005670;"></i>
+                                                <strong id="current-device-name-display" style="color: #1e293b; font-size: 0.88rem;">Navegador Web</strong>
+                                                <span class="badge-trusted" id="badge-device-trusted" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 12px; font-size: 0.72rem; font-weight: 600;">
+                                                    <i class="fa-solid fa-circle-check"></i> Confiável (7 dias)
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn-revoke-device" onclick="window.revokeCurrentDevice()">
+                                            <i class="fa-solid fa-ban"></i> Esquecer Este Dispositivo
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="assoc-form-footer">
                             <button type="submit" class="btn-assoc-submit">
                                 <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações no Perfil
@@ -846,149 +895,174 @@
             <!-- Aba 9: Outros & Central de Ajuda -->
             <div id="tab-outros" class="tab-panel">
                 <div class="panel-card">
-                    <div class="panel-header">
-                        <h2 class="panel-title"><i class="fa-solid fa-folder-open"></i> Documentos de Apoio & Atas Oficiais</h2>
+                    <!-- Banner Interativo / Pasta de Documentos Clicável -->
+                    <div class="doc-apoio-folder-banner" id="doc-apoio-folder-banner" onclick="window.toggleDocApoioCollapse()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.toggleDocApoioCollapse();}" title="Clique para abrir ou recolher os documentos oficiais">
+                        <div class="doc-folder-banner-left">
+                            <div class="doc-folder-icon-bubble">
+                                <i class="fa-solid fa-folder" id="doc-folder-main-icon"></i>
+                            </div>
+                            <div>
+                                <h2 class="doc-folder-title">
+                                    Documentos de Apoio & Atas Oficiais
+                                </h2>
+                                <p class="doc-folder-subtitle">
+                                    Acesse e faça o download dos atos normativos, atas de assembleias gerais, editais de convocação e certidões de registro público da SBPS.
+                                </p>
+                                <span class="doc-folder-click-hint">
+                                    <i class="fa-solid fa-arrow-pointer"></i> Clique para abrir e visualizar todos os documentos oficiais
+                                </span>
+                            </div>
+                        </div>
+                        <div class="doc-folder-banner-right">
+                            <span class="doc-count-badge">
+                                <i class="fa-solid fa-file-shield"></i> 6 Arquivos Oficiais
+                            </span>
+                            <div class="doc-toggle-btn">
+                                <span id="doc-toggle-text">Abrir Documentos</span>
+                                <i class="fa-solid fa-chevron-down doc-toggle-chevron" id="doc-toggle-chevron"></i>
+                            </div>
+                        </div>
                     </div>
-                    <p style="font-size:0.9rem; color:var(--assoc-text-muted); margin-bottom:24px;">
-                        Acesse e faça o download dos atos normativos, atas de assembleias gerais, editais de convocação e certidões de registro público da SBPS.
-                    </p>
 
-                    <div class="doc-apoio-grid">
-                        <!-- 1. Ata de Eleição e Posse -->
-                        <div class="doc-apoio-card">
-                            <div>
-                                <div class="doc-apoio-header">
-                                    <span class="doc-badge ata"><i class="fa-solid fa-stamp"></i> Ata Homologada</span>
+                    <!-- Conteúdo Expansível dos Documentos (Grid dos 6 Documentos) -->
+                    <div id="doc-apoio-content" class="doc-apoio-content-wrapper" style="display: none;">
+                        <div class="doc-apoio-grid">
+                            <!-- 1. Ata de Eleição e Posse -->
+                            <div class="doc-apoio-card" onclick="window.open('../documentos/sbps-ata_eleicao-2026.pdf', '_blank')" style="cursor: pointer;" title="Clique para visualizar a Ata">
+                                <div>
+                                    <div class="doc-apoio-header">
+                                        <span class="doc-badge ata"><i class="fa-solid fa-stamp"></i> Ata Homologada</span>
+                                    </div>
+                                    <h4 class="doc-apoio-title">Ata da Assembleia Geral Eletiva e Posse da Diretoria Executiva</h4>
+                                    <div class="doc-apoio-meta">
+                                        <i class="fa-regular fa-calendar"></i> 10 de fevereiro de 2026 • PDF (178 KB)
+                                    </div>
+                                    <p class="doc-apoio-desc">
+                                        Homologação oficial dos resultados da Assembleia Geral Ordinária, formalizando a posse da Diretoria Executiva (Gestão 2026–2028) sob presidência do Dr. José Pinto da Mota Filho e composição do Conselho Fiscal.
+                                    </p>
                                 </div>
-                                <h4 class="doc-apoio-title">Ata da Assembleia Geral Eletiva e Posse da Diretoria Executiva</h4>
-                                <div class="doc-apoio-meta">
-                                    <i class="fa-regular fa-calendar"></i> 10 de fevereiro de 2026 • PDF (178 KB)
+                                <div class="doc-apoio-actions" onclick="event.stopPropagation()">
+                                    <a href="../documentos/sbps-ata_eleicao-2026.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
+                                        <i class="fa-solid fa-eye"></i> Visualizar Ata
+                                    </a>
+                                    <a href="../documentos/sbps-ata_eleicao-2026.pdf" download="SBPS-Ata-Eleicao-Posse-2026.pdf" class="btn-doc-download">
+                                        <i class="fa-solid fa-download"></i> Baixar PDF
+                                    </a>
                                 </div>
-                                <p class="doc-apoio-desc">
-                                    Homologação oficial dos resultados da Assembleia Geral Ordinária, formalizando a posse da Diretoria Executiva (Gestão 2026–2028) sob presidência do Dr. José Pinto da Mota Filho e composição do Conselho Fiscal.
-                                </p>
                             </div>
-                            <div class="doc-apoio-actions">
-                                <a href="../documentos/sbps-ata_eleicao-2026.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
-                                    <i class="fa-solid fa-eye"></i> Visualizar Ata
-                                </a>
-                                <a href="../documentos/sbps-ata_eleicao-2026.pdf" download="SBPS-Ata-Eleicao-Posse-2026.pdf" class="btn-doc-download">
-                                    <i class="fa-solid fa-download"></i> Baixar PDF
-                                </a>
-                            </div>
-                        </div>
 
-                        <!-- 2. Edital de Convocação -->
-                        <div class="doc-apoio-card">
-                            <div>
-                                <div class="doc-apoio-header">
-                                    <span class="doc-badge edital"><i class="fa-solid fa-bullhorn"></i> Edital de Convocação</span>
+                            <!-- 2. Edital de Convocação -->
+                            <div class="doc-apoio-card" onclick="window.open('../documentos/edital-convocacao-2026.pdf', '_blank')" style="cursor: pointer;" title="Clique para visualizar o Edital">
+                                <div>
+                                    <div class="doc-apoio-header">
+                                        <span class="doc-badge edital"><i class="fa-solid fa-bullhorn"></i> Edital de Convocação</span>
+                                    </div>
+                                    <h4 class="doc-apoio-title">Edital de Convocação – Assembleia Geral Extraordinária</h4>
+                                    <div class="doc-apoio-meta">
+                                        <i class="fa-regular fa-calendar"></i> 15 de janeiro de 2026 • PDF (215 KB)
+                                    </div>
+                                    <p class="doc-apoio-desc">
+                                        Convocação formal de todos os associados da SBPS para deliberação eletiva, prazos de registro de chapas, requisitos estatutários de elegibilidade e critérios de votação presencial e telepresencial.
+                                    </p>
                                 </div>
-                                <h4 class="doc-apoio-title">Edital de Convocação – Assembleia Geral Extraordinária</h4>
-                                <div class="doc-apoio-meta">
-                                    <i class="fa-regular fa-calendar"></i> 15 de janeiro de 2026 • PDF (215 KB)
+                                <div class="doc-apoio-actions" onclick="event.stopPropagation()">
+                                    <a href="../documentos/edital-convocacao-2026.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
+                                        <i class="fa-solid fa-eye"></i> Visualizar Edital
+                                    </a>
+                                    <a href="../documentos/edital-convocacao-2026.pdf" download="SBPS-Edital-Convocacao-2026.pdf" class="btn-doc-download">
+                                        <i class="fa-solid fa-download"></i> Baixar PDF
+                                    </a>
                                 </div>
-                                <p class="doc-apoio-desc">
-                                    Convocação formal de todos os associados da SBPS para deliberação eletiva, prazos de registro de chapas, requisitos estatutários de elegibilidade e critérios de votação presencial e telepresencial.
-                                </p>
                             </div>
-                            <div class="doc-apoio-actions">
-                                <a href="../documentos/edital-convocacao-2026.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
-                                    <i class="fa-solid fa-eye"></i> Visualizar Edital
-                                </a>
-                                <a href="../documentos/edital-convocacao-2026.pdf" download="SBPS-Edital-Convocacao-2026.pdf" class="btn-doc-download">
-                                    <i class="fa-solid fa-download"></i> Baixar PDF
-                                </a>
-                            </div>
-                        </div>
 
-                        <!-- 3. Certidão Cartorária Multiplus RCPJ -->
-                        <div class="doc-apoio-card">
-                            <div>
-                                <div class="doc-apoio-header">
-                                    <span class="doc-badge cartorio"><i class="fa-solid fa-building-columns"></i> Registro em Cartório</span>
+                            <!-- 3. Certidão Cartorária Multiplus RCPJ -->
+                            <div class="doc-apoio-card" onclick="window.open('../documentos/mutiplus-cartorio.pdf', '_blank')" style="cursor: pointer;" title="Clique para visualizar a Certidão">
+                                <div>
+                                    <div class="doc-apoio-header">
+                                        <span class="doc-badge cartorio"><i class="fa-solid fa-building-columns"></i> Registro em Cartório</span>
+                                    </div>
+                                    <h4 class="doc-apoio-title">Certidão de Registro Civil de Pessoas Jurídicas – RCPJ</h4>
+                                    <div class="doc-apoio-meta">
+                                        <i class="fa-regular fa-building"></i> Cartório Multiplus RCPJ / DF • PDF (161 KB)
+                                    </div>
+                                    <p class="doc-apoio-desc">
+                                        Certidão comprobatória de regularidade registral dos atos constitutivos, atas e representação civil ativa da associação, em conformidade com o Código Civil brasileiro.
+                                    </p>
                                 </div>
-                                <h4 class="doc-apoio-title">Certidão de Registro Civil de Pessoas Jurídicas – RCPJ</h4>
-                                <div class="doc-apoio-meta">
-                                    <i class="fa-regular fa-building"></i> Cartório Multiplus RCPJ / DF • PDF (161 KB)
+                                <div class="doc-apoio-actions" onclick="event.stopPropagation()">
+                                    <a href="../documentos/mutiplus-cartorio.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
+                                        <i class="fa-solid fa-eye"></i> Visualizar Certidão
+                                    </a>
+                                    <a href="../documentos/mutiplus-cartorio.pdf" download="SBPS-Certidao-Registro-Cartorio.pdf" class="btn-doc-download">
+                                        <i class="fa-solid fa-download"></i> Baixar PDF
+                                    </a>
                                 </div>
-                                <p class="doc-apoio-desc">
-                                    Certidão comprobatória de regularidade registral dos atos constitutivos, atas e representação civil ativa da associação, em conformidade com o Código Civil brasileiro.
-                                </p>
                             </div>
-                            <div class="doc-apoio-actions">
-                                <a href="../documentos/mutiplus-cartorio.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
-                                    <i class="fa-solid fa-eye"></i> Visualizar Certidão
-                                </a>
-                                <a href="../documentos/mutiplus-cartorio.pdf" download="SBPS-Certidao-Registro-Cartorio.pdf" class="btn-doc-download">
-                                    <i class="fa-solid fa-download"></i> Baixar PDF
-                                </a>
-                            </div>
-                        </div>
 
-                        <!-- 4. Estatuto Social Oficial -->
-                        <div class="doc-apoio-card">
-                            <div>
-                                <div class="doc-apoio-header">
-                                    <span class="doc-badge estatuto"><i class="fa-solid fa-book"></i> Estatuto Social</span>
+                            <!-- 4. Estatuto Social Oficial -->
+                            <div class="doc-apoio-card" onclick="window.open('estatuto.html', '_blank')" style="cursor: pointer;" title="Clique para abrir o Estatuto Completo">
+                                <div>
+                                    <div class="doc-apoio-header">
+                                        <span class="doc-badge estatuto"><i class="fa-solid fa-book"></i> Estatuto Social</span>
+                                    </div>
+                                    <h4 class="doc-apoio-title">Estatuto Social Oficial da SBPS (Consolidado)</h4>
+                                    <div class="doc-apoio-meta">
+                                        <i class="fa-solid fa-scale-balanced"></i> Documento Oficial Registrado
+                                    </div>
+                                    <p class="doc-apoio-desc">
+                                        Texto integral com as normas institucionais, princípios fundamentais, organização administrativa, direitos e prerrogativas exclusivos dos associados da entidade.
+                                    </p>
                                 </div>
-                                <h4 class="doc-apoio-title">Estatuto Social Oficial da SBPS (Consolidado)</h4>
-                                <div class="doc-apoio-meta">
-                                    <i class="fa-solid fa-scale-balanced"></i> Documento Oficial Registrado
+                                <div class="doc-apoio-actions" onclick="event.stopPropagation()">
+                                    <a href="estatuto.html" target="_blank" rel="noopener noreferrer" class="btn-doc-view" style="flex:1;">
+                                        <i class="fa-solid fa-book-open"></i> Acessar Estatuto Completo
+                                    </a>
                                 </div>
-                                <p class="doc-apoio-desc">
-                                    Texto integral com as normas institucionais, princípios fundamentais, organização administrativa, direitos e prerrogativas exclusivos dos associados da entidade.
-                                </p>
                             </div>
-                            <div class="doc-apoio-actions">
-                                <a href="estatuto.html" target="_blank" rel="noopener noreferrer" class="btn-doc-view" style="flex:1;">
-                                    <i class="fa-solid fa-book-open"></i> Acessar Estatuto Completo
-                                </a>
-                            </div>
-                        </div>
 
-                        <!-- 5. Modelo de Certificação -->
-                        <div class="doc-apoio-card">
-                            <div>
-                                <div class="doc-apoio-header">
-                                    <span class="doc-badge certificado"><i class="fa-solid fa-certificate"></i> Certificação Oficial</span>
+                            <!-- 5. Modelo de Certificação -->
+                            <div class="doc-apoio-card" onclick="window.open('../documentos/certificado-presenca.pdf', '_blank')" style="cursor: pointer;" title="Clique para visualizar o modelo">
+                                <div>
+                                    <div class="doc-apoio-header">
+                                        <span class="doc-badge certificado"><i class="fa-solid fa-certificate"></i> Certificação Oficial</span>
+                                    </div>
+                                    <h4 class="doc-apoio-title">Regulamento e Modelo de Certificação Acadêmica SBPS</h4>
+                                    <div class="doc-apoio-meta">
+                                        <i class="fa-solid fa-award"></i> Código de Autenticidade • PDF (471 KB)
+                                    </div>
+                                    <p class="doc-apoio-desc">
+                                        Regulamento oficial que estabelece os critérios de validação de carga horária para cursos e simpósios, além do espelho padrão de certificação com código verificador.
+                                    </p>
                                 </div>
-                                <h4 class="doc-apoio-title">Regulamento e Modelo de Certificação Acadêmica SBPS</h4>
-                                <div class="doc-apoio-meta">
-                                    <i class="fa-solid fa-award"></i> Código de Autenticidade • PDF (471 KB)
+                                <div class="doc-apoio-actions" onclick="event.stopPropagation()">
+                                    <a href="../documentos/certificado-presenca.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
+                                        <i class="fa-solid fa-eye"></i> Visualizar Modelo
+                                    </a>
+                                    <a href="../documentos/certificado-presenca.pdf" download="SBPS-Modelo-Certificacao.pdf" class="btn-doc-download">
+                                        <i class="fa-solid fa-download"></i> Baixar PDF
+                                    </a>
                                 </div>
-                                <p class="doc-apoio-desc">
-                                    Regulamento oficial que estabelece os critérios de validação de carga horária para cursos e simpósios, além do espelho padrão de certificação com código verificador.
-                                </p>
                             </div>
-                            <div class="doc-apoio-actions">
-                                <a href="../documentos/certificado-presenca.pdf" target="_blank" rel="noopener noreferrer" class="btn-doc-view">
-                                    <i class="fa-solid fa-eye"></i> Visualizar Modelo
-                                </a>
-                                <a href="../documentos/certificado-presenca.pdf" download="SBPS-Modelo-Certificacao.pdf" class="btn-doc-download">
-                                    <i class="fa-solid fa-download"></i> Baixar PDF
-                                </a>
-                            </div>
-                        </div>
 
-                        <!-- 6. Manual de Marca e Mídias -->
-                        <div class="doc-apoio-card">
-                            <div>
-                                <div class="doc-apoio-header">
-                                    <span class="doc-badge midia"><i class="fa-solid fa-palette"></i> Identidade Visual</span>
+                            <!-- 6. Manual de Marca e Mídias -->
+                            <div class="doc-apoio-card" onclick="showToastMessage('Download do Pacote de Logotipos iniciado!')" style="cursor: pointer;" title="Clique para baixar o pacote de mídias">
+                                <div>
+                                    <div class="doc-apoio-header">
+                                        <span class="doc-badge midia"><i class="fa-solid fa-palette"></i> Identidade Visual</span>
+                                    </div>
+                                    <h4 class="doc-apoio-title">Manual de Marca e Pacote de Logotipos SBPS</h4>
+                                    <div class="doc-apoio-meta">
+                                        <i class="fa-solid fa-file-zipper"></i> Arquivos em Alta Definição (PNG/SVG)
+                                    </div>
+                                    <p class="doc-apoio-desc">
+                                        Pacote institucional com o manual de uso da marca e logotipos oficiais da SBPS em alta resolução para aplicação em assinaturas, artigos, petições e materiais acadêmicos.
+                                    </p>
                                 </div>
-                                <h4 class="doc-apoio-title">Manual de Marca e Pacote de Logotipos SBPS</h4>
-                                <div class="doc-apoio-meta">
-                                    <i class="fa-solid fa-file-zipper"></i> Arquivos em Alta Definição (PNG/SVG)
+                                <div class="doc-apoio-actions" onclick="event.stopPropagation()">
+                                    <a href="javascript:void(0)" onclick="showToastMessage('Download do Pacote de Logotipos iniciado!')" class="btn-doc-download" style="flex:1;">
+                                        <i class="fa-solid fa-download"></i> Baixar Pacote de Mídias
+                                    </a>
                                 </div>
-                                <p class="doc-apoio-desc">
-                                    Pacote institucional com o manual de uso da marca e logotipos oficiais da SBPS em alta resolução para aplicação em assinaturas, artigos, petições e materiais acadêmicos.
-                                </p>
-                            </div>
-                            <div class="doc-apoio-actions">
-                                <a href="javascript:void(0)" onclick="showToastMessage('Download do Pacote de Logotipos iniciado!')" class="btn-doc-download" style="flex:1;">
-                                    <i class="fa-solid fa-download"></i> Baixar Pacote de Mídias
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -1202,11 +1276,265 @@
         </div>
     </div>
 
+    <!-- Modal de Pagamento da Taxa de Associação (R$ 100 via Asaas / PIX / Cartão) -->
+    <div id="modal-pagamento-associacao" class="sbps-modal-overlay">
+        <div class="sbps-modal-card sbps-modal-card-payment">
+            <button type="button" class="sbps-modal-close" onclick="window.closePaymentModal()">&times;</button>
+            
+            <!-- Visão Principal: Cobrança e Formas de Pagamento -->
+            <div id="payment-main-view">
+                <div class="sbps-modal-icon-header">
+                    <div class="payment-icon-bubble">
+                        <i class="fa-solid fa-gem"></i>
+                    </div>
+                </div>
+                <h3 class="sbps-modal-title">Taxa de Associação SBPS</h3>
+                <p class="sbps-modal-desc">
+                    Etapa final: Conclua a anuidade para ativar sua conta e desbloquear todos os recursos do portal.
+                </p>
+
+                <!-- Resumo da Cobrança -->
+                <div class="payment-amount-card">
+                    <div class="payment-amount-info">
+                        <span class="amount-label">Plano Anual de Associação SBPS</span>
+                        <div class="amount-val-row">
+                            <span class="currency">R$</span>
+                            <span class="val">100,00</span>
+                            <span class="period">/ano</span>
+                        </div>
+                    </div>
+                    <div class="payment-amount-badge">
+                        <i class="fa-solid fa-shield-halved"></i> Ambiente Seguro
+                    </div>
+                </div>
+
+                <!-- Abas de Pagamento -->
+                <div class="payment-methods-tabs">
+                    <button type="button" class="payment-tab-btn active" id="tab-btn-pix" onclick="window.switchPaymentMethod('pix')">
+                        <i class="fa-brands fa-pix"></i> PIX Dinâmico
+                    </button>
+                    <button type="button" class="payment-tab-btn" id="tab-btn-card" onclick="window.switchPaymentMethod('card')">
+                        <i class="fa-solid fa-credit-card"></i> Cartão de Crédito
+                    </button>
+                </div>
+
+                <!-- Painel 1: PIX Dinâmico -->
+                <div class="payment-panel" id="payment-panel-pix">
+                    <div class="pix-qrcode-area">
+                        <div class="pix-qr-frame">
+                            <img id="pix-qrcode-img" src="" alt="QR Code PIX SBPS" class="pix-qr-img">
+                            <div class="pix-qr-badge">R$ 100,00</div>
+                        </div>
+                    </div>
+
+                    <div class="pix-copia-cola-box">
+                        <label for="pix-copy-input">Código PIX Copia e Cola:</label>
+                        <div class="pix-copy-group">
+                            <input type="text" id="pix-copy-input" readonly value="" class="form-control pix-code-field">
+                            <button type="button" id="btn-copy-pix" class="btn-copy-pix" onclick="window.copyPixCode()">
+                                <i class="fa-regular fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="pix-status-indicator">
+                        <span class="pulsing-dot"></span>
+                        <span id="pix-status-text">Aguardando confirmação bancária... Aprovação instantânea</span>
+                    </div>
+
+                    <div class="pix-steps-list">
+                        <div class="pix-step-item">
+                            <span class="step-num">1</span>
+                            <span>Abra o app do seu banco ou carteira digital</span>
+                        </div>
+                        <div class="pix-step-item">
+                            <span class="step-num">2</span>
+                            <span>Escolha a opção <strong>PIX Copia e Cola</strong> ou ler QR Code</span>
+                        </div>
+                        <div class="pix-step-item">
+                            <span class="step-num">3</span>
+                            <span>Confirme o pagamento de <strong>R$ 100,00</strong> para a SBPS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel 2: Cartão de Crédito -->
+                <div class="payment-panel" id="payment-panel-card" style="display: none;">
+                    <form id="form-credit-card" onsubmit="window.processCreditCardPayment(event)">
+                        <div class="card-form-group">
+                            <label for="card-number">Número do Cartão</label>
+                            <div class="card-input-with-icon">
+                                <input type="text" id="card-number" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                                <span class="card-brand-icon" id="card-brand-badge"><i class="fa-regular fa-credit-card"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="card-form-group">
+                            <label for="card-holder">Nome Impresso no Cartão</label>
+                            <input type="text" id="card-holder" class="form-control" placeholder="EX: NOME NO CARTAO" style="text-transform: uppercase;" required>
+                        </div>
+
+                        <div class="card-form-row">
+                            <div class="card-form-group">
+                                <label for="card-expiry">Validade</label>
+                                <input type="text" id="card-expiry" class="form-control" placeholder="MM/AA" maxlength="5" required>
+                            </div>
+                            <div class="card-form-group">
+                                <label for="card-cvv">CVV</label>
+                                <input type="password" id="card-cvv" class="form-control" placeholder="123" maxlength="4" required>
+                            </div>
+                        </div>
+
+                        <div class="card-form-row">
+                            <div class="card-form-group">
+                                <label for="card-cpf">CPF do Titular</label>
+                                <input type="text" id="card-cpf" class="form-control" placeholder="000.000.000-00" maxlength="14" required>
+                            </div>
+                            <div class="card-form-group">
+                                <label for="card-installments">Parcelas</label>
+                                <select id="card-installments" class="form-control">
+                                    <option value="1">1x de R$ 100,00 (sem juros)</option>
+                                    <option value="2">2x de R$ 50,00 (sem juros)</option>
+                                    <option value="3">3x de R$ 33,33 (sem juros)</option>
+                                    <option value="4">4x de R$ 25,00 (sem juros)</option>
+                                    <option value="6">6x de R$ 16,66 (sem juros)</option>
+                                    <option value="12">12x de R$ 8,33 (sem juros)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btn-submit-card" class="btn-pay-card-action">
+                            <i class="fa-solid fa-lock"></i> Pagar R$ 100,00 com Cartão
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Card de Ambiente de Testes / SBPS SandBox -->
+                <div class="payment-test-hint-box">
+                    <div class="hint-header">
+                        <i class="fa-solid fa-flask-vial"></i>
+                        <span>Ambiente de Testes (Homologação SBPS)</span>
+                    </div>
+                    <p class="hint-text">
+                        Permite testar a aprovação automática no banco Supabase instantaneamente, sem custos reais:
+                    </p>
+                    <button type="button" class="btn-simulate-payment" onclick="window.simulatePaymentSuccess()">
+                        <i class="fa-solid fa-bolt"></i> Simular Pagamento Aprovado (Teste)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visão de Sucesso: Confirmação & Recibo -->
+            <div id="payment-success-view" style="display: none;">
+                <div class="payment-success-bubble">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h3 class="sbps-modal-title" style="color: #059669;">Pagamento Confirmado!</h3>
+                <p class="sbps-modal-desc">
+                    Sua taxa de anuidade foi identificada e sua conta de associado SBPS está oficialmente <strong>Ativa</strong>.
+                </p>
+
+                <div class="payment-receipt-card">
+                    <div class="receipt-row">
+                        <span>Associado:</span>
+                        <strong id="receipt-assoc-name">---</strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>E-mail:</span>
+                        <strong id="receipt-assoc-email">---</strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Valor Pago:</span>
+                        <strong style="color: #059669;">R$ 100,00</strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Forma de Pagamento:</span>
+                        <strong id="receipt-payment-method">PIX Dinâmico</strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Vigência:</span>
+                        <strong>12 Meses (Anuidade SBPS)</strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Identificador:</span>
+                        <code id="receipt-payment-id">ASAAS-SIM-XXXXXX</code>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-enter-portal" onclick="window.finishPaymentAndEnterPortal()">
+                    <i class="fa-solid fa-door-open"></i> Acessar Portal do Associado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Autenticação em 2 Etapas (2FA Login & Dispositivo Confiável) -->
+    <div id="modal-otp-login" class="sbps-modal-overlay">
+        <div class="sbps-modal-card">
+            <button type="button" class="sbps-modal-close" onclick="window.close2faLoginModal()">&times;</button>
+            <div class="sbps-modal-icon-header">
+                <div class="otp-icon-bubble" style="background: rgba(0, 86, 112, 0.1); color: #005670;">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+            </div>
+            <h3 class="sbps-modal-title">Verificação de Segurança (2FA)</h3>
+            <p class="sbps-modal-desc">
+                Um novo acesso foi detectado. Para sua proteção, enviamos um código de segurança de 6 dígitos para:<br>
+                <strong id="otp-2fa-target-email" class="otp-highlight-email">seu.email@exemplo.com</strong>
+            </p>
+
+            <!-- Card de Ambiente de Testes / SBPS -->
+            <div id="otp-2fa-dev-hint" class="otp-test-hint-box">
+                <div class="hint-header">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Código 2FA (Ambiente de Testes):</span>
+                </div>
+                <div class="hint-body">
+                    <span class="hint-code-val" id="otp-2fa-dev-code-display">------</span>
+                    <button type="button" class="btn-copy-test-code" onclick="window.fillTest2faOtp()">Preencher Código</button>
+                </div>
+                <small>Gerado no Supabase para login seguro de dois fatores.</small>
+            </div>
+
+            <!-- 6 Dígitos OTP 2FA -->
+            <div class="otp-inputs-wrapper" id="otp-2fa-digits-container">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-2fa-digit-input" data-index="0" autofocus>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-2fa-digit-input" data-index="1">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-2fa-digit-input" data-index="2">
+                <span class="otp-separator">-</span>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-2fa-digit-input" data-index="3">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-2fa-digit-input" data-index="4">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-2fa-digit-input" data-index="5">
+            </div>
+
+            <div id="otp-2fa-error-msg" class="otp-error-feedback" style="display: none;"></div>
+
+            <!-- Opção de Lembrar Dispositivo por 7 Dias -->
+            <div class="remember-device-container">
+                <label class="remember-device-label">
+                    <input type="checkbox" id="check-trust-device-7days" checked>
+                    <span>Lembrar este dispositivo por <strong>7 dias</strong> (não pedir código novamente)</span>
+                </label>
+            </div>
+
+            <button type="button" id="btn-confirm-2fa" class="btn-otp-action" disabled onclick="window.submit2faVerification()">
+                <i class="fa-solid fa-right-to-bracket"></i> Confirmar e Acessar Portal
+            </button>
+
+            <div class="otp-timer-row">
+                <span id="otp-2fa-countdown-text">Não recebeu? Reenviar código em <strong id="otp-2fa-timer-seconds">60s</strong></span>
+                <button type="button" id="btn-resend-2fa" class="btn-link-resend" style="display: none;" onclick="window.resend2faCode()">
+                    <i class="fa-solid fa-rotate-right"></i> Reenviar novo código
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Supabase JS SDK & Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../scripts/supabase-client.js?v=2"></script>
+    <script src="../scripts/supabase-client.js?v=4"></script>
     <script src="../scripts/script.js?v=9999"></script>
-    <script src="../scripts/associado.js?v=99996"></script>
+    <script src="../scripts/associado.js?v=99999"></script>
 </body>
 
 </html>

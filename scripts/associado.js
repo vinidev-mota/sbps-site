@@ -128,6 +128,7 @@ window.logoutAssociado = function() {
 
 window.confirmLogout = function() {
     localStorage.removeItem('sbps_associado_user');
+    currentUser = null;
     const authContainer = document.getElementById('auth-container');
     const memberContent = document.getElementById('member-content');
     if (authContainer) authContainer.style.display = 'block';
@@ -145,6 +146,43 @@ window.cancelLogout = function() {
 
 window.leaveArea = function() {
     window.location.href = '../index.html';
+};
+
+window.toggleDocApoioCollapse = function () {
+    const banner = document.getElementById('doc-apoio-folder-banner');
+    const content = document.getElementById('doc-apoio-content');
+    const toggleText = document.getElementById('doc-toggle-text');
+    const chevron = document.getElementById('doc-toggle-chevron');
+    const icon = document.getElementById('doc-folder-main-icon');
+
+    if (!content) return;
+
+    const isOpen = content.style.display !== 'none';
+    if (isOpen) {
+        content.style.display = 'none';
+        if (banner) banner.classList.remove('is-open');
+        if (toggleText) toggleText.textContent = 'Abrir Documentos';
+        if (chevron) {
+            chevron.classList.remove('fa-chevron-up');
+            chevron.classList.add('fa-chevron-down');
+        }
+        if (icon) {
+            icon.classList.remove('fa-folder-open');
+            icon.classList.add('fa-folder');
+        }
+    } else {
+        content.style.display = 'block';
+        if (banner) banner.classList.add('is-open');
+        if (toggleText) toggleText.textContent = 'Recolher Documentos';
+        if (chevron) {
+            chevron.classList.remove('fa-chevron-down');
+            chevron.classList.add('fa-chevron-up');
+        }
+        if (icon) {
+            icon.classList.remove('fa-folder');
+            icon.classList.add('fa-folder-open');
+        }
+    }
 };
 
 window.addEventListener('popstate', (e) => {
@@ -202,8 +240,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderUserData();
     }
 
-    // Inicializa a sessão ativa imediatamente
-    ensureActiveSession();
+    if (currentUser) {
+        updateUserBadges();
+        renderUserData();
+    }
 
     let memberShortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY_SHORTCUTS)) || [
         { id: 1, title: 'Calculadora de Benefícios INSS', url: '#templates', icon: 'fa-solid fa-calculator' },
@@ -342,9 +382,53 @@ document.addEventListener('DOMContentLoaded', () => {
                                 uf: res.profile.uf || '',
                                 login_usuario: res.profile.login_usuario || userInput,
                                 foto_url: res.profile.foto_url || '',
-                                status: res.profile.status || 'Ativo'
+                                status: res.profile.status || 'Ativo',
+                                pagamento_status: res.profile.pagamento_status || 'Pendente',
+                                dois_fatores_sempre: !!res.profile.dois_fatores_sempre
                             };
+
+                            // Se a taxa de associação estiver pendente, direcionar para o pagamento
+                            if (currentUser.pagamento_status !== 'Aprovado') {
+                                localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+                                if (typeof window.openPaymentModal === 'function') {
+                                    window.openPaymentModal(currentUser);
+                                }
+                                if (typeof showToastMessage === 'function') {
+                                    showToastMessage('Sua anuidade SBPS (R$ 100,00) está pendente. Conclua o pagamento para liberar seu acesso.');
+                                }
+                                loginSuccess = true;
+                                if (btn) btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Acessar Portal';
+                                return;
+                            }
+
+                            // VERIFICAÇÃO DE DISPOSITIVO CONFIÁVEL & 2FA (FASE 4)
+                            let isTrusted = false;
+                            if (window.SBPS_Supabase) {
+                                const trustRes = await window.SBPS_Supabase.checkTrustedDevice(currentUser.email);
+                                isTrusted = !!(trustRes && trustRes.confiavel);
+                            } else {
+                                const localExp = localStorage.getItem('sbps_trusted_' + currentUser.email.toLowerCase());
+                                isTrusted = localExp && Number(localExp) > Date.now();
+                            }
+
+                            if (!isTrusted) {
+                                pending2faUser = currentUser;
+                                let otpRes = { codigo: Math.floor(100000 + Math.random() * 900000).toString() };
+                                if (window.SBPS_Supabase) {
+                                    otpRes = await window.SBPS_Supabase.generateOtp(currentUser.email, 'login_2fa');
+                                }
+                                open2faLoginModal(currentUser.email, otpRes.codigo);
+                                loginSuccess = true;
+                                if (btn) btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Acessar Portal';
+                                return;
+                            }
+
+                            // Dispositivo é confiável: renova validade de 7 dias e efetua login direto
+                            if (window.SBPS_Supabase) {
+                                window.SBPS_Supabase.registerTrustedDevice(currentUser.email);
+                            }
                             localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+
                             authContainer.style.display = 'none';
                             memberContent.style.display = 'block';
                             updateUserBadges();
@@ -372,6 +456,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             if (matchEmail || matchUser || matchCpf) {
                                 currentUser = localUser;
+
+                                // Se pendente de pagamento local
+                                if (currentUser.pagamento_status && currentUser.pagamento_status !== 'Aprovado') {
+                                    if (typeof window.openPaymentModal === 'function') {
+                                        window.openPaymentModal(currentUser);
+                                    }
+                                    if (typeof showToastMessage === 'function') {
+                                        showToastMessage('Sua anuidade SBPS (R$ 100,00) está pendente. Conclua o pagamento para liberar seu acesso.');
+                                    }
+                                    loginSuccess = true;
+                                    return;
+                                }
+
+                                // VERIFICAÇÃO DE DISPOSITIVO CONFIÁVEL & 2FA (FASE 4)
+                                let isTrusted = false;
+                                if (window.SBPS_Supabase) {
+                                    const trustRes = await window.SBPS_Supabase.checkTrustedDevice(currentUser.email);
+                                    isTrusted = !!(trustRes && trustRes.confiavel);
+                                } else {
+                                    const localExp = localStorage.getItem('sbps_trusted_' + (currentUser.email || '').toLowerCase());
+                                    isTrusted = localExp && Number(localExp) > Date.now();
+                                }
+
+                                if (!isTrusted) {
+                                    pending2faUser = currentUser;
+                                    let otpRes = { codigo: Math.floor(100000 + Math.random() * 900000).toString() };
+                                    if (window.SBPS_Supabase) {
+                                        otpRes = await window.SBPS_Supabase.generateOtp(currentUser.email, 'login_2fa');
+                                    }
+                                    open2faLoginModal(currentUser.email, otpRes.codigo);
+                                    loginSuccess = true;
+                                    return;
+                                }
+
+                                if (window.SBPS_Supabase) {
+                                    window.SBPS_Supabase.registerTrustedDevice(currentUser.email);
+                                }
+                                localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+
                                 if (authContainer) authContainer.style.display = 'none';
                                 if (memberContent) memberContent.style.display = 'block';
                                 updateUserBadges();
@@ -751,6 +874,21 @@ document.addEventListener('DOMContentLoaded', () => {
             emailConfirmInput.addEventListener('blur', checkEmailMatch);
         }
 
+        // Toggle Complemento
+        const checkSemComp = document.getElementById('check-sem-complemento');
+        const inputComp = document.getElementById('reg-complemento');
+        if (checkSemComp && inputComp) {
+            checkSemComp.addEventListener('change', () => {
+                if (checkSemComp.checked) {
+                    inputComp.value = 'Sem complemento';
+                    inputComp.disabled = true;
+                } else {
+                    inputComp.value = '';
+                    inputComp.disabled = false;
+                }
+            });
+        }
+
         // 7. Nome de Usuário Único (Login): Consulta em Tempo Real no Supabase
         const loginUserInput = document.getElementById('reg-login-user');
         const usernameFeedback = document.getElementById('username-feedback');
@@ -817,8 +955,9 @@ document.addEventListener('DOMContentLoaded', () => {
             regPasswordConfirmInput.addEventListener('blur', checkPassMatch);
         }
 
-        // Inicializar listeners do Modal OTP de E-mail
+        // Inicializar listeners dos Modais OTP (Cadastro e 2FA Login)
         setupOtpModalEvents();
+        setup2faModalEvents();
 
         // 9. SUBMIT CADASTRO: Validação Estrita Completa e Disparo do Modal OTP
         if (registerForm) {
@@ -987,12 +1126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const complementoInput = document.getElementById('reg-complemento');
                 const semComplementoChecked = document.getElementById('check-sem-complemento')?.checked;
-                const complemento = semComplementoChecked ? 'Sem complemento' : (complementoInput ? complementoInput.value.trim() : '');
-                if (!complemento) {
-                    alert('Por favor, informe o Complemento ou marque "Sem complemento".');
-                    if (complementoInput) complementoInput.focus();
-                    return;
-                }
+                const complemento = semComplementoChecked ? 'Sem complemento' : (complementoInput ? (complementoInput.value.trim() || 'Sem complemento') : 'Sem complemento');
 
                 const bairroInput = document.getElementById('reg-bairro');
                 if (!bairroInput || !bairroInput.value.trim()) {
@@ -1188,6 +1322,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         btnConfirm.style.background = '#059669';
 
                         pendingRegistration.userData.email_verificado = true;
+                        pendingRegistration.userData.pagamento_status = 'Pendente';
                         if (window.SBPS_Supabase) {
                             await window.SBPS_Supabase.registerUser(pendingRegistration.userData, pendingRegistration.password);
                         }
@@ -1196,16 +1331,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
 
                         if (typeof showToastMessage === 'function') {
-                            showToastMessage('E-mail confirmado com sucesso! Cadastro realizado na SBPS.');
+                            showToastMessage('E-mail confirmado com sucesso! Conclua o pagamento da anuidade para ativar sua conta.');
                         }
 
                         setTimeout(() => {
                             window.closeOtpModal();
-                            if (authContainer) authContainer.style.display = 'none';
-                            if (memberContent) memberContent.style.display = 'block';
-                            updateUserBadges();
-                            renderUserData();
-                        }, 1000);
+                            if (typeof window.openPaymentModal === 'function') {
+                                window.openPaymentModal(currentUser);
+                            }
+                        }, 800);
                     } else {
                         btnConfirm.disabled = false;
                         btnConfirm.innerHTML = '<i class="fa-solid fa-check"></i> Validar Código';
@@ -1325,6 +1459,588 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, 1000);
         }
+
+        // ==========================================================================
+        // FASE 3: MÓDULO DE PAGAMENTO DA TAXA DE ASSOCIAÇÃO (ASAAS / PIX / CARTÃO)
+        // ==========================================================================
+        let currentPayingUser = null;
+        let pixPollingInterval = null;
+
+        function openPaymentModal(userData) {
+            currentPayingUser = userData || currentUser;
+            const modal = document.getElementById('modal-pagamento-associacao');
+            if (!modal) return;
+
+            // Resetar visualizações
+            const mainView = document.getElementById('payment-main-view');
+            const successView = document.getElementById('payment-success-view');
+            if (mainView) mainView.style.display = 'block';
+            if (successView) successView.style.display = 'none';
+
+            // Gerar payload PIX dinâmico
+            const pixCodeField = document.getElementById('pix-copy-input');
+            const pixQrImg = document.getElementById('pix-qrcode-img');
+            const userEmail = (currentPayingUser?.email || 'associado@sbps.org.br').toLowerCase();
+            const userName = currentPayingUser?.nome || 'Associado SBPS';
+
+            // Chave PIX e payload padrão EMV do Asaas / Banco Central
+            const dummyTxId = 'SBPS' + Date.now().toString(36).toUpperCase();
+            const pixPayload = `00020101021226840014br.gov.bcb.pix2562pix.asaas.com/qr/stat/${dummyTxId}5204000053039865406100.005802BR5918SBPS PREVIDENCIA6009SAO PAULO62070503***63048F12`;
+
+            if (pixCodeField) pixCodeField.value = pixPayload;
+            if (pixQrImg) {
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(pixPayload)}`;
+                pixQrImg.src = qrUrl;
+            }
+
+            // Preencher campos do titular do cartão caso já existam
+            const cardHolder = document.getElementById('card-holder');
+            const cardCpf = document.getElementById('card-cpf');
+            if (cardHolder && !cardHolder.value) cardHolder.value = userName.toUpperCase();
+            if (cardCpf && !cardCpf.value && currentPayingUser?.cpf) cardCpf.value = currentPayingUser.cpf;
+
+            // Ativar aba PIX por padrão
+            window.switchPaymentMethod('pix');
+
+            modal.classList.add('active');
+
+            // Iniciar escuta periódica (polling) de confirmação de pagamento
+            startPixStatusPolling(userEmail);
+        }
+        window.openPaymentModal = openPaymentModal;
+
+        window.closePaymentModal = function () {
+            const modal = document.getElementById('modal-pagamento-associacao');
+            if (modal) modal.classList.remove('active');
+            if (pixPollingInterval) clearInterval(pixPollingInterval);
+
+            // Se o usuário ainda não tiver pagamento aprovado, avisar que pode concluir no login
+            if (!currentUser || currentUser.pagamento_status !== 'Aprovado') {
+                if (typeof showToastMessage === 'function') {
+                    showToastMessage('Você pode concluir a taxa de associação de R$ 100,00 quando quiser ao fazer login.');
+                }
+            }
+        };
+
+        window.switchPaymentMethod = function (method) {
+            const tabPix = document.getElementById('tab-btn-pix');
+            const tabCard = document.getElementById('tab-btn-card');
+            const panelPix = document.getElementById('payment-panel-pix');
+            const panelCard = document.getElementById('payment-panel-card');
+
+            if (method === 'pix') {
+                if (tabPix) tabPix.classList.add('active');
+                if (tabCard) tabCard.classList.remove('active');
+                if (panelPix) panelPix.style.display = 'block';
+                if (panelCard) panelCard.style.display = 'none';
+            } else {
+                if (tabPix) tabPix.classList.remove('active');
+                if (tabCard) tabCard.classList.add('active');
+                if (panelPix) panelPix.style.display = 'none';
+                if (panelCard) panelCard.style.display = 'block';
+            }
+        };
+
+        window.copyPixCode = function () {
+            const pixCodeField = document.getElementById('pix-copy-input');
+            const btn = document.getElementById('btn-copy-pix');
+            if (!pixCodeField) return;
+
+            navigator.clipboard.writeText(pixCodeField.value).then(() => {
+                if (btn) {
+                    btn.classList.add('copied');
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copiar';
+                    }, 2500);
+                }
+                if (typeof showToastMessage === 'function') {
+                    showToastMessage('Código PIX Copia e Cola copiado para a área de transferência!');
+                }
+            }).catch(() => {
+                pixCodeField.select();
+                document.execCommand('copy');
+                if (typeof showToastMessage === 'function') {
+                    showToastMessage('Código PIX selecionado. Pressione Ctrl+C para copiar.');
+                }
+            });
+        };
+
+        // Formatação dinâmica e detecção de bandeira do Cartão de Crédito
+        function setupCreditCardInputs() {
+            const cardNumInput = document.getElementById('card-number');
+            const cardBrandBadge = document.getElementById('card-brand-badge');
+            const expiryInput = document.getElementById('card-expiry');
+            const cvvInput = document.getElementById('card-cvv');
+            const cpfInput = document.getElementById('card-cpf');
+
+            if (cardNumInput) {
+                cardNumInput.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, '').slice(0, 16);
+                    v = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+                    e.target.value = v;
+
+                    // Detecção visual de bandeira
+                    const raw = v.replace(/\s/g, '');
+                    if (cardBrandBadge) {
+                        cardBrandBadge.className = 'card-brand-icon';
+                        if (/^4/.test(raw)) {
+                            cardBrandBadge.innerHTML = '<i class="fa-brands fa-cc-visa"></i>';
+                            cardBrandBadge.classList.add('visa');
+                        } else if (/^(5[1-5]|2[2-7])/.test(raw)) {
+                            cardBrandBadge.innerHTML = '<i class="fa-brands fa-cc-mastercard"></i>';
+                            cardBrandBadge.classList.add('mastercard');
+                        } else if (/^(4011|4389|4514|4576|5041|5066|5090|6277|6362|6363)/.test(raw)) {
+                            cardBrandBadge.innerHTML = '<i class="fa-solid fa-credit-card"></i>';
+                            cardBrandBadge.classList.add('elo');
+                        } else if (/^3[47]/.test(raw)) {
+                            cardBrandBadge.innerHTML = '<i class="fa-brands fa-cc-amex"></i>';
+                            cardBrandBadge.classList.add('amex');
+                        } else {
+                            cardBrandBadge.innerHTML = '<i class="fa-regular fa-credit-card"></i>';
+                        }
+                    }
+                });
+            }
+
+            if (expiryInput) {
+                expiryInput.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+                    if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
+                    e.target.value = v;
+                });
+            }
+
+            if (cvvInput) {
+                cvvInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                });
+            }
+
+            if (cpfInput) {
+                cpfInput.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+                    if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                    else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
+                    else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/, '$1.$2');
+                    e.target.value = v;
+                });
+            }
+        }
+        setupCreditCardInputs();
+
+        // Processar Pagamento por Cartão de Crédito
+        window.processCreditCardPayment = async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-card');
+            const cardNum = (document.getElementById('card-number')?.value || '').replace(/\s/g, '');
+            const cardHolder = document.getElementById('card-holder')?.value.trim() || '';
+            const cardExpiry = document.getElementById('card-expiry')?.value.trim() || '';
+            const cardCvv = document.getElementById('card-cvv')?.value.trim() || '';
+            const cardCpf = (document.getElementById('card-cpf')?.value || '').replace(/\D/g, '');
+            const installments = document.getElementById('card-installments')?.value || '1';
+
+            if (cardNum.length < 15 || !cardHolder || cardExpiry.length < 5 || cardCvv.length < 3 || cardCpf.length !== 11) {
+                alert('Por favor, preencha todos os campos do cartão de crédito corretamente.');
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando transação segura Asaas...';
+            }
+
+            const targetEmail = (currentPayingUser?.email || '').toLowerCase();
+
+            // Chamada ao backend Supabase
+            let approvalRes = { success: true, payment_id: 'ASAAS-CARD-' + Date.now().toString(36).toUpperCase() };
+            if (window.SBPS_Supabase && targetEmail) {
+                try {
+                    approvalRes = await window.SBPS_Supabase.simulatePaymentApproval(targetEmail, 'CREDIT_CARD');
+                } catch (err) {
+                    console.warn('Erro ao processar cartão:', err);
+                }
+            }
+
+            setTimeout(() => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-lock"></i> Pagar R$ 100,00 com Cartão';
+                }
+                showPaymentSuccessScreen('Cartão de Crédito (' + installments + 'x)', approvalRes.payment_id);
+            }, 1200);
+        };
+
+        // Simulação instantânea para Testes de Homologação
+        window.simulatePaymentSuccess = async function () {
+            const btn = document.querySelector('.btn-simulate-payment');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aprovando no Supabase...';
+            }
+
+            const targetEmail = (currentPayingUser?.email || currentUser?.email || '').toLowerCase();
+            let approvalRes = { success: true, payment_id: 'ASAAS-SIM-' + Math.random().toString(36).substring(2, 8).toUpperCase() };
+
+            if (window.SBPS_Supabase && targetEmail) {
+                try {
+                    approvalRes = await window.SBPS_Supabase.simulatePaymentApproval(targetEmail, 'PIX');
+                } catch (err) {
+                    console.warn('Erro ao simular no Supabase:', err);
+                }
+            }
+
+            setTimeout(() => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Simular Pagamento Aprovado (Teste)';
+                }
+                showPaymentSuccessScreen('PIX Dinâmico (Simulação)', approvalRes.payment_id || ('PAY-' + Date.now().toString(36).toUpperCase()));
+            }, 800);
+        };
+
+        function showPaymentSuccessScreen(methodName, txId) {
+            if (pixPollingInterval) clearInterval(pixPollingInterval);
+
+            // Atualizar estado em memória e localStorage
+            if (currentPayingUser) {
+                currentPayingUser.pagamento_status = 'Aprovado';
+                currentPayingUser.status = 'Ativo';
+            }
+            if (currentUser) {
+                currentUser.pagamento_status = 'Aprovado';
+                currentUser.status = 'Ativo';
+                localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+            }
+
+            // Registrar dispositivo atual como confiável por 7 dias para o associado
+            const targetAssocEmail = currentPayingUser?.email || currentUser?.email;
+            if (targetAssocEmail && window.SBPS_Supabase) {
+                window.SBPS_Supabase.registerTrustedDevice(targetAssocEmail);
+            }
+
+            const mainView = document.getElementById('payment-main-view');
+            const successView = document.getElementById('payment-success-view');
+            if (mainView) mainView.style.display = 'none';
+            if (successView) successView.style.display = 'block';
+
+            const nameEl = document.getElementById('receipt-assoc-name');
+            const emailEl = document.getElementById('receipt-assoc-email');
+            const methodEl = document.getElementById('receipt-payment-method');
+            const idEl = document.getElementById('receipt-payment-id');
+
+            if (nameEl) nameEl.textContent = currentPayingUser?.nome || currentUser?.nome || 'Associado SBPS';
+            if (emailEl) emailEl.textContent = currentPayingUser?.email || currentUser?.email || 'associado@sbps.org.br';
+            if (methodEl) methodEl.textContent = methodName || 'PIX Dinâmico';
+            if (idEl) idEl.textContent = txId || ('ASAAS-' + Date.now().toString(36).toUpperCase());
+
+            if (typeof showToastMessage === 'function') {
+                showToastMessage('Pagamento confirmado com sucesso! Bem-vindo(a) à SBPS.');
+            }
+        }
+
+        window.finishPaymentAndEnterPortal = function () {
+            window.closePaymentModal();
+            if (authContainer) authContainer.style.display = 'none';
+            if (memberContent) memberContent.style.display = 'block';
+            updateUserBadges();
+            renderUserData();
+            renderCertificates();
+            if (typeof showDashboard === 'function') showDashboard();
+        };
+
+        function startPixStatusPolling(email) {
+            if (pixPollingInterval) clearInterval(pixPollingInterval);
+            if (!email || !window.SBPS_Supabase) return;
+
+            pixPollingInterval = setInterval(async () => {
+                try {
+                    const res = await window.SBPS_Supabase.getPaymentStatus(email);
+                    if (res && res.status === 'Aprovado') {
+                        clearInterval(pixPollingInterval);
+                        showPaymentSuccessScreen('PIX Dinâmico (Asaas Webhook)', 'ASAAS-WH-' + Date.now().toString(36).toUpperCase());
+                    }
+                } catch (e) {
+                    console.warn('Polling de pagamento:', e);
+                }
+            }, 5000);
+        }
+
+        // ==========================================================================
+        // FASE 4: AUTENTICAÇÃO EM 2 ETAPAS (2FA) & DISPOSITIVOS CONFIÁVEIS (7 DIAS)
+        // ==========================================================================
+        let pending2faUser = null;
+        let otp2faTimerInterval = null;
+
+        function setup2faModalEvents() {
+            const modal = document.getElementById('modal-otp-login');
+            const digitsContainer = document.getElementById('otp-2fa-digits-container');
+            const btnConfirm = document.getElementById('btn-confirm-2fa');
+            const errorMsg = document.getElementById('otp-2fa-error-msg');
+            if (!digitsContainer) return;
+
+            const digitInputs = Array.from(digitsContainer.querySelectorAll('.otp-2fa-digit-input'));
+
+            digitInputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    e.target.value = val ? val.slice(-1) : '';
+                    if (errorMsg) errorMsg.style.display = 'none';
+                    digitInputs.forEach(i => i.classList.remove('is-error'));
+
+                    if (e.target.value && index < digitInputs.length - 1) {
+                        digitInputs[index + 1].focus();
+                    }
+
+                    const code = digitInputs.map(i => i.value).join('');
+                    if (btnConfirm) btnConfirm.disabled = (code.length !== 6);
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        digitInputs[index - 1].focus();
+                        digitInputs[index - 1].value = '';
+                        if (btnConfirm) btnConfirm.disabled = true;
+                    } else if (e.key === 'ArrowLeft' && index > 0) {
+                        digitInputs[index - 1].focus();
+                    } else if (e.key === 'ArrowRight' && index < digitInputs.length - 1) {
+                        digitInputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+                    if (!pasteData) return;
+                    pasteData.split('').forEach((char, i) => {
+                        if (digitInputs[i]) digitInputs[i].value = char;
+                    });
+                    const lastIdx = Math.min(pasteData.length, digitInputs.length) - 1;
+                    if (digitInputs[lastIdx]) digitInputs[lastIdx].focus();
+                    const code = digitInputs.map(i => i.value).join('');
+                    if (btnConfirm) btnConfirm.disabled = (code.length !== 6);
+                });
+            });
+        }
+
+        function open2faLoginModal(email, code) {
+            const modal = document.getElementById('modal-otp-login');
+            if (!modal) return;
+
+            const emailDisplay = document.getElementById('otp-2fa-target-email');
+            if (emailDisplay) emailDisplay.textContent = email;
+
+            const codeDisplay = document.getElementById('otp-2fa-dev-code-display');
+            if (codeDisplay) codeDisplay.textContent = code;
+
+            const errorMsg = document.getElementById('otp-2fa-error-msg');
+            if (errorMsg) errorMsg.style.display = 'none';
+
+            const btnConfirm = document.getElementById('btn-confirm-2fa');
+            if (btnConfirm) {
+                btnConfirm.disabled = true;
+                btnConfirm.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Confirmar e Acessar Portal';
+                btnConfirm.style.background = '';
+            }
+
+            const digitInputs = modal.querySelectorAll('.otp-2fa-digit-input');
+            digitInputs.forEach(i => {
+                i.value = '';
+                i.classList.remove('is-error');
+            });
+
+            modal.classList.add('active');
+            start2faCountdown(60);
+
+            setTimeout(() => {
+                if (digitInputs[0]) digitInputs[0].focus();
+            }, 150);
+        }
+
+        window.open2faLoginModal = open2faLoginModal;
+
+        window.close2faLoginModal = function () {
+            const modal = document.getElementById('modal-otp-login');
+            if (modal) modal.classList.remove('active');
+            if (otp2faTimerInterval) clearInterval(otp2faTimerInterval);
+            pending2faUser = null;
+        };
+
+        window.fillTest2faOtp = function () {
+            const codeDisplay = document.getElementById('otp-2fa-dev-code-display');
+            const code = codeDisplay ? codeDisplay.textContent.trim() : '';
+            if (!code || code === '------') return;
+
+            const modal = document.getElementById('modal-otp-login');
+            if (!modal) return;
+            const digitInputs = modal.querySelectorAll('.otp-2fa-digit-input');
+            const chars = code.split('');
+            chars.forEach((c, i) => {
+                if (digitInputs[i]) digitInputs[i].value = c;
+            });
+            const btnConfirm = document.getElementById('btn-confirm-2fa');
+            if (btnConfirm) btnConfirm.disabled = false;
+            if (digitInputs[5]) digitInputs[5].focus();
+        };
+
+        window.resend2faCode = async function () {
+            if (!pending2faUser || !pending2faUser.email) return;
+            const btnResend = document.getElementById('btn-resend-2fa');
+            if (btnResend) btnResend.style.display = 'none';
+
+            let otpRes = { codigo: Math.floor(100000 + Math.random() * 900000).toString() };
+            if (window.SBPS_Supabase) {
+                otpRes = await window.SBPS_Supabase.generateOtp(pending2faUser.email, 'login_2fa');
+            }
+
+            const codeDisplay = document.getElementById('otp-2fa-dev-code-display');
+            if (codeDisplay) codeDisplay.textContent = otpRes.codigo;
+
+            if (typeof showToastMessage === 'function') {
+                showToastMessage(`Novo código 2FA enviado para ${pending2faUser.email}: [ ${otpRes.codigo} ]`);
+            }
+            start2faCountdown(60);
+        };
+
+        function start2faCountdown(seconds) {
+            if (otp2faTimerInterval) clearInterval(otp2faTimerInterval);
+            let remaining = seconds;
+            const timerText = document.getElementById('otp-2fa-countdown-text');
+            const secondsEl = document.getElementById('otp-2fa-timer-seconds');
+            const btnResend = document.getElementById('btn-resend-2fa');
+
+            if (timerText) timerText.style.display = 'inline';
+            if (btnResend) btnResend.style.display = 'none';
+            if (secondsEl) secondsEl.textContent = remaining + 's';
+
+            otp2faTimerInterval = setInterval(() => {
+                remaining--;
+                if (secondsEl) secondsEl.textContent = remaining + 's';
+                if (remaining <= 0) {
+                    clearInterval(otp2faTimerInterval);
+                    if (timerText) timerText.style.display = 'none';
+                    if (btnResend) btnResend.style.display = 'inline-flex';
+                }
+            }, 1000);
+        }
+
+        window.submit2faVerification = async function () {
+            if (!pending2faUser) return;
+            const modal = document.getElementById('modal-otp-login');
+            if (!modal) return;
+
+            const digitInputs = Array.from(modal.querySelectorAll('.otp-2fa-digit-input'));
+            const code = digitInputs.map(i => i.value).join('');
+            if (code.length !== 6) return;
+
+            const btnConfirm = document.getElementById('btn-confirm-2fa');
+            const errorMsg = document.getElementById('otp-2fa-error-msg');
+
+            if (btnConfirm) {
+                btnConfirm.disabled = true;
+                btnConfirm.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando código 2FA...';
+            }
+            if (errorMsg) errorMsg.style.display = 'none';
+
+            let verifyRes = { success: false };
+            if (window.SBPS_Supabase) {
+                verifyRes = await window.SBPS_Supabase.verifyOtp(pending2faUser.email, code, 'login_2fa');
+            } else {
+                const stored = sessionStorage.getItem('sbps_temp_otp_' + pending2faUser.email.toLowerCase());
+                if (stored === code) verifyRes = { success: true };
+            }
+
+            if (verifyRes.success) {
+                if (btnConfirm) {
+                    btnConfirm.innerHTML = '<i class="fa-solid fa-circle-check"></i> Acesso Autorizado!';
+                    btnConfirm.style.background = '#059669';
+                }
+
+                // Verificar se o usuário marcou "Lembrar este dispositivo por 7 dias"
+                const trustCheckbox = document.getElementById('check-trust-device-7days');
+                const remember7Days = trustCheckbox ? trustCheckbox.checked : true;
+
+                if (remember7Days && window.SBPS_Supabase) {
+                    await window.SBPS_Supabase.registerTrustedDevice(pending2faUser.email);
+                } else if (remember7Days) {
+                    const expires = Date.now() + 7 * 24 * 60 * 60 * 1000;
+                    localStorage.setItem('sbps_trusted_' + pending2faUser.email.toLowerCase(), expires.toString());
+                }
+
+                currentUser = pending2faUser;
+                localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+
+                setTimeout(() => {
+                    window.close2faLoginModal();
+                    if (authContainer) authContainer.style.display = 'none';
+                    if (memberContent) memberContent.style.display = 'block';
+                    updateUserBadges();
+                    renderUserData();
+                    renderCertificates();
+                    if (typeof showDashboard === 'function') showDashboard();
+                    if (typeof showToastMessage === 'function') {
+                        showToastMessage(`Bem-vindo(a), ${currentUser.nome || 'Associado'}!`);
+                    }
+                }, 700);
+            } else {
+                if (btnConfirm) {
+                    btnConfirm.disabled = false;
+                    btnConfirm.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Confirmar e Acessar Portal';
+                }
+                digitInputs.forEach(i => i.classList.add('is-error'));
+                if (errorMsg) {
+                    errorMsg.style.display = 'flex';
+                    errorMsg.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${verifyRes.error || 'Código 2FA incorreto ou expirado. Tente novamente.'}`;
+                }
+                digitInputs[0].focus();
+            }
+        };
+
+        // Preferência de 2FA permanente na aba Perfil
+        window.toggleTwoFactorPreference = async function (checked) {
+            if (!currentUser) return;
+            currentUser.dois_fatores_sempre = checked;
+            localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+
+            const label2fa = document.getElementById('label-2fa-status');
+            if (label2fa) {
+                label2fa.textContent = checked ? 'Máxima Proteção (Sempre)' : 'Padrão (7 Dias)';
+                label2fa.style.color = checked ? '#059669' : '#64748b';
+            }
+
+            if (window.SBPS_Supabase) {
+                await window.SBPS_Supabase.updateTwoFactorPreference(currentUser.email, checked);
+            }
+
+            if (typeof showToastMessage === 'function') {
+                showToastMessage(checked 
+                    ? '2FA Obrigatório ativado! Você receberá código em todos os acessos.' 
+                    : 'Modo padrão ativado: Dispositivos confiáveis são lembrados por 7 dias.');
+            }
+        };
+
+        // Revogar Dispositivo Confiável Atual
+        window.revokeCurrentDevice = async function () {
+            if (!currentUser) return;
+
+            if (window.SBPS_Supabase) {
+                await window.SBPS_Supabase.revokeTrustedDevice(currentUser.email);
+            }
+            localStorage.removeItem('sbps_trusted_' + (currentUser.email || '').toLowerCase());
+
+            const badgeTrusted = document.getElementById('badge-device-trusted');
+            if (badgeTrusted) {
+                badgeTrusted.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Não Confiável (Exige 2FA)';
+                badgeTrusted.style.background = '#fef2f2';
+                badgeTrusted.style.color = '#dc2626';
+                badgeTrusted.style.borderColor = '#fecaca';
+            }
+
+            if (typeof showToastMessage === 'function') {
+                showToastMessage('Dispositivo esquecido. No próximo login, um código de verificação 2FA será solicitado.');
+            }
+        };
 
         const fixoInput = document.getElementById('reg-fixo');
         if (fixoInput) {
@@ -1887,6 +2603,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const elStatus = document.getElementById('edit-status');
         if (elLoginUser) elLoginUser.value = currentUser.login_usuario || currentUser.email || '';
         if (elStatus) elStatus.value = currentUser.status || 'Ativo';
+
+        // 5. Segurança & Dispositivos (2FA)
+        const toggle2fa = document.getElementById('toggle-dois-fatores-sempre');
+        const label2fa = document.getElementById('label-2fa-status');
+        const deviceNameDisplay = document.getElementById('current-device-name-display');
+        const badgeTrusted = document.getElementById('badge-device-trusted');
+
+        if (toggle2fa) {
+            toggle2fa.checked = !!currentUser.dois_fatores_sempre;
+        }
+        if (label2fa) {
+            label2fa.textContent = currentUser.dois_fatores_sempre ? 'Máxima Proteção (Sempre)' : 'Padrão (7 Dias)';
+            label2fa.style.color = currentUser.dois_fatores_sempre ? '#059669' : '#64748b';
+        }
+        if (deviceNameDisplay && window.SBPS_Supabase) {
+            deviceNameDisplay.textContent = window.SBPS_Supabase.getDeviceName();
+        }
+        if (badgeTrusted) {
+            const isLocalTrusted = localStorage.getItem('sbps_trusted_' + (currentUser.email || '').toLowerCase());
+            if (isLocalTrusted && Number(isLocalTrusted) > Date.now()) {
+                badgeTrusted.innerHTML = '<i class="fa-solid fa-circle-check"></i> Confiável (7 dias)';
+                badgeTrusted.style.background = '#ecfdf5';
+                badgeTrusted.style.color = '#059669';
+                badgeTrusted.style.borderColor = '#a7f3d0';
+            } else {
+                badgeTrusted.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Não Confiável (Exige 2FA)';
+                badgeTrusted.style.background = '#fef2f2';
+                badgeTrusted.style.color = '#dc2626';
+                badgeTrusted.style.borderColor = '#fecaca';
+            }
+        }
 
         // ViaCEP na Aba Perfil
         if (elCep && !elCep.dataset.cepBound) {

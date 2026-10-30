@@ -50,7 +50,7 @@
 
                         <div class="evt-form-group" style="margin-bottom: 15px;">
                             <label>E-mail ou CPF <span style="color:red;">*</span></label>
-                            <input type="text" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
+                            <input type="text" id="login-part-user" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
                         </div>
                         <div class="evt-form-group" style="margin-bottom: 15px;">
                             <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -215,7 +215,7 @@
                         
                         <div class="evt-form-group" style="margin-bottom: 15px;">
                             <label>E-mail ou CPF <span style="color:red;">*</span></label>
-                            <input type="text" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
+                            <input type="text" id="login-pal-user" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
                         </div>
                         <div class="evt-form-group" style="margin-bottom: 15px;">
                             <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -457,6 +457,9 @@
                     <h1 class="evt-page-title"><i class="fa-solid fa-calendar-plus"></i> Criar Novo Evento / Capacitação</h1>
                 </div>
 
+                <!-- Banner Dinâmico de Cota e Publicações do Palestrante -->
+                <div id="quota-criar-evento-banner-container" style="margin-bottom: 20px;"></div>
+
                 <div class="evt-auth-card" style="padding:25px;">
                     <form id="form-criar-evento-palestrante">
                         <h3 style="color:var(--evt-primary); margin-bottom:15px;"><i class="fa-solid fa-network-wired"></i> 1. Dados para Webhook / Integração</h3>
@@ -668,6 +671,355 @@
                     <button type="button" class="evt-btn-card-secondary" onclick="document.getElementById('evt-modal-confirmar-evento').style.display='none'"><i class="fa-solid fa-pen"></i> Voltar e Editar</button>
                     <button type="button" id="btn-confirmar-publicacao" class="evt-btn-primary" style="width: auto; margin: 0;"><i class="fa-solid fa-check"></i> Confirmar e Publicar</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL DE PAGAMENTO DE INSCRIÇÃO EM EVENTO (PARTICIPANTE)
+         ========================================================================== -->
+    <div id="modal-pagamento-inscricao" class="evt-modal" style="display: none;">
+        <div class="evt-modal-content" style="max-width: 620px;">
+            <div class="evt-modal-header" style="background: linear-gradient(135deg, #0F3B5F, #1E293B); color: #fff;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-credit-card" style="font-size:1.3rem; color:#10B981;"></i>
+                    <div>
+                        <h2 style="margin:0; font-size:1.15rem; color:#fff;">Pagamento da Inscrição</h2>
+                        <p style="margin:2px 0 0 0; font-size:0.75rem; color:#94A3B8;">Área de Eventos & Cursos SBPS</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-fechar-modal" onclick="window.fecharModalPagamentoInscricao()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Corpo do Modal -->
+            <div class="evt-modal-body" id="modal-inscricao-body">
+                <!-- Resumo do Evento e Valor -->
+                <div class="evt-pay-event-summary">
+                    <div style="flex:1;">
+                        <span class="evt-pay-badge-type" id="pay-insc-tipo">CURSO PRESENCIAL</span>
+                        <h3 id="pay-insc-titulo" style="margin:6px 0 4px 0; font-size:1.05rem; color:var(--evt-primary);">Título do Evento</h3>
+                        <p id="pay-insc-palestrante" style="margin:0; font-size:0.82rem; color:var(--evt-text-muted);"><i class="fa-solid fa-user-tie"></i> Palestrante</p>
+                        <p id="pay-insc-data" style="margin:2px 0 0 0; font-size:0.82rem; color:var(--evt-text-muted);"><i class="fa-solid fa-calendar"></i> Data</p>
+                    </div>
+                    <div class="evt-pay-value-box">
+                        <span style="font-size:0.75rem; text-transform:uppercase; color:#64748B; font-weight:600;">Total da Inscrição</span>
+                        <div class="evt-pay-price" id="pay-insc-valor">R$ 0,00</div>
+                        <span style="font-size:0.7rem; color:#059669; font-weight:600;"><i class="fa-solid fa-shield-check"></i> Pagamento Seguro</span>
+                    </div>
+                </div>
+
+                <!-- Seletor de Método de Pagamento -->
+                <div class="evt-pay-methods-tabs">
+                    <button type="button" class="evt-pay-tab-btn active" id="tab-btn-pay-pix" onclick="window.switchInscricaoPaymentMethod('pix')">
+                        <i class="fa-brands fa-pix" style="color:#32BCAD;"></i> PIX Instantâneo
+                    </button>
+                    <button type="button" class="evt-pay-tab-btn" id="tab-btn-pay-card" onclick="window.switchInscricaoPaymentMethod('card')">
+                        <i class="fa-solid fa-credit-card" style="color:#0F3B5F;"></i> Cartão de Crédito
+                    </button>
+                </div>
+
+                <!-- Aba PIX -->
+                <div id="pay-insc-method-pix" class="evt-pay-method-content">
+                    <div class="evt-pay-pix-container">
+                        <div class="evt-pix-qr-wrapper">
+                            <img id="pay-insc-qr-img" src="" alt="QR Code PIX SBPS" style="width:150px; height:150px; border-radius:8px; border:1px solid #E2E8F0;">
+                            <div style="font-size:0.75rem; color:#64748B; margin-top:6px;"><i class="fa-solid fa-qrcode"></i> Aponte a câmera do seu banco</div>
+                        </div>
+                        <div class="evt-pix-copy-wrapper" style="flex:1;">
+                            <label style="font-size:0.8rem; font-weight:600; color:#334155; margin-bottom:5px; display:block;">Código Pix Copia e Cola:</label>
+                            <div style="display:flex; gap:8px;">
+                                <input type="text" id="pay-insc-pix-copia" class="evt-form-control" readonly style="font-size:0.75rem; background:#F8FAFC; color:#475569; font-family:monospace;">
+                                <button type="button" class="evt-btn-primary" style="width:auto; padding:8px 14px; font-size:0.82rem; margin:0;" onclick="window.copiarCodigoPixInscricao()">
+                                    <i class="fa-solid fa-copy"></i> Copiar
+                                </button>
+                            </div>
+                            <p style="font-size:0.75rem; color:#64748B; margin:8px 0 0 0; line-height:1.4;">
+                                O pagamento é identificado em segundos. Após a aprovação, sua vaga é confirmada na aba "Inscrições".
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aba Cartão de Crédito -->
+                <div id="pay-insc-method-card" class="evt-pay-method-content" style="display:none;">
+                    <div class="evt-grid-2" style="gap:12px;">
+                        <div class="evt-form-group evt-full-width">
+                            <label style="font-size:0.8rem; font-weight:600;">Número do Cartão</label>
+                            <input type="text" id="pay-card-num" class="evt-form-control" placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+                        <div class="evt-form-group evt-full-width">
+                            <label style="font-size:0.8rem; font-weight:600;">Nome Impresso no Cartão</label>
+                            <input type="text" id="pay-card-nome" class="evt-form-control" placeholder="Nome como no cartão">
+                        </div>
+                        <div class="evt-form-group">
+                            <label style="font-size:0.8rem; font-weight:600;">Validade</label>
+                            <input type="text" id="pay-card-val" class="evt-form-control" placeholder="MM/AA" maxlength="5">
+                        </div>
+                        <div class="evt-form-group">
+                            <label style="font-size:0.8rem; font-weight:600;">CVV</label>
+                            <input type="text" id="pay-card-cvv" class="evt-form-control" placeholder="123" maxlength="4">
+                        </div>
+                        <div class="evt-form-group evt-full-width">
+                            <label style="font-size:0.8rem; font-weight:600;">Parcelamento</label>
+                            <select id="pay-card-parcelas" class="evt-form-control">
+                                <option value="1">1x sem juros (À vista)</option>
+                                <option value="2">2x sem juros</option>
+                                <option value="3">3x sem juros</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner Sandbox / Simulação Imediata de Teste -->
+                <div class="evt-pay-sandbox-banner">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="evt-badge-test"><i class="fa-solid fa-flask"></i> Modo de Testes</span>
+                        <span style="font-size:0.8rem; color:#475569;">Simule a aprovação em tempo real:</span>
+                    </div>
+                    <button type="button" id="btn-simular-pay-inscricao" class="evt-btn-simulate-pay" onclick="window.simularAprovacaoPagamentoInscricao()">
+                        <i class="fa-solid fa-bolt"></i> Simular Pagamento Aprovado
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estado de Sucesso / Comprovante -->
+            <div class="evt-modal-body" id="modal-inscricao-success" style="display:none; text-align:center; padding:30px 20px;">
+                <div class="evt-pay-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <h3 style="color:#059669; margin:12px 0 6px 0;">Inscrição Confirmada com Sucesso!</h3>
+                <p style="color:#475569; font-size:0.9rem; max-width:400px; margin:0 auto 20px auto;">
+                    O pagamento da taxa de inscrição foi aprovado e seu acesso ao evento foi liberado com sucesso.
+                </p>
+                <div class="evt-receipt-box" id="pay-insc-receipt-details">
+                    <!-- Detalhes do comprovante -->
+                </div>
+                <div style="margin-top:25px; display:flex; justify-content:center; gap:12px;">
+                    <button type="button" class="evt-btn-primary" style="width:auto;" onclick="window.concluirInscricaoSucesso()">
+                        <i class="fa-solid fa-ticket"></i> Acessar Minhas Inscrições
+                    </button>
+                </div>
+            </div>
+
+            <div class="evt-modal-footer" id="modal-inscricao-footer">
+                <button type="button" class="evt-btn-card-secondary" onclick="window.fecharModalPagamentoInscricao()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                <button type="button" class="evt-btn-primary" id="btn-processar-card-inscricao" style="width:auto; margin:0; display:none;" onclick="window.processarCartaoInscricao()">
+                    <i class="fa-solid fa-lock"></i> Pagar com Cartão
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL DE PLANOS, MENSALIDADE E COTAS DO PALESTRANTE
+         ========================================================================== -->
+    <div id="modal-pagamento-palestrante" class="evt-modal" style="display: none;">
+        <div class="evt-modal-content" style="max-width: 760px;">
+            <div class="evt-modal-header" style="background: linear-gradient(135deg, #0F3B5F, #8B5CF6); color: #fff;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-crown" style="font-size:1.3rem; color:#FBBF24;"></i>
+                    <div>
+                        <h2 style="margin:0; font-size:1.15rem; color:#fff;">Planos & Publicações de Palestrante</h2>
+                        <p style="margin:2px 0 0 0; font-size:0.75rem; color:#E2E8F0;">Mensalidade Base de R$ 50,00 (até 5 publicações no mês)</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-fechar-modal" onclick="window.fecharModalPagamentoPalestrante()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="evt-modal-body" id="modal-palestrante-body">
+                <!-- Widget Cota Atual do Palestrante -->
+                <div class="evt-quota-status-banner" id="palestrante-quota-banner">
+                    <div style="flex:1;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="evt-badge-tag" id="quota-banner-plano" style="background:#0F3B5F; color:#fff; font-weight:700;">Plano Base</span>
+                            <span id="quota-banner-status" class="evt-badge-status-ativo"><i class="fa-solid fa-circle-check"></i> Assinatura Ativa</span>
+                        </div>
+                        <h4 style="margin:6px 0 2px 0; color:var(--evt-primary);" id="quota-banner-resumo">Você utilizou 0 de 5 publicações no mês</h4>
+                        <p style="margin:0; font-size:0.78rem; color:var(--evt-text-muted);">
+                            Válido para eventos e cursos combinados (ex: 3 eventos e 2 cursos, 5 de um só, etc.)
+                        </p>
+                    </div>
+                    <div class="evt-quota-progress-circle" id="quota-circle-container">
+                        <span id="quota-disponiveis-num">5</span>
+                        <small>restantes</small>
+                    </div>
+                </div>
+
+                <!-- Seletor das 2 Opções de Publicação -->
+                <div class="evt-choice-options-wrapper">
+                    <h4 style="color:var(--evt-primary); margin:0 0 12px 0; font-size:0.95rem;">
+                        <i class="fa-solid fa-layer-group"></i> Escolha como deseja liberar novas publicações:
+                    </h4>
+
+                    <div class="evt-choice-cards-grid">
+                        <!-- OPÇÃO 1: PUBLICAR AVULSO (R$ 10) -->
+                        <div class="evt-choice-card active" id="card-choice-avulso" onclick="window.selecionarOpcaoPalestrante('avulso')">
+                            <div class="evt-choice-card-header">
+                                <span class="evt-badge-opt">Opção 1</span>
+                                <span class="evt-badge-pill">Rápido</span>
+                            </div>
+                            <h3>Publicação Avulsa</h3>
+                            <p>Pague apenas pela nova publicação. Concede <strong>+1 publicação extra</strong> para este mês.</p>
+                            <div class="evt-choice-price">
+                                <strong>R$ 10,00</strong>
+                                <small>por publicação adicional</small>
+                            </div>
+                            <button type="button" class="evt-btn-select-choice" id="btn-select-avulso">
+                                <i class="fa-solid fa-circle-check"></i> Selecionar Avulso
+                            </button>
+                        </div>
+
+                        <!-- OPÇÃO 2: AUMENTAR O PACOTE MENSAL -->
+                        <div class="evt-choice-card" id="card-choice-upgrade" onclick="window.selecionarOpcaoPalestrante('upgrade')">
+                            <div class="evt-choice-card-header">
+                                <span class="evt-badge-opt">Opção 2</span>
+                                <span class="evt-badge-pill" style="background:#EDE9FE; color:#7C3AED;">Econômico</span>
+                            </div>
+                            <h3>Aumentar o Pacote</h3>
+                            <p>Aumente de 5 em 5 eventos/cursos com mensalidade contínua e maior economia por publicação.</p>
+                            <div class="evt-choice-price">
+                                <strong id="choice-upgrade-price-preview">A partir de R$ 90,00</strong>
+                                <small>por mês</small>
+                            </div>
+                            <button type="button" class="evt-btn-select-choice" id="btn-select-upgrade">
+                                <i class="fa-solid fa-arrows-up-to-line"></i> Ver Pacotes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-seleção dos Pacotes (Quando Opção 2 está ativa) -->
+                <div id="section-packages-grid" style="display:none; margin-top:18px;">
+                    <h5 style="margin:0 0 10px 0; color:#334155; font-size:0.85rem; font-weight:700;">
+                        <i class="fa-solid fa-cubes"></i> Selecione o pacote desejado por mês:
+                    </h5>
+                    <div class="evt-packages-table-grid">
+                        <div class="evt-pkg-item" data-plan="Base" onclick="window.escolherPacotePalestrante('Base', 50, 5)">
+                            <div class="pkg-header">Base</div>
+                            <div class="pkg-limit">5 publicações</div>
+                            <div class="pkg-price">R$ 50,00<span>/mês</span></div>
+                        </div>
+                        <div class="evt-pkg-item active" data-plan="Pacote 10" onclick="window.escolherPacotePalestrante('Pacote 10', 90, 10)">
+                            <span class="pkg-ribbon">Recomendado</span>
+                            <div class="pkg-header">Pacote 10</div>
+                            <div class="pkg-limit">10 publicações</div>
+                            <div class="pkg-price">R$ 90,00<span>/mês</span></div>
+                        </div>
+                        <div class="evt-pkg-item" data-plan="Pacote 15" onclick="window.escolherPacotePalestrante('Pacote 15', 125, 15)">
+                            <div class="pkg-header">Pacote 15</div>
+                            <div class="pkg-limit">15 publicações</div>
+                            <div class="pkg-price">R$ 125,00<span>/mês</span></div>
+                        </div>
+                        <div class="evt-pkg-item" data-plan="Pacote 20" onclick="window.escolherPacotePalestrante('Pacote 20', 155, 20)">
+                            <div class="pkg-header">Pacote 20</div>
+                            <div class="pkg-limit">20 publicações</div>
+                            <div class="pkg-price">R$ 155,00<span>/mês</span></div>
+                        </div>
+                        <div class="evt-pkg-item" data-plan="Ilimitado" onclick="window.escolherPacotePalestrante('Ilimitado', 170, 999999)">
+                            <span class="pkg-ribbon" style="background:#10B981;">Melhor Valor</span>
+                            <div class="pkg-header">Ilimitado</div>
+                            <div class="pkg-limit">Ilimitadas</div>
+                            <div class="pkg-price">R$ 170,00<span>/mês</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção de Checkout do Palestrante -->
+                <div class="evt-palestrante-checkout-box" id="palestrante-checkout-section" style="margin-top:20px;">
+                    <div class="evt-checkout-summary-row">
+                        <div>
+                            <span style="font-size:0.75rem; color:#64748B; font-weight:600;">ITEM SELECIONADO</span>
+                            <h4 id="palestrante-selected-item-title" style="margin:2px 0 0 0; color:var(--evt-primary);">Publicação Avulsa (+1 cota)</h4>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="font-size:0.75rem; color:#64748B; font-weight:600;">VALOR A PAGAR</span>
+                            <div id="palestrante-selected-item-price" style="font-size:1.3rem; font-weight:800; color:#059669;">R$ 10,00</div>
+                        </div>
+                    </div>
+
+                    <!-- Métodos de Pagamento Palestrante -->
+                    <div class="evt-pay-methods-tabs" style="margin-top:15px;">
+                        <button type="button" class="evt-pay-tab-btn active" id="tab-btn-pal-pix" onclick="window.switchPalestrantePaymentMethod('pix')">
+                            <i class="fa-brands fa-pix" style="color:#32BCAD;"></i> PIX Instantâneo
+                        </button>
+                        <button type="button" class="evt-pay-tab-btn" id="tab-btn-pal-card" onclick="window.switchPalestrantePaymentMethod('card')">
+                            <i class="fa-solid fa-credit-card" style="color:#0F3B5F;"></i> Cartão de Crédito
+                        </button>
+                    </div>
+
+                    <!-- PIX Palestrante -->
+                    <div id="pay-pal-method-pix" class="evt-pay-method-content">
+                        <div class="evt-pay-pix-container">
+                            <div class="evt-pix-qr-wrapper">
+                                <img id="pay-pal-qr-img" src="" alt="QR Code PIX SBPS" style="width:140px; height:140px; border-radius:8px; border:1px solid #E2E8F0;">
+                            </div>
+                            <div class="evt-pix-copy-wrapper" style="flex:1;">
+                                <label style="font-size:0.8rem; font-weight:600; color:#334155; margin-bottom:5px; display:block;">Código Pix Copia e Cola:</label>
+                                <div style="display:flex; gap:8px;">
+                                    <input type="text" id="pay-pal-pix-copia" class="evt-form-control" readonly style="font-size:0.75rem; background:#F8FAFC; color:#475569; font-family:monospace;">
+                                    <button type="button" class="evt-btn-primary" style="width:auto; padding:8px 14px; font-size:0.82rem; margin:0;" onclick="window.copiarCodigoPixPalestrante()">
+                                        <i class="fa-solid fa-copy"></i> Copiar
+                                    </button>
+                                </div>
+                                <p style="font-size:0.75rem; color:#64748B; margin:8px 0 0 0; line-height:1.4;">
+                                    Ao confirmar o pagamento, sua cota é liberada imediatamente para você criar eventos ou cursos na plataforma.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cartão Palestrante -->
+                    <div id="pay-pal-method-card" class="evt-pay-method-content" style="display:none;">
+                        <div class="evt-grid-2" style="gap:10px;">
+                            <div class="evt-form-group evt-full-width">
+                                <label style="font-size:0.8rem; font-weight:600;">Número do Cartão</label>
+                                <input type="text" id="pal-card-num" class="evt-form-control" placeholder="0000 0000 0000 0000">
+                            </div>
+                            <div class="evt-form-group evt-full-width">
+                                <label style="font-size:0.8rem; font-weight:600;">Nome no Cartão</label>
+                                <input type="text" id="pal-card-nome" class="evt-form-control" placeholder="Nome como no cartão">
+                            </div>
+                            <div class="evt-form-group">
+                                <label style="font-size:0.8rem; font-weight:600;">Validade</label>
+                                <input type="text" id="pal-card-val" class="evt-form-control" placeholder="MM/AA">
+                            </div>
+                            <div class="evt-form-group">
+                                <label style="font-size:0.8rem; font-weight:600;">CVV</label>
+                                <input type="text" id="pal-card-cvv" class="evt-form-control" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sandbox Palestrante -->
+                    <div class="evt-pay-sandbox-banner" style="margin-top:15px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="evt-badge-test"><i class="fa-solid fa-flask"></i> Modo Sandbox</span>
+                            <span style="font-size:0.8rem; color:#475569;">Aprovação imediata de teste:</span>
+                        </div>
+                        <button type="button" id="btn-simular-pay-palestrante" class="evt-btn-simulate-pay" onclick="window.simularAprovacaoPagamentoPalestrante()">
+                            <i class="fa-solid fa-bolt"></i> Simular Pagamento Aprovado
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sucesso Palestrante -->
+            <div class="evt-modal-body" id="modal-palestrante-success" style="display:none; text-align:center; padding:30px 20px;">
+                <div class="evt-pay-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <h3 style="color:#059669; margin:12px 0 6px 0;" id="pal-success-title">Cota Atualizada com Sucesso!</h3>
+                <p style="color:#475569; font-size:0.9rem; max-width:440px; margin:0 auto 20px auto;" id="pal-success-desc">
+                    Seu pagamento foi confirmado e a liberação para novas publicações já está disponível.
+                </p>
+                <div class="evt-receipt-box" id="pay-pal-receipt-details">
+                    <!-- Detalhes do recibo do palestrante -->
+                </div>
+                <div style="margin-top:25px; display:flex; justify-content:center; gap:12px;">
+                    <button type="button" class="evt-btn-primary" style="width:auto;" onclick="window.concluirPagamentoPalestranteSucesso()">
+                        <i class="fa-solid fa-calendar-plus"></i> Continuar Criando Evento
+                    </button>
+                </div>
+            </div>
+
+            <div class="evt-modal-footer" id="modal-palestrante-footer">
+                <button type="button" class="evt-btn-card-secondary" onclick="window.fecharModalPagamentoPalestrante()"><i class="fa-solid fa-xmark"></i> Fechar</button>
             </div>
         </div>
     </div>
