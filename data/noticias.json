@@ -1,13 +1,5 @@
 [
   {
-    "id": "122",
-    "title": "Previdência Própria de Gravatá: IPSEG Promove Palestra Essencial para Servidores e Cidadãos",
-    "description": "O Instituto de Previdência dos Servidores Municipais de Gravatá (IPSEG) realizará uma palestra informativa sobre a Previdência Própria do município. O evento, aberto a servidores e à população, visa esclarecer dúvidas e aprofundar o conhecimento sobre o Regime Próprio de Previdência Social (RPPS) local.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae7701139f4463594031684258318e3&url=https%3a%2f%2fgravata.pe.gov.br%2fnoticia%2fipseg-promove-palestra-esclarecedora-sobre-a-previdencia-propria-do-municipio-de-gravata%2f&c=14907068049100739001&mkt=pt-br",
-    "image": "https://gravata.pe.gov.br/wp-content/uploads/2026/10/WhatsApp-Image-2026-10-29-at-11.31.02-225x300.jpeg"
-  },
-  {
     "id": "131",
     "title": "Operação da PF Desvenda Rombo de R$ 16 Milhões na Previdência de Servidores em Palhoça",
     "description": "A Polícia Federal deflagrou a Operação Casa de Palha para investigar o desvio de R$ 16 milhões do Instituto de Previdência Social dos Servidores Públicos de Palhoça (IPPA). As fraudes, ocorridas em 2013, envolvem gestão fraudulenta, corrupção e lavagem de dinheiro, com suspeita de uso dos valores na compra de bens. A atual gestão do IPPA colabora ativamente com as investigações.",
@@ -16,27 +8,51 @@
     "image": "https://s2-g1.glbimg.com/KjNSsTRYpSls7WMCw-tZbjIGaY=/0x0:1300x921/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/9/A/YvZg9bSwGdHLb4ZSd71Q/pf-mira-grupo-suspeito-de-fraudar-r-16-milhoes-no-fundo-de-previdencia-dos-servidores-de-palhoca.jpeg"
   },
   {
-    "id": "130",
-    "title": "STF Confirma Limitação de Isenção Previdenciária para Servidores Aposentados por Incapacidade Grave",
-    "description": "O Supremo Tribunal Federal (STF) validou a regra da Reforma da Previdência de 2019 que restringe a isenção da contribuição previdenciária de servidores públicos inativos com doenças graves e incapacitantes. Antes, a isenção era mais abrangente, mas agora se limita ao teto do Regime Geral de Previdência Social (RGPS), impactando financeiramente essa parcela de aposentados.",
+    "id": "117",
+    "title": "STF Mantém Alteração na Contribuição Previdenciária de Servidores Aposentados por Incapacidade: Entenda a Decisão da ADI 6336",
+    "description": "O Supremo Tribunal Federal validou, por maioria de votos, a mudança na Reforma da Previdência de 2019 que limita a isenção da contribuição previdenciária de servidores públicos aposentados por doenças graves ou incapacitantes. A decisão da ADI 6336 estabelece que a isenção agora se restringe ao teto do Regime Geral de Previdência Social (RGPS), impactando diretamente os proventos desses beneficiários.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae8c2fc286f4cb4939857f2642d1fc9&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados%2f&c=2020271326690933483&mkt=pt-br",
+    "link": "https://noticias.stf.jus.br/postsnoticias/stf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados/",
     "image": ""
   },
   {
-    "id": "115",
-    "title": "STF Valida Nova Regra de Contribuição Previdenciária para Servidores Aposentados por Incapacidade",
-    "description": "O Supremo Tribunal Federal (STF) validou a alteração da Reforma da Previdência de 2019 que modifica a isenção da contribuição previdenciária para servidores públicos aposentados com doenças graves ou incapacitantes. A decisão limita a isenção ao teto do Regime Geral de Previdência Social (RGPS), revogando a regra anterior que previa uma proteção mais ampla. Este julgamento impacta diretamente os proventos de aposentadoria desses servidores.",
+    "id": "122",
+    "title": "Previdência Própria de Gravatá: IPSEG Promove Palestra Essencial para Servidores e Cidadãos",
+    "description": "O Instituto de Previdência dos Servidores Municipais de Gravatá (IPSEG) realizará uma palestra informativa sobre a Previdência Própria do município. O evento, aberto a servidores e à população, visa esclarecer dúvidas e aprofundar o conhecimento sobre o Regime Próprio de Previdência Social (RPPS) local.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae61201807e4c738dd6715fd8cfcedd&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados%2f&c=2020271326690933483&mkt=pt-br",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae7701139f4463594031684258318e3&url=https%3a%2f%2fgravata.pe.gov.br%2fnoticia%2fipseg-promove-palestra-esclarecedora-sobre-a-previdencia-propria-do-municipio-de-gravata%2f&c=14907068049100739001&mkt=pt-br",
+    "image": "https://gravata.pe.gov.br/wp-content/uploads/2026/10/WhatsApp-Image-2026-10-29-at-11.31.02-225x300.jpeg"
+  },
+  {
+    "id": "104",
+    "title": "Ações de Valorização e Avanços na Previdência Marcam o Dia do Servidor Público no Paraná",
+    "description": "A Secretaria da Administração e da Previdência (Seap) do Paraná celebra o Dia do Servidor Público com um balanço positivo de iniciativas focadas na melhoria de salários, progressões de carreira, ampliação da assistência à saúde e capacitação profissional, reforçando o compromisso com o funcionalismo estadual. Essas medidas visam reconhecer e incentivar os profissionais que dedicam seu trabalho ao serviço público.",
+    "date": null,
+    "link": "https://www.administracao.pr.gov.br/Noticia/Secretaria-da-Administracao-e-da-Previdencia-celebra-o-Dia-do-Servidor-Publico-valorizando",
+    "image": "https://www.administracao.pr.gov.br/sites/default/arquivos_restritos/files/imagem/2026-10/thumbnail_video_institucional_1.png"
+  },
+  {
+    "id": "123",
+    "title": "STF Suspende Julgamento Crucial sobre Igualdade de Gênero na Previdência Complementar",
+    "description": "O Supremo Tribunal Federal (STF) analisa a constitucionalidade da exigência de igual tempo de contribuição para homens e mulheres em planos de previdência complementar. O julgamento, que aborda especificamente o caso da Previ, pode redefinir direitos previdenciários ao considerar as particularidades da aposentadoria feminina. A sessão foi suspensa e aguarda a retomada com a presença de todos os ministros para a decisão final.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae77198daf7408d98803c8020bfd83e&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fsupremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=3779082299344736522&mkt=pt-br",
+    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
+  },
+  {
+    "id": "124",
+    "title": "Diarista e INSS: Guia Completo para Entender a Contribuição e o Enquadramento Legal",
+    "description": "Este artigo descomplica as regras do INSS para diaristas, explicando a crucial diferença entre a trabalhadora autônoma e a empregada doméstica. Aborda as formas de contribuição, os direitos previdenciários e a importância do registro correto para garantir o acesso aos benefícios.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae774b2ce7942609fe238363a7b8e5b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fdiarista-precisa-pagar-inss-veja-quando-e-autonoma-e-quando-e-domestica%2f&c=10936730241462492274&mkt=pt-br",
     "image": ""
   },
   {
-    "id": "129",
-    "title": "STF Inicia Julgamento Crucial sobre Igualdade de Gênero na Previdência Complementar",
-    "description": "O Supremo Tribunal Federal (STF) começou a analisar um recurso que questiona a aplicação do mesmo critério de cálculo para homens e mulheres na aposentadoria complementar da Previ, a Caixa de Previdência dos Funcionários do Banco do Brasil. A discussão central é se a exigência de 30 anos de filiação para ambos os sexos viola o princípio da igualdade, considerando as particularidades da trajetória profissional feminina.",
+    "id": "125",
+    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
+    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae8c2fc286f4cb4939857f2642d1fc9&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-comeca-a-julgar-diferenca-de-tratamento-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=11400275671584715882&mkt=pt-br",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
     "image": ""
   },
   {
@@ -48,51 +64,27 @@
     "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
   },
   {
-    "id": "123",
-    "title": "STF Suspende Julgamento Crucial sobre Igualdade de Gênero na Previdência Complementar",
-    "description": "O Supremo Tribunal Federal (STF) analisa a constitucionalidade da exigência de igual tempo de contribuição para homens e mulheres em planos de previdência complementar. O julgamento, que aborda especificamente o caso da Previ, pode redefinir direitos previdenciários ao considerar as particularidades da aposentadoria feminina. A sessão foi suspensa e aguarda a retomada com a presença de todos os ministros para a decisão final.",
+    "id": "129",
+    "title": "STF Inicia Julgamento Crucial sobre Igualdade de Gênero na Previdência Complementar",
+    "description": "O Supremo Tribunal Federal (STF) começou a analisar um recurso que questiona a aplicação do mesmo critério de cálculo para homens e mulheres na aposentadoria complementar da Previ, a Caixa de Previdência dos Funcionários do Banco do Brasil. A discussão central é se a exigência de 30 anos de filiação para ambos os sexos viola o princípio da igualdade, considerando as particularidades da trajetória profissional feminina.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae77198daf7408d98803c8020bfd83e&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fsupremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=3779082299344736522&mkt=pt-br",
-    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
-  },
-  {
-    "id": "104",
-    "title": "Ações de Valorização e Avanços na Previdência Marcam o Dia do Servidor Público no Paraná",
-    "description": "A Secretaria da Administração e da Previdência (Seap) do Paraná celebra o Dia do Servidor Público com um balanço positivo de iniciativas focadas na melhoria de salários, progressões de carreira, ampliação da assistência à saúde e capacitação profissional, reforçando o compromisso com o funcionalismo estadual. Essas medidas visam reconhecer e incentivar os profissionais que dedicam seu trabalho ao serviço público.",
-    "date": null,
-    "link": "https://www.administracao.pr.gov.br/Noticia/Secretaria-da-Administracao-e-da-Previdencia-celebra-o-Dia-do-Servidor-Publico-valorizando",
-    "image": "https://www.administracao.pr.gov.br/sites/default/arquivos_restritos/files/imagem/2026-10/thumbnail_video_institucional_1.png"
-  },
-  {
-    "id": "125",
-    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
-    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae8c2fc286f4cb4939857f2642d1fc9&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-comeca-a-julgar-diferenca-de-tratamento-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=11400275671584715882&mkt=pt-br",
     "image": ""
   },
   {
-    "id": "117",
-    "title": "STF Mantém Alteração na Contribuição Previdenciária de Servidores Aposentados por Incapacidade: Entenda a Decisão da ADI 6336",
-    "description": "O Supremo Tribunal Federal validou, por maioria de votos, a mudança na Reforma da Previdência de 2019 que limita a isenção da contribuição previdenciária de servidores públicos aposentados por doenças graves ou incapacitantes. A decisão da ADI 6336 estabelece que a isenção agora se restringe ao teto do Regime Geral de Previdência Social (RGPS), impactando diretamente os proventos desses beneficiários.",
+    "id": "115",
+    "title": "STF Valida Nova Regra de Contribuição Previdenciária para Servidores Aposentados por Incapacidade",
+    "description": "O Supremo Tribunal Federal (STF) validou a alteração da Reforma da Previdência de 2019 que modifica a isenção da contribuição previdenciária para servidores públicos aposentados com doenças graves ou incapacitantes. A decisão limita a isenção ao teto do Regime Geral de Previdência Social (RGPS), revogando a regra anterior que previa uma proteção mais ampla. Este julgamento impacta diretamente os proventos de aposentadoria desses servidores.",
     "date": null,
-    "link": "https://noticias.stf.jus.br/postsnoticias/stf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados/",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae61201807e4c738dd6715fd8cfcedd&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados%2f&c=2020271326690933483&mkt=pt-br",
     "image": ""
   },
   {
-    "id": "124",
-    "title": "Diarista e INSS: Guia Completo para Entender a Contribuição e o Enquadramento Legal",
-    "description": "Este artigo descomplica as regras do INSS para diaristas, explicando a crucial diferença entre a trabalhadora autônoma e a empregada doméstica. Aborda as formas de contribuição, os direitos previdenciários e a importância do registro correto para garantir o acesso aos benefícios.",
+    "id": "130",
+    "title": "STF Confirma Limitação de Isenção Previdenciária para Servidores Aposentados por Incapacidade Grave",
+    "description": "O Supremo Tribunal Federal (STF) validou a regra da Reforma da Previdência de 2019 que restringe a isenção da contribuição previdenciária de servidores públicos inativos com doenças graves e incapacitantes. Antes, a isenção era mais abrangente, mas agora se limita ao teto do Regime Geral de Previdência Social (RGPS), impactando financeiramente essa parcela de aposentados.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae774b2ce7942609fe238363a7b8e5b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fdiarista-precisa-pagar-inss-veja-quando-e-autonoma-e-quando-e-domestica%2f&c=10936730241462492274&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "110",
-    "title": "3º Seminário de Previdência Complementar: Guia Essencial para Servidores Públicos",
-    "description": "Um importante evento sobre previdência complementar para servidores públicos será realizado em novembro, em Brasília. O seminário, promovido por Funpresp-Exe, Funpresp-Jud e DF-PreviCom, oferecerá palestras e painéis sobre planejamento financeiro, regras previdenciárias e formação de renda futura. As inscrições são gratuitas e com vagas presenciais limitadas, além de transmissão online.",
-    "date": "2026-10-29T18:25:37.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae61085c055463f8314a5fdf77b34cd&url=https%3a%2f%2fwww.gov.br%2fservidor%2fpt-br%2fassuntos%2fnoticias%2f2026%2foutubro%2f3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro%2d%2denb%2dbrasilia&c=15542924752912275236&mkt=pt-br",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae8c2fc286f4cb4939857f2642d1fc9&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados%2f&c=2020271326690933483&mkt=pt-br",
     "image": ""
   },
   {
@@ -101,6 +93,14 @@
     "description": "O evento, organizado pela Funpresp-Exe, Funpresp-Jud e DF-PreviCom, visa capacitar servidores públicos sobre planejamento financeiro e previdenciário de longo prazo. Especialistas abordarão temas cruciais como endividamento, regras previdenciárias e estratégias de investimento para a aposentadoria. As inscrições são gratuitas e as vagas presenciais são limitadas.",
     "date": "2026-10-29T18:25:37.000Z",
     "link": "https://www.gov.br/servidor/pt-br/assuntos/noticias/2026/outubro/3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro-em-brasilia",
+    "image": ""
+  },
+  {
+    "id": "110",
+    "title": "3º Seminário de Previdência Complementar: Guia Essencial para Servidores Públicos",
+    "description": "Um importante evento sobre previdência complementar para servidores públicos será realizado em novembro, em Brasília. O seminário, promovido por Funpresp-Exe, Funpresp-Jud e DF-PreviCom, oferecerá palestras e painéis sobre planejamento financeiro, regras previdenciárias e formação de renda futura. As inscrições são gratuitas e com vagas presenciais limitadas, além de transmissão online.",
+    "date": "2026-10-29T18:25:37.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae61085c055463f8314a5fdf77b34cd&url=https%3a%2f%2fwww.gov.br%2fservidor%2fpt-br%2fassuntos%2fnoticias%2f2026%2foutubro%2f3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro%2d%2denb%2dbrasilia&c=15542924752912275236&mkt=pt-br",
     "image": ""
   },
   {
@@ -176,19 +176,19 @@
     "image": ""
   },
   {
-    "id": "103",
-    "title": "INSS e Previdência Social: Avanços na Redução de Filas e Ampliação da Proteção Social",
-    "description": "O Ministro da Previdência Social, Wolney Queiroz, destacou a importância da defesa do sistema previdenciário e os avanços significativos na gestão de benefícios do INSS, incluindo a redução recorde da fila de requerimentos e a incorporação de novos mecanismos de proteção social, como a Licença-Paternidade e o Benefício de Afastamento Protetivo.",
-    "date": "2026-10-27T21:50:00.000Z",
-    "link": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss",
-    "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss/1.jpg/@@images/3ed37962-1d04-4862-a92d-53c2a9e63529.jpeg"
-  },
-  {
     "id": "120",
     "title": "INSS Acelera Análise de Benefícios e Amplia Proteção Social com Novas Conquistas",
     "description": "O Ministério da Previdência Social reafirma seu compromisso com a proteção social, destacando a redução significativa no tempo de análise de benefícios do INSS e a inclusão de novas modalidades. O Ministro Wolney Queiroz enfatizou a defesa contínua do sistema previdenciário e os avanços na eficiência operacional do Instituto.",
     "date": "2026-10-27T21:50:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae7701139f4463594031684258318e3&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss&c=14757846840781658415&mkt=pt-br",
+    "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss/1.jpg/@@images/3ed37962-1d04-4862-a92d-53c2a9e63529.jpeg"
+  },
+  {
+    "id": "103",
+    "title": "INSS e Previdência Social: Avanços na Redução de Filas e Ampliação da Proteção Social",
+    "description": "O Ministro da Previdência Social, Wolney Queiroz, destacou a importância da defesa do sistema previdenciário e os avanços significativos na gestão de benefícios do INSS, incluindo a redução recorde da fila de requerimentos e a incorporação de novos mecanismos de proteção social, como a Licença-Paternidade e o Benefício de Afastamento Protetivo.",
+    "date": "2026-10-27T21:50:00.000Z",
+    "link": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss",
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss/1.jpg/@@images/3ed37962-1d04-4862-a92d-53c2a9e63529.jpeg"
   },
   {
@@ -272,19 +272,19 @@
     "image": ""
   },
   {
-    "id": "84",
-    "title": "Guia Essencial: Como Trabalhadores Informais e MEIs Podem Garantir Aposentadoria e Benefícios do INSS",
-    "description": "Milhões de trabalhadores brasileiros atuam sem carteira assinada, como autônomos e Microempreendedores Individuais (MEIs), e muitos desconhecem a importância de contribuir para a Previdência Social. Este artigo detalha como esses profissionais podem assegurar sua aposentadoria e ter acesso a uma série de benefícios essenciais do INSS, protegendo-se contra imprevistos e garantindo um futuro mais seguro.",
-    "date": "2026-10-26T14:45:44.000Z",
-    "link": "https://www.gov.br/previdencia/pt-br/noticias/2025/maio/contribuicao-mensal-garante-protecao-social-para-quem-nao-tem-carteira-assinada",
-    "image": ""
-  },
-  {
     "id": "74",
     "title": "Proteção Previdenciária Essencial: Como Autônomos e MEIs Podem Garantir Seus Direitos no INSS",
     "description": "Milhões de trabalhadores brasileiros atuam sem carteira assinada, mas é fundamental que conheçam as formas de contribuir para o INSS. A contribuição mensal garante acesso a uma série de benefícios previdenciários, desde a aposentadoria até auxílios em casos de doença, acidente ou maternidade, assegurando proteção social para si e seus familiares.",
     "date": "2026-10-26T14:45:44.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae0cab3f1c24b15864e1b4de02eaecf&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2025%2fmaio%2fcontribuicao-mensal-garante-protecao-social-para-quem-nao-tem-carteira-assinada&c=15368627384382047350&mkt=pt-br",
+    "image": ""
+  },
+  {
+    "id": "84",
+    "title": "Guia Essencial: Como Trabalhadores Informais e MEIs Podem Garantir Aposentadoria e Benefícios do INSS",
+    "description": "Milhões de trabalhadores brasileiros atuam sem carteira assinada, como autônomos e Microempreendedores Individuais (MEIs), e muitos desconhecem a importância de contribuir para a Previdência Social. Este artigo detalha como esses profissionais podem assegurar sua aposentadoria e ter acesso a uma série de benefícios essenciais do INSS, protegendo-se contra imprevistos e garantindo um futuro mais seguro.",
+    "date": "2026-10-26T14:45:44.000Z",
+    "link": "https://www.gov.br/previdencia/pt-br/noticias/2025/maio/contribuicao-mensal-garante-protecao-social-para-quem-nao-tem-carteira-assinada",
     "image": ""
   },
   {
@@ -302,13 +302,5 @@
     "date": "2026-10-08T08:00:00.000Z",
     "link": "https://c-level.folha.uol.com.br/negocios/2026/10/advogado-investigado-por-lavagem-com-bets-comprou-empresa-de-apostas-acusada-de-calote-no-rio.shtml",
     "image": "https://f.i.uol.com.br/fotografia/2026/09/29/17907234266abc4562d7470_1790723426_3x2_md.jpg"
-  },
-  {
-    "id": "132",
-    "title": "Reforma Previdenciária em Campinas: Novas Regras de Aposentadoria para Servidores Municipais",
-    "description": "A Prefeitura de Campinas propôs um projeto de lei para reformar a previdência de seus servidores, aumentando a idade mínima e alterando regras de transição. As mudanças buscam adequar o regime municipal à legislação federal e combater um déficit de R$ 13 bilhões no fundo Camprev.",
-    "date": "2026-08-20T19:46:15.000Z",
-    "link": "https://g1.globo.com/sp/campinas-regiao/noticia/2026/10/20/reforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml",
-    "image": "https://s2-g1.glbimg.com/g_lnyCnQpc4JSVX1Yg7f3EDWb88=/0x0:1280x960/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2019/c/W/T4ZnpeQuOqmGZZQAac2w/predio-camprev.jpg"
   }
 ]
