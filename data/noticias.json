@@ -1,21 +1,5 @@
 [
   {
-    "id": "130",
-    "title": "STF Confirma Limitação de Isenção Previdenciária para Servidores Aposentados por Incapacidade Grave",
-    "description": "O Supremo Tribunal Federal (STF) validou a regra da Reforma da Previdência de 2019 que restringe a isenção da contribuição previdenciária de servidores públicos inativos com doenças graves e incapacitantes. Antes, a isenção era mais abrangente, mas agora se limita ao teto do Regime Geral de Previdência Social (RGPS), impactando financeiramente essa parcela de aposentados.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae8c2fc286f4cb4939857f2642d1fc9&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados%2f&c=2020271326690933483&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "117",
-    "title": "STF Mantém Alteração na Contribuição Previdenciária de Servidores Aposentados por Incapacidade: Entenda a Decisão da ADI 6336",
-    "description": "O Supremo Tribunal Federal validou, por maioria de votos, a mudança na Reforma da Previdência de 2019 que limita a isenção da contribuição previdenciária de servidores públicos aposentados por doenças graves ou incapacitantes. A decisão da ADI 6336 estabelece que a isenção agora se restringe ao teto do Regime Geral de Previdência Social (RGPS), impactando diretamente os proventos desses beneficiários.",
-    "date": null,
-    "link": "https://noticias.stf.jus.br/postsnoticias/stf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados/",
-    "image": ""
-  },
-  {
     "id": "122",
     "title": "Previdência Própria de Gravatá: IPSEG Promove Palestra Essencial para Servidores e Cidadãos",
     "description": "O Instituto de Previdência dos Servidores Municipais de Gravatá (IPSEG) realizará uma palestra informativa sobre a Previdência Própria do município. O evento, aberto a servidores e à população, visa esclarecer dúvidas e aprofundar o conhecimento sobre o Regime Próprio de Previdência Social (RPPS) local.",
@@ -24,11 +8,51 @@
     "image": "https://gravata.pe.gov.br/wp-content/uploads/2026/10/WhatsApp-Image-2026-10-29-at-11.31.02-225x300.jpeg"
   },
   {
-    "id": "135",
-    "title": "STF Inicia Julgamento Crucial Sobre Igualdade de Gênero na Previdência Complementar",
-    "description": "O Supremo Tribunal Federal (STF) começou a analisar um Recurso Extraordinário que discute a constitucionalidade da aplicação do mesmo critério de cálculo para homens e mulheres em planos de previdência complementar, como o da Previ. A decisão, com repercussão geral, poderá impactar milhares de beneficiários e redefinir as regras de equidade no setor.",
+    "id": "130",
+    "title": "STF Confirma Limitação de Isenção Previdenciária para Servidores Aposentados por Incapacidade Grave",
+    "description": "O Supremo Tribunal Federal (STF) validou a regra da Reforma da Previdência de 2019 que restringe a isenção da contribuição previdenciária de servidores públicos inativos com doenças graves e incapacitantes. Antes, a isenção era mais abrangente, mas agora se limita ao teto do Regime Geral de Previdência Social (RGPS), impactando financeiramente essa parcela de aposentados.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aea133710ff49f5b7991a6aa72dbb05&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-comeca-a-julgar-diferenca-de-tratamento-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=11400275671584715882&mkt=pt-br",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae8c2fc286f4cb4939857f2642d1fc9&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados%2f&c=2020271326690933483&mkt=pt-br",
+    "image": ""
+  },
+  {
+    "id": "128",
+    "title": "STF Avalia Igualdade de Gênero na Previdência Complementar: Impactos do Julgamento da Previ",
+    "description": "O Supremo Tribunal Federal (STF) debate a exigência de tempo de contribuição igual para homens e mulheres na previdência complementar, focando no caso da Previ. Cinco ministros já se manifestaram contra a regra que desconsidera a aposentadoria feminina com menor tempo. O julgamento foi suspenso e aguarda a continuidade dos votos.",
+    "date": null,
+    "link": "https://noticias.stf.jus.br/postsnoticias/supremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar/",
+    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
+  },
+  {
+    "id": "125",
+    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
+    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
+    "image": ""
+  },
+  {
+    "id": "124",
+    "title": "Diarista e INSS: Guia Completo para Entender a Contribuição e o Enquadramento Legal",
+    "description": "Este artigo descomplica as regras do INSS para diaristas, explicando a crucial diferença entre a trabalhadora autônoma e a empregada doméstica. Aborda as formas de contribuição, os direitos previdenciários e a importância do registro correto para garantir o acesso aos benefícios.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae774b2ce7942609fe238363a7b8e5b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fdiarista-precisa-pagar-inss-veja-quando-e-autonoma-e-quando-e-domestica%2f&c=10936730241462492274&mkt=pt-br",
+    "image": ""
+  },
+  {
+    "id": "137",
+    "title": "Reforma Previdenciária em Campinas: Novas Regras para Aposentadoria de Servidores Municipais",
+    "description": "A Prefeitura de Campinas propõe uma reforma em seu regime previdenciário, elevando a idade mínima para aposentadoria de servidores municipais para 62 anos (mulheres) e 65 anos (homens). O projeto, que busca adequar o sistema à legislação federal e combater um déficit atuarial de R$ 13 bilhões, também inclui regras de transição e alterações no cálculo dos benefícios.",
+    "date": null,
+    "link": "https://g1.globo.com/sp/campinas-regiao/noticia/2026/10/20/reforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml",
+    "image": "https://s02.video.glbimg.com/x240/15107485.jpg"
+  },
+  {
+    "id": "117",
+    "title": "STF Mantém Alteração na Contribuição Previdenciária de Servidores Aposentados por Incapacidade: Entenda a Decisão da ADI 6336",
+    "description": "O Supremo Tribunal Federal validou, por maioria de votos, a mudança na Reforma da Previdência de 2019 que limita a isenção da contribuição previdenciária de servidores públicos aposentados por doenças graves ou incapacitantes. A decisão da ADI 6336 estabelece que a isenção agora se restringe ao teto do Regime Geral de Previdência Social (RGPS), impactando diretamente os proventos desses beneficiários.",
+    "date": null,
+    "link": "https://noticias.stf.jus.br/postsnoticias/stf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados/",
     "image": ""
   },
   {
@@ -40,36 +64,12 @@
     "image": "https://www.administracao.pr.gov.br/sites/default/arquivos_restritos/files/imagem/2026-10/thumbnail_video_institucional_1.png"
   },
   {
-    "id": "137",
-    "title": "Reforma Previdenciária em Campinas: Novas Regras para Aposentadoria de Servidores Municipais",
-    "description": "A Prefeitura de Campinas propõe uma reforma em seu regime previdenciário, elevando a idade mínima para aposentadoria de servidores municipais para 62 anos (mulheres) e 65 anos (homens). O projeto, que busca adequar o sistema à legislação federal e combater um déficit atuarial de R$ 13 bilhões, também inclui regras de transição e alterações no cálculo dos benefícios.",
+    "id": "135",
+    "title": "STF Inicia Julgamento Crucial Sobre Igualdade de Gênero na Previdência Complementar",
+    "description": "O Supremo Tribunal Federal (STF) começou a analisar um Recurso Extraordinário que discute a constitucionalidade da aplicação do mesmo critério de cálculo para homens e mulheres em planos de previdência complementar, como o da Previ. A decisão, com repercussão geral, poderá impactar milhares de beneficiários e redefinir as regras de equidade no setor.",
     "date": null,
-    "link": "https://g1.globo.com/sp/campinas-regiao/noticia/2026/10/20/reforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml",
-    "image": "https://s02.video.glbimg.com/x240/15107485.jpg"
-  },
-  {
-    "id": "124",
-    "title": "Diarista e INSS: Guia Completo para Entender a Contribuição e o Enquadramento Legal",
-    "description": "Este artigo descomplica as regras do INSS para diaristas, explicando a crucial diferença entre a trabalhadora autônoma e a empregada doméstica. Aborda as formas de contribuição, os direitos previdenciários e a importância do registro correto para garantir o acesso aos benefícios.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae774b2ce7942609fe238363a7b8e5b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fdiarista-precisa-pagar-inss-veja-quando-e-autonoma-e-quando-e-domestica%2f&c=10936730241462492274&mkt=pt-br",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aea133710ff49f5b7991a6aa72dbb05&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-comeca-a-julgar-diferenca-de-tratamento-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=11400275671584715882&mkt=pt-br",
     "image": ""
-  },
-  {
-    "id": "125",
-    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
-    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "128",
-    "title": "STF Avalia Igualdade de Gênero na Previdência Complementar: Impactos do Julgamento da Previ",
-    "description": "O Supremo Tribunal Federal (STF) debate a exigência de tempo de contribuição igual para homens e mulheres na previdência complementar, focando no caso da Previ. Cinco ministros já se manifestaram contra a regra que desconsidera a aposentadoria feminina com menor tempo. O julgamento foi suspenso e aguarda a continuidade dos votos.",
-    "date": null,
-    "link": "https://noticias.stf.jus.br/postsnoticias/supremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar/",
-    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
   },
   {
     "id": "138",
@@ -184,20 +184,20 @@
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss/1.jpg/@@images/3ed37962-1d04-4862-a92d-53c2a9e63529.jpeg"
   },
   {
-    "id": "127",
-    "title": "Operação \"Aliciamento Espúrio\" Combate Tentativa de Suborno e Fraude no INSS em Minas Gerais",
-    "description": "A Força-Tarefa Previdenciária em Minas Gerais deflagrou a Operação \"Aliciamento Espúrio\" para investigar uma tentativa de suborno a um estagiário do INSS. O objetivo era acessar ilegalmente informações sigilosas dos sistemas da autarquia, resultando no cumprimento de mandados de busca e apreensão em Belo Horizonte e Contagem.",
-    "date": "2026-10-27T17:17:18.000Z",
-    "link": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/operacao-investiga-tentativa-de-suborno-a-estagiario-do-inss-em-minas-gerais",
-    "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/operacao-investiga-tentativa-de-suborno-a-estagiario-do-inss-em-minas-gerais/00-tamanho-capa3.jpeg/@@images/6a610b55-28bd-42a2-92ec-43a5f36df6da.jpeg"
-  },
-  {
     "id": "93",
     "title": "Operação Policial em Minas Gerais Investiga Tentativa de Suborno a Estagiário do INSS",
     "description": "Uma operação policial foi deflagrada em Minas Gerais para investigar uma tentativa de suborno envolvendo um estagiário do Instituto Nacional do Seguro Social (INSS). O caso levanta preocupações sobre a integridade dos processos e a segurança dos dados dentro da autarquia. As autoridades buscam identificar os responsáveis e as motivações por trás da ação criminosa.",
     "date": "2026-10-27T17:17:18.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae36d814fc240a8b22e6d35016eb579&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2foperacao-investiga-tentativa-de-suborno-a-estagiario-do-inss-em-minas-gerais&c=4181531019211469998&mkt=pt-br",
     "image": ""
+  },
+  {
+    "id": "127",
+    "title": "Operação \"Aliciamento Espúrio\" Combate Tentativa de Suborno e Fraude no INSS em Minas Gerais",
+    "description": "A Força-Tarefa Previdenciária em Minas Gerais deflagrou a Operação \"Aliciamento Espúrio\" para investigar uma tentativa de suborno a um estagiário do INSS. O objetivo era acessar ilegalmente informações sigilosas dos sistemas da autarquia, resultando no cumprimento de mandados de busca e apreensão em Belo Horizonte e Contagem.",
+    "date": "2026-10-27T17:17:18.000Z",
+    "link": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/operacao-investiga-tentativa-de-suborno-a-estagiario-do-inss-em-minas-gerais",
+    "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/operacao-investiga-tentativa-de-suborno-a-estagiario-do-inss-em-minas-gerais/00-tamanho-capa3.jpeg/@@images/6a610b55-28bd-42a2-92ec-43a5f36df6da.jpeg"
   },
   {
     "id": "86",
@@ -286,21 +286,5 @@
     "date": "2026-10-08T08:00:00.000Z",
     "link": "https://c-level.folha.uol.com.br/negocios/2026/10/advogado-investigado-por-lavagem-com-bets-comprou-empresa-de-apostas-acusada-de-calote-no-rio.shtml",
     "image": "https://f.i.uol.com.br/fotografia/2026/09/29/17907234266abc4562d7470_1790723426_3x2_md.jpg"
-  },
-  {
-    "id": "136",
-    "title": "Operação 'Casa de Palha': PF Investiga Desvio de R$ 16 Milhões da Previdência de Servidores em Palhoça",
-    "description": "A Polícia Federal deflagrou a Operação 'Casa de Palha' para apurar um suposto desvio de R$ 16 milhões do Instituto de Previdência Social dos Servidores Públicos de Palhoça (IPPA). As investigações apontam para aplicações financeiras irregulares em 2013, com o dinheiro possivelmente usado na aquisição de bens em nome de terceiros. Os crimes investigados incluem gestão fraudulenta, corrupção passiva e lavagem de dinheiro.",
-    "date": "2026-08-20T19:46:15.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aea13660fad498bbecc99c7a81bbc07&url=https%3a%2f%2fg1.globo.com%2fsc%2fsanta-catarina%2fnoticia%2f2026%2f10%2f29%2fpf-mira-rombo-de-16-milhoes-previdencia-palhoca.ghtml&c=9401054296140572923&mkt=pt-br",
-    "image": "https://s2-g1.glbimg.com/KjNSsTRYJpSls7WMCw-tZbjIGaY=/0x0:1300x921/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/9/A/YvZg9bSwGdHLb4ZSd71Q/pf-mira-grupo-suspeito-de-fraudar-r-16-milhoes-no-fundo-de-previdencia-dos-servidores-de-palhoca.jpeg"
-  },
-  {
-    "id": "134",
-    "title": "Reforma Previdenciária em Campinas: Entenda as Novas Regras de Aposentadoria para Servidores Municipais",
-    "description": "A Prefeitura de Campinas propôs uma reforma previdenciária que eleva a idade mínima para aposentadoria de seus servidores. As novas regras visam adequar o regime municipal à legislação federal e combater um déficit atuarial significativo. O projeto inclui também opções de transição e mudanças no cálculo dos benefícios.",
-    "date": "2025-05-08T23:15:48.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae96b8f97224beaafe605b45db8eff2&url=https%3a%2f%2fg1.globo.com%2fsp%2fcampinas-regiao%2fnoticia%2f2026%2f10%2f20%2freforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml&c=13580720519065973160&mkt=pt-br",
-    "image": "https://s02.video.glbimg.com/x240/15107485.jpg"
   }
 ]
