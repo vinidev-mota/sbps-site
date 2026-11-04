@@ -1,13 +1,5 @@
 [
   {
-    "id": "122",
-    "title": "Previdência Própria de Gravatá: IPSEG Promove Palestra Essencial para Servidores e Cidadãos",
-    "description": "O Instituto de Previdência dos Servidores Municipais de Gravatá (IPSEG) realizará uma palestra informativa sobre a Previdência Própria do município. O evento, aberto a servidores e à população, visa esclarecer dúvidas e aprofundar o conhecimento sobre o Regime Próprio de Previdência Social (RPPS) local.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae7701139f4463594031684258318e3&url=https%3a%2f%2fgravata.pe.gov.br%2fnoticia%2fipseg-promove-palestra-esclarecedora-sobre-a-previdencia-propria-do-municipio-de-gravata%2f&c=14907068049100739001&mkt=pt-br",
-    "image": "https://gravata.pe.gov.br/wp-content/uploads/2026/10/WhatsApp-Image-2026-10-29-at-11.31.02-225x300.jpeg"
-  },
-  {
     "id": "130",
     "title": "STF Confirma Limitação de Isenção Previdenciária para Servidores Aposentados por Incapacidade Grave",
     "description": "O Supremo Tribunal Federal (STF) validou a regra da Reforma da Previdência de 2019 que restringe a isenção da contribuição previdenciária de servidores públicos inativos com doenças graves e incapacitantes. Antes, a isenção era mais abrangente, mas agora se limita ao teto do Regime Geral de Previdência Social (RGPS), impactando financeiramente essa parcela de aposentados.",
@@ -16,43 +8,27 @@
     "image": ""
   },
   {
-    "id": "128",
-    "title": "STF Avalia Igualdade de Gênero na Previdência Complementar: Impactos do Julgamento da Previ",
-    "description": "O Supremo Tribunal Federal (STF) debate a exigência de tempo de contribuição igual para homens e mulheres na previdência complementar, focando no caso da Previ. Cinco ministros já se manifestaram contra a regra que desconsidera a aposentadoria feminina com menor tempo. O julgamento foi suspenso e aguarda a continuidade dos votos.",
-    "date": null,
-    "link": "https://noticias.stf.jus.br/postsnoticias/supremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar/",
-    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
-  },
-  {
-    "id": "125",
-    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
-    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "124",
-    "title": "Diarista e INSS: Guia Completo para Entender a Contribuição e o Enquadramento Legal",
-    "description": "Este artigo descomplica as regras do INSS para diaristas, explicando a crucial diferença entre a trabalhadora autônoma e a empregada doméstica. Aborda as formas de contribuição, os direitos previdenciários e a importância do registro correto para garantir o acesso aos benefícios.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae774b2ce7942609fe238363a7b8e5b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fdiarista-precisa-pagar-inss-veja-quando-e-autonoma-e-quando-e-domestica%2f&c=10936730241462492274&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "137",
-    "title": "Reforma Previdenciária em Campinas: Novas Regras para Aposentadoria de Servidores Municipais",
-    "description": "A Prefeitura de Campinas propõe uma reforma em seu regime previdenciário, elevando a idade mínima para aposentadoria de servidores municipais para 62 anos (mulheres) e 65 anos (homens). O projeto, que busca adequar o sistema à legislação federal e combater um déficit atuarial de R$ 13 bilhões, também inclui regras de transição e alterações no cálculo dos benefícios.",
-    "date": null,
-    "link": "https://g1.globo.com/sp/campinas-regiao/noticia/2026/10/20/reforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml",
-    "image": "https://s02.video.glbimg.com/x240/15107485.jpg"
-  },
-  {
     "id": "117",
     "title": "STF Mantém Alteração na Contribuição Previdenciária de Servidores Aposentados por Incapacidade: Entenda a Decisão da ADI 6336",
     "description": "O Supremo Tribunal Federal validou, por maioria de votos, a mudança na Reforma da Previdência de 2019 que limita a isenção da contribuição previdenciária de servidores públicos aposentados por doenças graves ou incapacitantes. A decisão da ADI 6336 estabelece que a isenção agora se restringe ao teto do Regime Geral de Previdência Social (RGPS), impactando diretamente os proventos desses beneficiários.",
     "date": null,
     "link": "https://noticias.stf.jus.br/postsnoticias/stf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados/",
+    "image": ""
+  },
+  {
+    "id": "122",
+    "title": "Previdência Própria de Gravatá: IPSEG Promove Palestra Essencial para Servidores e Cidadãos",
+    "description": "O Instituto de Previdência dos Servidores Municipais de Gravatá (IPSEG) realizará uma palestra informativa sobre a Previdência Própria do município. O evento, aberto a servidores e à população, visa esclarecer dúvidas e aprofundar o conhecimento sobre o Regime Próprio de Previdência Social (RPPS) local.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae7701139f4463594031684258318e3&url=https%3a%2f%2fgravata.pe.gov.br%2fnoticia%2fipseg-promove-palestra-esclarecedora-sobre-a-previdencia-propria-do-municipio-de-gravata%2f&c=14907068049100739001&mkt=pt-br",
+    "image": "https://gravata.pe.gov.br/wp-content/uploads/2026/10/WhatsApp-Image-2026-10-29-at-11.31.02-225x300.jpeg"
+  },
+  {
+    "id": "135",
+    "title": "STF Inicia Julgamento Crucial Sobre Igualdade de Gênero na Previdência Complementar",
+    "description": "O Supremo Tribunal Federal (STF) começou a analisar um Recurso Extraordinário que discute a constitucionalidade da aplicação do mesmo critério de cálculo para homens e mulheres em planos de previdência complementar, como o da Previ. A decisão, com repercussão geral, poderá impactar milhares de beneficiários e redefinir as regras de equidade no setor.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aea133710ff49f5b7991a6aa72dbb05&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-comeca-a-julgar-diferenca-de-tratamento-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=11400275671584715882&mkt=pt-br",
     "image": ""
   },
   {
@@ -64,12 +40,36 @@
     "image": "https://www.administracao.pr.gov.br/sites/default/arquivos_restritos/files/imagem/2026-10/thumbnail_video_institucional_1.png"
   },
   {
-    "id": "135",
-    "title": "STF Inicia Julgamento Crucial Sobre Igualdade de Gênero na Previdência Complementar",
-    "description": "O Supremo Tribunal Federal (STF) começou a analisar um Recurso Extraordinário que discute a constitucionalidade da aplicação do mesmo critério de cálculo para homens e mulheres em planos de previdência complementar, como o da Previ. A decisão, com repercussão geral, poderá impactar milhares de beneficiários e redefinir as regras de equidade no setor.",
+    "id": "137",
+    "title": "Reforma Previdenciária em Campinas: Novas Regras para Aposentadoria de Servidores Municipais",
+    "description": "A Prefeitura de Campinas propõe uma reforma em seu regime previdenciário, elevando a idade mínima para aposentadoria de servidores municipais para 62 anos (mulheres) e 65 anos (homens). O projeto, que busca adequar o sistema à legislação federal e combater um déficit atuarial de R$ 13 bilhões, também inclui regras de transição e alterações no cálculo dos benefícios.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aea133710ff49f5b7991a6aa72dbb05&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-comeca-a-julgar-diferenca-de-tratamento-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=11400275671584715882&mkt=pt-br",
+    "link": "https://g1.globo.com/sp/campinas-regiao/noticia/2026/10/20/reforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml",
+    "image": "https://s02.video.glbimg.com/x240/15107485.jpg"
+  },
+  {
+    "id": "124",
+    "title": "Diarista e INSS: Guia Completo para Entender a Contribuição e o Enquadramento Legal",
+    "description": "Este artigo descomplica as regras do INSS para diaristas, explicando a crucial diferença entre a trabalhadora autônoma e a empregada doméstica. Aborda as formas de contribuição, os direitos previdenciários e a importância do registro correto para garantir o acesso aos benefícios.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae774b2ce7942609fe238363a7b8e5b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fdiarista-precisa-pagar-inss-veja-quando-e-autonoma-e-quando-e-domestica%2f&c=10936730241462492274&mkt=pt-br",
     "image": ""
+  },
+  {
+    "id": "125",
+    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
+    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
+    "image": ""
+  },
+  {
+    "id": "128",
+    "title": "STF Avalia Igualdade de Gênero na Previdência Complementar: Impactos do Julgamento da Previ",
+    "description": "O Supremo Tribunal Federal (STF) debate a exigência de tempo de contribuição igual para homens e mulheres na previdência complementar, focando no caso da Previ. Cinco ministros já se manifestaram contra a regra que desconsidera a aposentadoria feminina com menor tempo. O julgamento foi suspenso e aguarda a continuidade dos votos.",
+    "date": null,
+    "link": "https://noticias.stf.jus.br/postsnoticias/supremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar/",
+    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
   },
   {
     "id": "138",
@@ -80,19 +80,19 @@
     "image": ""
   },
   {
-    "id": "118",
-    "title": "3º Seminário Nacional Promove Educação Previdenciária e Financeira para Servidores Públicos",
-    "description": "O evento, organizado pela Funpresp-Exe, Funpresp-Jud e DF-PreviCom, visa capacitar servidores públicos sobre planejamento financeiro e previdenciário de longo prazo. Especialistas abordarão temas cruciais como endividamento, regras previdenciárias e estratégias de investimento para a aposentadoria. As inscrições são gratuitas e as vagas presenciais são limitadas.",
-    "date": "2026-10-29T18:25:37.000Z",
-    "link": "https://www.gov.br/servidor/pt-br/assuntos/noticias/2026/outubro/3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro-em-brasilia",
-    "image": ""
-  },
-  {
     "id": "110",
     "title": "3º Seminário de Previdência Complementar: Guia Essencial para Servidores Públicos",
     "description": "Um importante evento sobre previdência complementar para servidores públicos será realizado em novembro, em Brasília. O seminário, promovido por Funpresp-Exe, Funpresp-Jud e DF-PreviCom, oferecerá palestras e painéis sobre planejamento financeiro, regras previdenciárias e formação de renda futura. As inscrições são gratuitas e com vagas presenciais limitadas, além de transmissão online.",
     "date": "2026-10-29T18:25:37.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae61085c055463f8314a5fdf77b34cd&url=https%3a%2f%2fwww.gov.br%2fservidor%2fpt-br%2fassuntos%2fnoticias%2f2026%2foutubro%2f3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro%2d%2denb%2dbrasilia&c=15542924752912275236&mkt=pt-br",
+    "image": ""
+  },
+  {
+    "id": "118",
+    "title": "3º Seminário Nacional Promove Educação Previdenciária e Financeira para Servidores Públicos",
+    "description": "O evento, organizado pela Funpresp-Exe, Funpresp-Jud e DF-PreviCom, visa capacitar servidores públicos sobre planejamento financeiro e previdenciário de longo prazo. Especialistas abordarão temas cruciais como endividamento, regras previdenciárias e estratégias de investimento para a aposentadoria. As inscrições são gratuitas e as vagas presenciais são limitadas.",
+    "date": "2026-10-29T18:25:37.000Z",
+    "link": "https://www.gov.br/servidor/pt-br/assuntos/noticias/2026/outubro/3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro-em-brasilia",
     "image": ""
   },
   {
@@ -168,19 +168,19 @@
     "image": ""
   },
   {
-    "id": "103",
-    "title": "INSS e Previdência Social: Avanços na Redução de Filas e Ampliação da Proteção Social",
-    "description": "O Ministro da Previdência Social, Wolney Queiroz, destacou a importância da defesa do sistema previdenciário e os avanços significativos na gestão de benefícios do INSS, incluindo a redução recorde da fila de requerimentos e a incorporação de novos mecanismos de proteção social, como a Licença-Paternidade e o Benefício de Afastamento Protetivo.",
-    "date": "2026-10-27T21:50:00.000Z",
-    "link": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss",
-    "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss/1.jpg/@@images/3ed37962-1d04-4862-a92d-53c2a9e63529.jpeg"
-  },
-  {
     "id": "120",
     "title": "INSS Acelera Análise de Benefícios e Amplia Proteção Social com Novas Conquistas",
     "description": "O Ministério da Previdência Social reafirma seu compromisso com a proteção social, destacando a redução significativa no tempo de análise de benefícios do INSS e a inclusão de novas modalidades. O Ministro Wolney Queiroz enfatizou a defesa contínua do sistema previdenciário e os avanços na eficiência operacional do Instituto.",
     "date": "2026-10-27T21:50:00.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae7701139f4463594031684258318e3&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss&c=14757846840781658415&mkt=pt-br",
+    "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss/1.jpg/@@images/3ed37962-1d04-4862-a92d-53c2a9e63529.jpeg"
+  },
+  {
+    "id": "103",
+    "title": "INSS e Previdência Social: Avanços na Redução de Filas e Ampliação da Proteção Social",
+    "description": "O Ministro da Previdência Social, Wolney Queiroz, destacou a importância da defesa do sistema previdenciário e os avanços significativos na gestão de benefícios do INSS, incluindo a redução recorde da fila de requerimentos e a incorporação de novos mecanismos de proteção social, como a Licença-Paternidade e o Benefício de Afastamento Protetivo.",
+    "date": "2026-10-27T21:50:00.000Z",
+    "link": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss",
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/ministro-destaca-novos-mecanismos-de-protecao-social-e-a-ampliacao-de-beneficios-administrados-pelo-inss/1.jpg/@@images/3ed37962-1d04-4862-a92d-53c2a9e63529.jpeg"
   },
   {
@@ -200,14 +200,6 @@
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/operacao-investiga-tentativa-de-suborno-a-estagiario-do-inss-em-minas-gerais/00-tamanho-capa3.jpeg/@@images/6a610b55-28bd-42a2-92ec-43a5f36df6da.jpeg"
   },
   {
-    "id": "86",
-    "title": "Polícia Federal Investiga Desvio de R$ 100 Milhões em Previdência de Servidores Municipais de São Roque",
-    "description": "A Polícia Federal deflagrou a Operação Entressafras para investigar um esquema de desvio de cerca de R$ 100 milhões na São Roque Prev, empresa responsável pela previdência dos servidores municipais de São Roque. As investigações apontam movimentações financeiras vultosas sem a devida fundamentação técnica entre 2022 e 2024. Diversos crimes, incluindo gestão fraudulenta e lavagem de capitais, estão sendo apurados, gerando preocupação sobre a segurança dos fundos previdenciários.",
-    "date": "2026-10-27T16:45:16.000Z",
-    "link": "https://bandnewstv.uol.com.br/justica/policia-federal-investiga-desvio-de-dinheiro-em-empresa-de-previdencia-de-sao-roque",
-    "image": "https://bandblogs-assets.valiantgroup.com.br/medias/bandnewstv/policia%20federal.jpg"
-  },
-  {
     "id": "141",
     "title": "Operação Entressafras: PF Investiga Desvio de R$ 100 Milhões em Fundo de Previdência de Servidores de São Roque",
     "description": "A Polícia Federal deflagrou a Operação Entressafras para investigar um esquema de desvio de cerca de R$ 100 milhões na São Roque Prev, empresa responsável pela previdência social dos servidores municipais. As investigações apontam movimentações financeiras sem a devida fundamentação técnica entre 2022 e 2024, com aplicações suspeitas no Banco Master. Os crimes apurados incluem gestão fraudulenta, lavagem de capitais e peculato financeiro.",
@@ -216,12 +208,12 @@
     "image": "https://bandblogs-assets.valiantgroup.com.br/medias/bandnewstv/policia%20federal.jpg"
   },
   {
-    "id": "87",
-    "title": "Operação Entressafras: PF Investiga Prejuízo de R$ 121 Milhões em Fundo de Previdência de Servidores",
-    "description": "A Polícia Federal deflagrou a Operação Entressafras para investigar fraudes e gestão irregular de investimentos no Instituto de Previdência Social dos Servidores Municipais de São Roque (São Roque Prev). Estima-se um prejuízo de R$ 121 milhões, com foco em aplicações sem fundamentação técnica adequada. A investigação também apura a conduta de ex-gestores e a possível responsabilização por crimes financeiros.",
-    "date": "2026-10-27T13:38:00.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae21e47b8db46929750c71cbe08eaa5&url=https%3a%2f%2fjc.uol.com.br%2fbrasil%2f2026%2f10%2f27%2fpf-faz-operacao-em-pernambuco-para-investigar-prejuizo-de-rs-121-milhoes-em-instituto-de-previdencia-de-sp.html&c=10796486526417015988&mkt=pt-br",
-    "image": ""
+    "id": "86",
+    "title": "Polícia Federal Investiga Desvio de R$ 100 Milhões em Previdência de Servidores Municipais de São Roque",
+    "description": "A Polícia Federal deflagrou a Operação Entressafras para investigar um esquema de desvio de cerca de R$ 100 milhões na São Roque Prev, empresa responsável pela previdência dos servidores municipais de São Roque. As investigações apontam movimentações financeiras vultosas sem a devida fundamentação técnica entre 2022 e 2024. Diversos crimes, incluindo gestão fraudulenta e lavagem de capitais, estão sendo apurados, gerando preocupação sobre a segurança dos fundos previdenciários.",
+    "date": "2026-10-27T16:45:16.000Z",
+    "link": "https://bandnewstv.uol.com.br/justica/policia-federal-investiga-desvio-de-dinheiro-em-empresa-de-previdencia-de-sao-roque",
+    "image": "https://bandblogs-assets.valiantgroup.com.br/medias/bandnewstv/policia%20federal.jpg"
   },
   {
     "id": "85",
