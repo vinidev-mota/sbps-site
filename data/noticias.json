@@ -1,10 +1,18 @@
 [
   {
-    "id": "147",
-    "title": "STF Debate Igualdade de Gênero na Previdência Complementar: O Caso Previ e o Tempo de Contribuição",
-    "description": "O Supremo Tribunal Federal (STF) está em meio a um importante julgamento que discute a igualdade de tempo de contribuição entre homens e mulheres para o recebimento de benefícios integrais em previdência complementar, com foco no caso da Previ. Cinco ministros já se manifestaram pela inconstitucionalidade da regra que exige 30 anos de contribuição para ambos os sexos, sem considerar a diferença de idade de aposentadoria feminina. O processo foi suspenso e aguarda a retomada para a conclusão dos votos.",
+    "id": "137",
+    "title": "Reforma Previdenciária em Campinas: Novas Regras para Aposentadoria de Servidores Municipais",
+    "description": "A Prefeitura de Campinas propõe uma reforma em seu regime previdenciário, elevando a idade mínima para aposentadoria de servidores municipais para 62 anos (mulheres) e 65 anos (homens). O projeto, que busca adequar o sistema à legislação federal e combater um déficit atuarial de R$ 13 bilhões, também inclui regras de transição e alterações no cálculo dos benefícios.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aeb668624c14ce292edcb98633f4bfc&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fsupremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=3779082299344736522&mkt=pt-br",
+    "link": "https://g1.globo.com/sp/campinas-regiao/noticia/2026/10/20/reforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml",
+    "image": "https://s02.video.glbimg.com/x240/15107485.jpg"
+  },
+  {
+    "id": "128",
+    "title": "STF Avalia Igualdade de Gênero na Previdência Complementar: Impactos do Julgamento da Previ",
+    "description": "O Supremo Tribunal Federal (STF) debate a exigência de tempo de contribuição igual para homens e mulheres na previdência complementar, focando no caso da Previ. Cinco ministros já se manifestaram contra a regra que desconsidera a aposentadoria feminina com menor tempo. O julgamento foi suspenso e aguarda a continuidade dos votos.",
+    "date": null,
+    "link": "https://noticias.stf.jus.br/postsnoticias/supremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar/",
     "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
   },
   {
@@ -40,36 +48,20 @@
     "image": "https://s2-g1.glbimg.com/KjNSsTRYJpSls7WMCw-tZbjIGaY=/0x0:1300x921/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/9/A/YvZg9bSwGdHLb4ZSd71Q/pf-mira-grupo-suspeito-de-fraudar-r-16-milhoes-no-fundo-de-previdencia-dos-servidores-de-palhoca.jpeg"
   },
   {
+    "id": "125",
+    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
+    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
+    "image": ""
+  },
+  {
     "id": "122",
     "title": "Previdência Própria de Gravatá: IPSEG Promove Palestra Essencial para Servidores e Cidadãos",
     "description": "O Instituto de Previdência dos Servidores Municipais de Gravatá (IPSEG) realizará uma palestra informativa sobre a Previdência Própria do município. O evento, aberto a servidores e à população, visa esclarecer dúvidas e aprofundar o conhecimento sobre o Regime Próprio de Previdência Social (RPPS) local.",
     "date": null,
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae7701139f4463594031684258318e3&url=https%3a%2f%2fgravata.pe.gov.br%2fnoticia%2fipseg-promove-palestra-esclarecedora-sobre-a-previdencia-propria-do-municipio-de-gravata%2f&c=14907068049100739001&mkt=pt-br",
     "image": "https://gravata.pe.gov.br/wp-content/uploads/2026/10/WhatsApp-Image-2026-10-29-at-11.31.02-225x300.jpeg"
-  },
-  {
-    "id": "135",
-    "title": "STF Inicia Julgamento Crucial Sobre Igualdade de Gênero na Previdência Complementar",
-    "description": "O Supremo Tribunal Federal (STF) começou a analisar um Recurso Extraordinário que discute a constitucionalidade da aplicação do mesmo critério de cálculo para homens e mulheres em planos de previdência complementar, como o da Previ. A decisão, com repercussão geral, poderá impactar milhares de beneficiários e redefinir as regras de equidade no setor.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aea133710ff49f5b7991a6aa72dbb05&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-comeca-a-julgar-diferenca-de-tratamento-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=11400275671584715882&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "104",
-    "title": "Ações de Valorização e Avanços na Previdência Marcam o Dia do Servidor Público no Paraná",
-    "description": "A Secretaria da Administração e da Previdência (Seap) do Paraná celebra o Dia do Servidor Público com um balanço positivo de iniciativas focadas na melhoria de salários, progressões de carreira, ampliação da assistência à saúde e capacitação profissional, reforçando o compromisso com o funcionalismo estadual. Essas medidas visam reconhecer e incentivar os profissionais que dedicam seu trabalho ao serviço público.",
-    "date": null,
-    "link": "https://www.administracao.pr.gov.br/Noticia/Secretaria-da-Administracao-e-da-Previdencia-celebra-o-Dia-do-Servidor-Publico-valorizando",
-    "image": "https://www.administracao.pr.gov.br/sites/default/arquivos_restritos/files/imagem/2026-10/thumbnail_video_institucional_1.png"
-  },
-  {
-    "id": "137",
-    "title": "Reforma Previdenciária em Campinas: Novas Regras para Aposentadoria de Servidores Municipais",
-    "description": "A Prefeitura de Campinas propõe uma reforma em seu regime previdenciário, elevando a idade mínima para aposentadoria de servidores municipais para 62 anos (mulheres) e 65 anos (homens). O projeto, que busca adequar o sistema à legislação federal e combater um déficit atuarial de R$ 13 bilhões, também inclui regras de transição e alterações no cálculo dos benefícios.",
-    "date": null,
-    "link": "https://g1.globo.com/sp/campinas-regiao/noticia/2026/10/20/reforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml",
-    "image": "https://s02.video.glbimg.com/x240/15107485.jpg"
   },
   {
     "id": "124",
@@ -80,28 +72,12 @@
     "image": ""
   },
   {
-    "id": "125",
-    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
-    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
+    "id": "104",
+    "title": "Ações de Valorização e Avanços na Previdência Marcam o Dia do Servidor Público no Paraná",
+    "description": "A Secretaria da Administração e da Previdência (Seap) do Paraná celebra o Dia do Servidor Público com um balanço positivo de iniciativas focadas na melhoria de salários, progressões de carreira, ampliação da assistência à saúde e capacitação profissional, reforçando o compromisso com o funcionalismo estadual. Essas medidas visam reconhecer e incentivar os profissionais que dedicam seu trabalho ao serviço público.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "128",
-    "title": "STF Avalia Igualdade de Gênero na Previdência Complementar: Impactos do Julgamento da Previ",
-    "description": "O Supremo Tribunal Federal (STF) debate a exigência de tempo de contribuição igual para homens e mulheres na previdência complementar, focando no caso da Previ. Cinco ministros já se manifestaram contra a regra que desconsidera a aposentadoria feminina com menor tempo. O julgamento foi suspenso e aguarda a continuidade dos votos.",
-    "date": null,
-    "link": "https://noticias.stf.jus.br/postsnoticias/supremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar/",
-    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
-  },
-  {
-    "id": "130",
-    "title": "STF Confirma Limitação de Isenção Previdenciária para Servidores Aposentados por Incapacidade Grave",
-    "description": "O Supremo Tribunal Federal (STF) validou a regra da Reforma da Previdência de 2019 que restringe a isenção da contribuição previdenciária de servidores públicos inativos com doenças graves e incapacitantes. Antes, a isenção era mais abrangente, mas agora se limita ao teto do Regime Geral de Previdência Social (RGPS), impactando financeiramente essa parcela de aposentados.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae8c2fc286f4cb4939857f2642d1fc9&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados%2f&c=2020271326690933483&mkt=pt-br",
-    "image": ""
+    "link": "https://www.administracao.pr.gov.br/Noticia/Secretaria-da-Administracao-e-da-Previdencia-celebra-o-Dia-do-Servidor-Publico-valorizando",
+    "image": "https://www.administracao.pr.gov.br/sites/default/arquivos_restritos/files/imagem/2026-10/thumbnail_video_institucional_1.png"
   },
   {
     "id": "143",
@@ -120,22 +96,6 @@
     "image": ""
   },
   {
-    "id": "118",
-    "title": "3º Seminário Nacional Promove Educação Previdenciária e Financeira para Servidores Públicos",
-    "description": "O evento, organizado pela Funpresp-Exe, Funpresp-Jud e DF-PreviCom, visa capacitar servidores públicos sobre planejamento financeiro e previdenciário de longo prazo. Especialistas abordarão temas cruciais como endividamento, regras previdenciárias e estratégias de investimento para a aposentadoria. As inscrições são gratuitas e as vagas presenciais são limitadas.",
-    "date": "2026-10-29T18:25:37.000Z",
-    "link": "https://www.gov.br/servidor/pt-br/assuntos/noticias/2026/outubro/3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro-em-brasilia",
-    "image": ""
-  },
-  {
-    "id": "110",
-    "title": "3º Seminário de Previdência Complementar: Guia Essencial para Servidores Públicos",
-    "description": "Um importante evento sobre previdência complementar para servidores públicos será realizado em novembro, em Brasília. O seminário, promovido por Funpresp-Exe, Funpresp-Jud e DF-PreviCom, oferecerá palestras e painéis sobre planejamento financeiro, regras previdenciárias e formação de renda futura. As inscrições são gratuitas e com vagas presenciais limitadas, além de transmissão online.",
-    "date": "2026-10-29T18:25:37.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae61085c055463f8314a5fdf77b34cd&url=https%3a%2f%2fwww.gov.br%2fservidor%2fpt-br%2fassuntos%2fnoticias%2f2026%2foutubro%2f3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro%2d%2denb%2dbrasilia&c=15542924752912275236&mkt=pt-br",
-    "image": ""
-  },
-  {
     "id": "146",
     "title": "3º Seminário de Previdência Complementar: Guia Essencial para o Futuro Financeiro do Servidor Público",
     "description": "A Funpresp-Exe, Funpresp-Jud e DF-PreviCom promovem o 3º Seminário de Previdência Complementar do Servidor Público em novembro de 2026. O evento gratuito visa capacitar servidores em planejamento financeiro e previdenciário, abordando temas cruciais para a construção de um futuro seguro.",
@@ -144,12 +104,12 @@
     "image": ""
   },
   {
-    "id": "145",
-    "title": "Ministério da Previdência Social Divulga Resultado Preliminar do Selo Patrocinadores do Futuro 2026",
-    "description": "O Ministério da Previdência Social (MPS) anunciou o resultado preliminar da edição 2026 do Selo Patrocinadores do Futuro, reconhecendo 106 instituições por suas boas práticas em previdência complementar. A iniciativa visa fortalecer o regime de previdência fechada e incentivar a responsabilidade social e de governança. As organizações classificadas têm prazo para apresentar recursos antes da publicação do resultado definitivo.",
-    "date": "2026-10-29T18:17:11.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aeb649370af41ca90de0ba2b2243a6e&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fmps-divulga-resultado-preliminar-do-selo-patrocinadores-do-futuro&c=5913074950681725693&mkt=pt-br",
-    "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/mps-divulga-resultado-preliminar-do-selo-patrocinadores-do-futuro/8a614ff4-1c97-467d-a874-7bc2fc338a54.jpeg/@@images/b9006e4c-b651-4c2c-99b0-ef97a62d34ff.jpeg"
+    "id": "118",
+    "title": "3º Seminário Nacional Promove Educação Previdenciária e Financeira para Servidores Públicos",
+    "description": "O evento, organizado pela Funpresp-Exe, Funpresp-Jud e DF-PreviCom, visa capacitar servidores públicos sobre planejamento financeiro e previdenciário de longo prazo. Especialistas abordarão temas cruciais como endividamento, regras previdenciárias e estratégias de investimento para a aposentadoria. As inscrições são gratuitas e as vagas presenciais são limitadas.",
+    "date": "2026-10-29T18:25:37.000Z",
+    "link": "https://www.gov.br/servidor/pt-br/assuntos/noticias/2026/outubro/3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro-em-brasilia",
+    "image": ""
   },
   {
     "id": "100",
@@ -157,6 +117,14 @@
     "description": "O Ministério da Previdência Social (MPS) anunciou o resultado preliminar da edição 2026 do Selo Patrocinadores do Futuro, destacando 106 instituições por suas práticas de responsabilidade social na previdência complementar. A iniciativa bienal visa fortalecer o regime de previdência fechada e promover a agenda ambiental, social e de governança (ASG). As entidades classificadas têm um prazo para interpor recursos antes da divulgação do resultado final.",
     "date": "2026-10-29T18:17:11.000Z",
     "link": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/mps-divulga-resultado-preliminar-do-selo-patrocinadores-do-futuro",
+    "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/mps-divulga-resultado-preliminar-do-selo-patrocinadores-do-futuro/8a614ff4-1c97-467d-a874-7bc2fc338a54.jpeg/@@images/b9006e4c-b651-4c2c-99b0-ef97a62d34ff.jpeg"
+  },
+  {
+    "id": "145",
+    "title": "Ministério da Previdência Social Divulga Resultado Preliminar do Selo Patrocinadores do Futuro 2026",
+    "description": "O Ministério da Previdência Social (MPS) anunciou o resultado preliminar da edição 2026 do Selo Patrocinadores do Futuro, reconhecendo 106 instituições por suas boas práticas em previdência complementar. A iniciativa visa fortalecer o regime de previdência fechada e incentivar a responsabilidade social e de governança. As organizações classificadas têm prazo para apresentar recursos antes da publicação do resultado definitivo.",
+    "date": "2026-10-29T18:17:11.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aeb649370af41ca90de0ba2b2243a6e&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fmps-divulga-resultado-preliminar-do-selo-patrocinadores-do-futuro&c=5913074950681725693&mkt=pt-br",
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/outubro/mps-divulga-resultado-preliminar-do-selo-patrocinadores-do-futuro/8a614ff4-1c97-467d-a874-7bc2fc338a54.jpeg/@@images/b9006e4c-b651-4c2c-99b0-ef97a62d34ff.jpeg"
   },
   {
@@ -221,14 +189,6 @@
     "description": "O Conselho Nacional de Previdência Social (CNPS) aprovou por unanimidade uma moção crucial em defesa da longevidade e equilíbrio financeiro do sistema previdenciário brasileiro. Essa decisão sublinha a importância de políticas que assegurem a capacidade da Previdência de cumprir seus compromissos futuros com milhões de beneficiários. A iniciativa destaca a preocupação das autoridades em garantir a solidez de um dos pilares sociais do país.",
     "date": "2026-10-27T21:54:44.000Z",
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aeb649370af41ca90de0ba2b2243a6e&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fcnps-aprova-mocao-em-defesa-da-sustentabilidade-da-previdencia-social&c=16221932854250795607&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "119",
-    "title": "CNPS Reafirma Compromisso com a Sustentabilidade da Previdência Social: O Que Significa a Moção Aprovada",
-    "description": "O Conselho Nacional de Previdência Social (CNPS) aprovou, por unanimidade, uma moção em defesa da sustentabilidade do sistema previdenciário brasileiro. Esta importante decisão sublinha a necessidade de garantir a saúde financeira e a longevidade da Previdência. A iniciativa reforça o compromisso com a segurança dos benefícios e o futuro de milhões de segurados no país.",
-    "date": "2026-10-27T21:54:44.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae7701139f4463594031684258318e3&url=https%3a%2f%2fwww.gov.br%2fprevidencia%2fpt-br%2fnoticias%2f2026%2foutubro%2fcnps-aprova-mocao-em-defesa-da-sustentabilidade-da-previdencia-social&c=16221932854250795607&mkt=pt-br",
     "image": ""
   },
   {
