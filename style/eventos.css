@@ -1,31 +1,37 @@
 /* ==========================================================================
-   ÁREA DE EVENTOS - DESIGN SYSTEM & LAYOUT (SIDEBAR FIXED TOP: 115PX 100% VISÍVEL)
+   ÁREA DE EVENTOS - DESIGN SYSTEM & LAYOUT (PADRÃO PORTAL DO ASSOCIADO SBPS)
    Sociedade Brasileira de Previdência Social (SBPS)
    ========================================================================== */
 
 :root {
-    --evt-primary: #1E293B;
+    --evt-primary: #0F172A;
     --evt-primary-dark: #0F172A;
     --evt-secondary: #059669;
     --evt-accent: #10B981;
     --evt-bg-light: #F8FAFC;
     --evt-bg-card: #FFFFFF;
     --evt-border: #E2E8F0;
-    --evt-text-main: #1E293B;
+    --evt-text-main: #0F172A;
     --evt-text-muted: #64748B;
-    --evt-success: #10B981;
+    --evt-success: #059669;
     --evt-warning: #F59E0B;
     --evt-danger: #EF4444;
-    --evt-purple: #8B5CF6;
+    --evt-purple: #059669;
     --evt-radius: 16px;
-    --evt-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --evt-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    --evt-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+    --evt-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+}
+
+#global-search-modal,
+.search-modal {
+    display: none !important;
 }
 
 body.eventos-portal-page {
-    background-color: var(--evt-bg-light);
+    background-color: #f8fafc;
     color: var(--evt-text-main);
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -40,9 +46,8 @@ body.eventos-portal-page {
    ========================================================================== */
 
 .evt-auth-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 20px;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .evt-auth-card {
@@ -56,89 +61,124 @@ body.eventos-portal-page {
 .evt-type-selector {
     display: flex;
     background: #F1F5F9;
-    padding: 6px;
-    margin: 20px 30px 0 30px;
-    border-radius: 10px;
+    padding: 5px;
+    margin: 24px 32px 0 32px;
+    border-radius: 12px;
+    gap: 4px;
 }
 
 .evt-type-btn {
     flex: 1;
-    padding: 10px;
+    padding: 10px 14px;
     border: none;
     background: transparent;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 500;
-    color: var(--evt-text-muted);
-    border-radius: 8px;
+    color: #64748B;
+    border-radius: 9px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    text-transform: capitalize;
+    gap: 8px;
 }
 
 .evt-type-btn.active {
     background: #ffffff;
-    color: var(--evt-primary);
+    color: #0F172A;
     font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .evt-subtabs-nav {
     display: flex;
-    background: #FAFAFA;
+    background: #FFFFFF;
     border-bottom: 1px solid var(--evt-border);
-    padding: 0 30px;
+    padding: 8px 32px 0 32px;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .evt-subtab-btn {
     flex: 1;
-    padding: 12px;
+    min-width: 120px;
+    padding: 12px 14px;
     border: none;
     background: transparent;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    color: var(--evt-text-muted);
+    color: #64748B;
     cursor: pointer;
-    border-bottom: 3px solid transparent;
+    border-bottom: 2px solid transparent;
     transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.evt-subtab-btn:hover {
+    color: #0F172A;
 }
 
 .evt-subtab-btn.active {
-    color: var(--evt-primary);
-    border-bottom-color: var(--evt-primary);
+    color: #059669;
+    border-bottom-color: #059669;
     background: transparent;
 }
 
 .evt-auth-form-body {
-    padding: 35px 40px;
+    padding: 32px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
+    .evt-type-selector {
+        margin: 18px 18px 0 18px;
+    }
+
+    .evt-subtabs-nav {
+        padding: 6px 18px 0 18px;
+    }
+
     .evt-auth-form-body {
-        padding: 20px;
+        padding: 20px 18px;
     }
 }
 
 .evt-form-title {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: var(--evt-primary);
-    margin-bottom: 6px;
+    color: #0F172A;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
 }
 
 .evt-form-desc {
-    font-size: 0.88rem;
-    color: var(--evt-text-muted);
-    margin-bottom: 25px;
+    font-size: 0.82rem;
+    color: #64748B;
+    margin: 0 0 22px 0;
+}
+
+.evt-section-heading {
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+
+.evt-section-heading h3 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0;
 }
 
 .evt-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    gap: 14px 18px;
 }
 
 @media (max-width: 768px) {
@@ -154,52 +194,53 @@ body.eventos-portal-page {
 .evt-form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
 }
 
 .evt-form-group label {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    color: var(--evt-primary);
+    color: #334155;
 }
 
 .evt-form-control {
     width: 100%;
-    padding: 12px 16px;
-    border: 1px solid var(--evt-border);
-    border-radius: 8px;
-    font-size: 0.9rem;
+    padding: 10px 14px;
+    border: 1px solid #CBD5E1;
+    border-radius: 10px;
+    font-size: 0.85rem;
     font-family: inherit;
-    transition: border-color 0.2s;
+    color: #0F172A;
+    background: #FFFFFF;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .evt-form-control:focus {
     outline: none;
-    border-color: var(--evt-secondary);
-    box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.15);
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
 }
 
 .evt-btn-primary {
-    background-color: var(--evt-primary);
+    background-color: #0F172A;
     color: #ffffff;
-    font-weight: 500;
-    padding: 12px 16px;
+    font-weight: 600;
+    padding: 11px 18px;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    font-size: 0.95rem;
-    transition: transform 0.2s, background-color 0.2s;
+    gap: 8px;
+    font-size: 0.82rem;
+    transition: background-color 0.2s, transform 0.15s;
     width: 100%;
-    margin-top: 15px;
+    margin-top: 12px;
 }
 
 .evt-btn-primary:hover {
-    transform: scale(1.01);
-    background-color: var(--evt-secondary);
+    background-color: #047857;
 }
 
 .evt-edu-row {
@@ -214,327 +255,96 @@ body.eventos-portal-page {
 }
 
 .evt-btn-icon-danger {
-    background: #FEE2E2;
-    color: var(--evt-danger);
-    border: 1px solid #FCA5A5;
-    padding: 10px 14px;
-    border-radius: 8px;
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+    padding: 8px 12px;
+    border-radius: 10px;
     cursor: pointer;
+    font-size: 0.78rem;
+    transition: all 0.2s;
+}
+
+.evt-btn-icon-danger:hover {
+    background: #FEE2E2;
+}
+
+.evt-btn-icon-secondary {
+    background: #F8FAFC;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+    padding: 6px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+}
+
+.evt-btn-icon-secondary:hover {
+    background: #ECFDF5;
+    color: #047857;
+    border-color: #A7F3D0;
+}
+
+.evt-btn-icon-primary {
+    background: #ECFDF5;
+    color: #047857;
+    border: 1px solid #A7F3D0;
+    padding: 6px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .evt-btn-add-item {
-    background: #E0F2FE;
-    color: var(--evt-secondary);
-    border: 1px dashed var(--evt-secondary);
-    padding: 9px 16px;
-    border-radius: 8px;
-    font-size: 0.85rem;
+    background: #ECFDF5;
+    color: #047857;
+    border: 1px dashed #6EE7B7;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    margin-top: 4px;
+    transition: background 0.2s;
+}
+
+.evt-btn-add-item:hover {
+    background: #D1FAE5;
 }
 
 .evt-notice-box {
-    background: #EFF6FF;
-    border-left: 4px solid var(--evt-secondary);
+    background: #ECFDF5;
+    border: 1px solid #A7F3D0;
     padding: 12px 16px;
-    border-radius: 0 8px 8px 0;
-    font-size: 0.85rem;
-    color: #1E40AF;
-    margin-bottom: 20px;
-}
-
-/* ==========================================================================
-   HEADER MOBILE LIMPO (APENAS 3 TRAÇOS E FOTINHA DO PERFIL)
-   ========================================================================== */
-
-.evt-mobile-header {
-    display: none;
-    background: var(--evt-primary-dark);
-    color: #ffffff;
-    padding: 12px 18px;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    position: sticky;
-    top: 0;
-    z-index: 900;
-}
-
-@media (max-width: 768px) {
-    .evt-mobile-header {
-        display: flex;
-    }
-}
-
-.evt-mobile-menu-btn {
-    background: transparent;
-    border: none;
-    color: #ffffff;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 4px 8px;
-}
-
-.evt-mobile-profile-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--evt-secondary), var(--evt-accent));
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border: 2px solid #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.evt-sidebar-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(2px);
-    z-index: 9998;
-    display: none;
-}
-
-.evt-sidebar-backdrop.show {
-    display: block;
-}
-
-/* ==========================================================================
-   WORKSPACE AUTENTICADO & SIDEBAR PURE CSS STICKY (SUAVE E SEM NENHUM SCROLL JUMP)
-   ========================================================================== */
-
-.evt-workspace {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-    min-height: calc(100vh - 120px);
-    background: #F8FAFC;
-    position: relative;
-}
-
-/* Sidebar Desktop Pure CSS Sticky: 100% acelerado por GPU sem JavaScript onScroll */
-@media (min-width: 769px) {
-    .evt-sidebar {
-        position: sticky;
-        top: 0;
-        width: 260px;
-        height: 100vh;
-        max-height: 100vh;
-        background: var(--evt-primary-dark);
-        color: #ffffff;
-        padding: 20px 16px;
-        flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 90;
-        box-sizing: border-box;
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
-        align-self: flex-start;
-    }
-
-    .evt-content-area {
-        flex-grow: 1;
-        min-width: 0;
-        padding: 30px;
-        background: #F8FAFC;
-        box-sizing: border-box;
-    }
-}
-
-/* Mobile Off-Canvas Drawer */
-@media (max-width: 768px) {
-    .evt-sidebar {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: -290px;
-        width: 270px;
-        height: 100vh;
-        background: var(--evt-primary-dark);
-        color: #ffffff;
-        padding: 22px 16px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 9999;
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 8px 0 30px rgba(0, 0, 0, 0.3);
-        box-sizing: border-box;
-    }
-    .evt-sidebar.open {
-        left: 0;
-    }
-    .evt-content-area {
-        margin-left: 0;
-        flex-grow: 1;
-        min-width: 0;
-        padding: 18px;
-        background: #F8FAFC;
-        box-sizing: border-box;
-    }
-}
-
-/* Grupo Superior da Sidebar (Profile + Nav) */
-.evt-sidebar-main-content {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    padding-right: 2px;
-}
-
-.evt-sidebar-main-content::-webkit-scrollbar {
-    width: 4px;
-}
-.evt-sidebar-main-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-}
-
-.evt-user-profile-summary {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    flex-shrink: 0;
-}
-
-.evt-user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--evt-secondary), var(--evt-accent));
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0, 180, 216, 0.3);
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-.evt-user-info-text h4 {
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0;
-    line-height: 1.2;
-}
-
-.evt-role-badge {
-    display: inline-block;
-    padding: 2px 7px;
     border-radius: 12px;
-    font-size: 0.68rem;
-    font-weight: 700;
-    margin-top: 3px;
-    text-transform: uppercase;
-}
-
-.evt-role-badge.participante {
-    background: rgba(0, 180, 216, 0.25);
-    color: #7DD3FC;
-    border: 1px solid rgba(0, 180, 216, 0.4);
-}
-
-.evt-role-badge.palestrante {
-    background: rgba(139, 92, 246, 0.25);
-    color: #C4B5FD;
-    border: 1px solid rgba(139, 92, 246, 0.4);
-}
-
-/* Sidebar Nav Links */
-.evt-sidebar-nav {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.evt-sidebar-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    color: #94A3B8;
-    text-decoration: none;
-    font-size: 0.88rem;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.evt-sidebar-link:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.evt-sidebar-link.active {
-    color: #ffffff;
-    background: linear-gradient(90deg, var(--evt-secondary), rgba(0, 136, 204, 0.7));
-    box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
-}
-
-.evt-sidebar-link i {
-    font-size: 1rem;
-    width: 20px;
-    text-align: center;
-}
-
-/* Rodapé do Sidebar e Botão Sair Isolado */
-.evt-sidebar-footer {
-    flex-shrink: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    padding-top: 12px;
-    margin-top: 10px;
-}
-
-.evt-btn-logout-sidebar {
-    background: rgba(239, 68, 68, 0.15);
-    color: #FCA5A5;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    padding: 11px 14px;
-    border-radius: 10px;
-    font-size: 0.86rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.2s ease;
-    width: 100%;
-}
-
-.evt-btn-logout-sidebar:hover {
-    background: #EF4444;
-    color: #ffffff;
-    border-color: #EF4444;
+    font-size: 0.8rem;
+    color: #065F46;
+    margin-bottom: 20px;
+    line-height: 1.5;
 }
 
 /* ==========================================================================
-   DRAWER DE CHAT PRIVADO DA COMUNIDADE (OCULTO POR PADRÃO)
+   DASHBOARD CARDS (ESTILO EXATO PORTAL DO ASSOCIADO)
+   ========================================================================== */
+
+.dashboard-card {
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   DRAWER DE CHAT PRIVADO DA COMUNIDADE
    ========================================================================== */
 
 .evt-chat-drawer {
@@ -545,7 +355,7 @@ body.eventos-portal-page {
     width: 340px;
     height: 100vh;
     background: #ffffff;
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.12);
     z-index: 9999;
     flex-direction: column;
     border-left: 1px solid var(--evt-border);
@@ -555,19 +365,9 @@ body.eventos-portal-page {
     display: flex;
 }
 
-.evt-chat-header {
-    background: var(--evt-primary-dark);
-    color: #ffffff;
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.9rem;
-}
-
 .evt-chat-messages {
     flex-grow: 1;
-    padding: 15px;
+    padding: 16px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -576,111 +376,69 @@ body.eventos-portal-page {
 }
 
 .evt-chat-msg {
-    max-width: 82%;
-    padding: 9px 13px;
-    border-radius: 12px;
-    font-size: 0.83rem;
-    line-height: 1.4;
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 0.78rem;
+    line-height: 1.45;
 }
 
 .evt-chat-msg.received {
     background: #ffffff;
-    color: var(--evt-text-main);
+    color: #334155;
     align-self: flex-start;
     border: 1px solid var(--evt-border);
-    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .evt-chat-msg.sent {
-    background: var(--evt-secondary);
+    background: #0F172A;
     color: #ffffff;
     align-self: flex-end;
-    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
 }
 
-.evt-chat-input-bar {
-    padding: 12px;
-    border-top: 1px solid var(--evt-border);
-    display: flex;
-    gap: 8px;
-    background: #ffffff;
-}
+/* ==========================================================================
+   GRID E CARDS DE EVENTOS
+   ========================================================================== */
 
-.evt-page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.evt-page-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--evt-primary);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.evt-filters-toolbar {
-    background: #ffffff;
-    padding: 16px 20px;
-    border-radius: var(--evt-radius);
-    border: 1px solid var(--evt-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
-    margin-bottom: 25px;
-}
-
-/* Grid de Cards de Evento */
 .evt-cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 22px;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 20px;
+    margin-bottom: 10px;
 }
 
 .evt-card-row-single {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
     gap: 20px;
-    overflow-x: auto;
-    padding-bottom: 12px;
-    scroll-snap-type: x mandatory;
-}
-
-.evt-card-row-single .evt-event-card {
-    min-width: 280px;
-    max-width: 320px;
-    scroll-snap-align: start;
-    flex-shrink: 0;
 }
 
 .evt-event-card {
     background: #ffffff;
-    border-radius: 14px;
+    border-radius: 16px;
     border: 1px solid var(--evt-border);
     box-shadow: var(--evt-shadow);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .evt-event-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: var(--evt-shadow-hover);
+    border-color: #CBD5E1;
 }
 
 .evt-card-img-wrapper {
     position: relative;
-    height: 150px;
+    height: 155px;
     overflow: hidden;
+    background: #F1F5F9;
 }
 
 .evt-card-img-wrapper img {
@@ -690,88 +448,40 @@ body.eventos-portal-page {
 }
 
 .evt-badge-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #ECFDF5;
+    color: #047857;
+    border: 1px solid #A7F3D0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    text-transform: capitalize;
+}
+
+.evt-card-img-wrapper .evt-badge-tag {
     position: absolute;
     top: 12px;
     left: 12px;
-    background: var(--evt-primary);
-    color: #ffffff;
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    text-transform: uppercase;
-}
-
-.evt-card-dots-menu {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10;
-}
-
-.evt-dots-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    color: var(--evt-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.evt-dots-dropdown {
-    position: absolute;
-    top: 38px;
-    right: 0;
-    background: #ffffff;
-    border: 1px solid var(--evt-border);
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    width: 210px;
-    display: none;
-    flex-direction: column;
-    padding: 6px 0;
-    z-index: 20;
-}
-
-.evt-dots-dropdown.show {
-    display: flex;
-}
-
-.evt-dots-dropdown-item {
-    padding: 9px 15px;
-    font-size: 0.83rem;
-    font-weight: 600;
-    color: var(--evt-text-main);
-    text-align: left;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.evt-dots-dropdown-item:hover {
-    background: #F1F5F9;
-    color: var(--evt-secondary);
+    background: rgba(255, 255, 255, 0.95);
+    color: #0F172A;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .evt-card-body {
-    padding: 18px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
 .evt-card-meta {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--evt-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #059669;
     margin-bottom: 6px;
     display: flex;
     align-items: center;
@@ -779,18 +489,18 @@ body.eventos-portal-page {
 }
 
 .evt-card-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
-    color: var(--evt-primary);
-    margin: 0 0 10px 0;
-    line-height: 1.35;
+    color: #0F172A;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
 }
 
 .evt-card-desc {
-    font-size: 0.82rem;
-    color: var(--evt-text-muted);
-    margin-bottom: 15px;
-    line-height: 1.4;
+    font-size: 0.78rem;
+    color: #64748B;
+    margin-bottom: 16px;
+    line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -801,158 +511,95 @@ body.eventos-portal-page {
     margin-top: auto;
     display: flex;
     gap: 8px;
-    padding-top: 12px;
+    padding-top: 14px;
     border-top: 1px solid #F1F5F9;
+    flex-wrap: wrap;
 }
 
 .evt-btn-card-primary {
     flex: 1;
-    background: var(--evt-secondary);
+    background: #0F172A;
     color: #ffffff;
-    border: none;
-    padding: 9px 12px;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    font-weight: 700;
+    border: 1px solid #0F172A;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
     cursor: pointer;
     text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
 }
 
 .evt-btn-card-primary:hover {
-    background: var(--evt-primary);
+    background: #047857;
+    border-color: #047857;
 }
 
 .evt-btn-card-secondary {
     flex: 1;
-    background: #F1F5F9;
-    color: var(--evt-text-main);
-    border: 1px solid var(--evt-border);
-    padding: 9px 12px;
-    border-radius: 8px;
-    font-size: 0.82rem;
+    background: #F8FAFC;
+    color: #334155;
+    border: 1px solid #E2E8F0;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
     text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
 }
 
-.evt-btn-card-secondary:hover {
-    background: #E2E8F0;
+.evt-btn-card-secondary:hover:not(:disabled) {
+    background: #F1F5F9;
+    color: #0F172A;
+    border-color: #CBD5E1;
+}
+
+.evt-btn-card-secondary:disabled {
+    opacity: 0.75;
+    cursor: default;
 }
 
 .evt-btn-card-danger {
     flex: 1;
-    background: #FEE2E2;
-    color: var(--evt-danger);
-    border: 1px solid #FCA5A5;
-    padding: 9px 12px;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    font-weight: 700;
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
     cursor: pointer;
     text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
 }
 
 .evt-btn-card-danger:hover {
-    background: #FCA5A5;
-}
-
-.evt-create-event-banner-card {
-    background: linear-gradient(135deg, var(--evt-primary-dark), var(--evt-primary));
-    border-radius: 16px;
-    padding: 30px;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 10px 25px rgba(15, 59, 95, 0.2);
-    margin-bottom: 30px;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.evt-create-event-banner-card:hover {
-    transform: translateY(-2px);
-}
-
-.evt-create-card-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.evt-plus-square-icon {
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px dashed rgba(255, 255, 255, 0.4);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    color: #ffffff;
-}
-
-.evt-create-card-text h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 6px 0;
-    color: #ffffff;
-}
-
-.evt-create-card-text p {
-    font-size: 0.9rem;
-    color: #94A3B8;
-    margin: 0;
-}
-
-/* Floating AI Chatbot */
-.evt-ai-fab-btn {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--evt-secondary), var(--evt-accent));
-    color: #ffffff;
-    border: none;
-    box-shadow: 0 8px 25px rgba(0, 180, 216, 0.4);
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.evt-ai-chat-window {
-    position: fixed;
-    bottom: 95px;
-    right: 25px;
-    width: 380px;
-    height: 520px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-    border: 1px solid var(--evt-border);
-    z-index: 1000;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.evt-ai-chat-window.open {
-    display: flex;
+    background: #FEE2E2;
 }
 
 /* ==========================================================================
-   MODAL DE CONFIRMAÇÃO DE EVENTOS
+   MODAIS CLEAN (PADRÃO SLATE / EMERALD)
    ========================================================================== */
 .evt-modal {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(15, 23, 42, 0.75);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.5);
     backdrop-filter: blur(4px);
     z-index: 99999;
     display: flex;
@@ -963,20 +610,22 @@ body.eventos-portal-page {
 
 .evt-modal-content {
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
     width: 100%;
     max-width: 600px;
     max-height: 90vh;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.18);
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
 .evt-modal-header {
-    background: var(--evt-primary);
-    color: #ffffff;
-    padding: 20px 24px;
+    background: #ffffff;
+    color: #0F172A;
+    padding: 18px 24px;
+    border-bottom: 1px solid #F1F5F9;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -984,26 +633,28 @@ body.eventos-portal-page {
 
 .evt-modal-header h2 {
     margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0F172A;
 }
 
 .btn-fechar-modal {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: #fff;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    color: #64748B;
     width: 32px;
     height: 32px;
-    border-radius: 50%;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .btn-fechar-modal:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: #F1F5F9;
+    color: #0F172A;
 }
 
 .evt-modal-body {
@@ -1012,23 +663,18 @@ body.eventos-portal-page {
     flex: 1;
 }
 
-.evt-modal-body p {
-    color: #475569;
-    margin-bottom: 20px;
-}
-
 .evt-resumo-evento {
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 16px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .evt-resumo-evento p {
-    margin: 0 0 10px 0;
-    color: #1E293B;
-    font-size: 0.95rem;
+    margin: 0 0 8px 0;
+    color: #334155;
+    font-size: 0.82rem;
 }
 
 .evt-resumo-evento p:last-child {
@@ -1036,17 +682,18 @@ body.eventos-portal-page {
 }
 
 .evt-resumo-evento strong {
-    color: var(--evt-primary-dark);
+    color: #0F172A;
     display: inline-block;
-    width: 140px;
+    width: 130px;
 }
 
 .evt-modal-footer {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    border-top: 1px solid #E2E8F0;
-    padding-top: 20px;
+    gap: 10px;
+    border-top: 1px solid #F1F5F9;
+    padding: 16px 24px;
+    background: #FAFAFA;
 }
 
 /* ==========================================================================
@@ -1054,15 +701,14 @@ body.eventos-portal-page {
    ========================================================================== */
 
 .evt-filter-panel {
-    background: #ffffff;
-    border: 1px solid var(--evt-border);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .evt-search-box-wrapper {
@@ -1075,64 +721,63 @@ body.eventos-portal-page {
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--evt-text-muted);
-    font-size: 1rem;
+    color: #94A3B8;
+    font-size: 0.88rem;
 }
 
 .evt-search-input {
     width: 100%;
-    padding: 12px 14px 12px 42px;
-    border: 1px solid var(--evt-border);
+    padding: 10px 14px 10px 38px;
+    border: 1px solid #CBD5E1;
     border-radius: 10px;
-    font-size: 0.92rem;
+    font-size: 0.84rem;
     font-family: inherit;
-    color: var(--evt-text-main);
-    background: #F8FAFC;
+    color: #0F172A;
+    background: #FFFFFF;
     transition: all 0.2s ease;
     box-sizing: border-box;
 }
 
 .evt-search-input:focus {
     outline: none;
-    background: #ffffff;
-    border-color: var(--evt-secondary);
-    box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15);
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
 }
 
 .evt-filter-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
     align-items: flex-end;
 }
 
 .evt-filter-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
 }
 
 .evt-filter-group label {
-    font-size: 0.78rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    color: var(--evt-primary);
+    color: #64748B;
     display: flex;
     align-items: center;
     gap: 5px;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.04em;
 }
 
 .evt-filter-group select,
 .evt-filter-group input {
     width: 100%;
-    padding: 9px 12px;
-    border: 1px solid var(--evt-border);
-    border-radius: 8px;
-    font-size: 0.85rem;
+    padding: 8px 12px;
+    border: 1px solid #CBD5E1;
+    border-radius: 10px;
+    font-size: 0.8rem;
     font-family: inherit;
     background: #ffffff;
-    color: var(--evt-text-main);
+    color: #0F172A;
     box-sizing: border-box;
     transition: border-color 0.2s;
 }
@@ -1140,7 +785,7 @@ body.eventos-portal-page {
 .evt-filter-group select:focus,
 .evt-filter-group input:focus {
     outline: none;
-    border-color: var(--evt-secondary);
+    border-color: #059669;
 }
 
 .evt-range-inputs {
@@ -1159,25 +804,25 @@ body.eventos-portal-page {
     align-items: center;
     justify-content: space-between;
     padding-top: 12px;
-    border-top: 1px dashed var(--evt-border);
+    border-top: 1px solid #E2E8F0;
     flex-wrap: wrap;
     gap: 10px;
 }
 
 .evt-results-counter {
-    font-size: 0.84rem;
-    font-weight: 600;
-    color: var(--evt-text-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #64748B;
 }
 
 .evt-btn-clear-filters {
-    background: #F1F5F9;
-    color: var(--evt-text-main);
-    border: 1px solid var(--evt-border);
-    padding: 7px 14px;
+    background: #FFFFFF;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+    padding: 6px 12px;
     border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 700;
+    font-size: 0.75rem;
+    font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -1186,111 +831,140 @@ body.eventos-portal-page {
 }
 
 .evt-btn-clear-filters:hover {
-    background: #E2E8F0;
-    color: var(--evt-danger);
+    background: #FEF2F2;
+    color: #DC2626;
+    border-color: #FECACA;
 }
 
 .evt-empty-results {
     text-align: center;
-    padding: 40px 20px;
-    background: #ffffff;
-    border: 1px dashed var(--evt-border);
-    border-radius: 14px;
-    color: var(--evt-text-muted);
+    padding: 36px 20px;
+    background: #F8FAFC;
+    border: 1px dashed #CBD5E1;
+    border-radius: 16px;
+    color: #64748B;
     grid-column: 1 / -1;
     width: 100%;
     box-sizing: border-box;
 }
 
 .evt-empty-results i {
-    font-size: 2.5rem;
-    color: var(--evt-border);
-    margin-bottom: 12px;
+    font-size: 2rem;
+    color: #94A3B8;
+    margin-bottom: 10px;
 }
 
 .evt-empty-results h4 {
-    margin: 0 0 6px 0;
-    font-size: 1.1rem;
-    color: var(--evt-primary);
+    margin: 0 0 4px 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0F172A;
 }
 
-/* Logout Modal */
+.evt-empty-results p {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   LOGOUT MODAL
+   ========================================================================== */
 .logout-confirm-modal {
     display: none;
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(15, 23, 42, 0.6);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.5);
     backdrop-filter: blur(4px);
     z-index: 9999;
     align-items: center;
     justify-content: center;
-    animation: fadeIn 0.2s ease-out;
 }
+
 .logout-modal-content {
     background: #FFFFFF;
     width: 90%;
-    max-width: 400px;
+    max-width: 390px;
     border-radius: 16px;
-    padding: 30px;
+    border: 1px solid #E2E8F0;
+    padding: 28px;
     text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    animation: slideUp 0.3s ease-out;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
+
 .logout-icon {
-    width: 60px; height: 60px;
-    background: #FEE2E2; color: #DC2626;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem; margin: 0 auto 20px auto;
+    width: 52px;
+    height: 52px;
+    background: #FEF2F2;
+    color: #DC2626;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin: 0 auto 16px auto;
 }
+
 .logout-modal-content h3 {
-    color: #1E293B; font-size: 1.25rem; margin-bottom: 10px;
+    color: #0F172A;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 6px 0;
 }
+
 .logout-modal-content p {
-    color: #64748B; font-size: 0.95rem; margin-bottom: 25px;
+    color: #64748B;
+    font-size: 0.82rem;
+    margin: 0 0 20px 0;
 }
+
 .logout-actions {
-    display: flex; flex-direction: column; gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
-.btn-logout-cancel, .btn-logout-area, .btn-logout-confirm {
-    padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s;
-}
-.btn-logout-cancel {
-    background: #FFFFFF; color: #1E293B; border: 1px solid #E2E8F0;
-}
-.btn-logout-cancel:hover { background: #F8FAFC; }
-.btn-logout-area {
-    background: #F1F5F9; color: #1E293B; border: 1px solid #E2E8F0;
-}
-.btn-logout-area:hover { background: #E2E8F0; }
+
+.btn-logout-cancel,
+.btn-logout-area,
 .btn-logout-confirm {
-    background: #DC2626; color: #FFF;
-}
-.btn-logout-confirm:hover { background: #B91C1C; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-/* Estilos Adicionais para Separador e Botões Mobile */
-.evt-dashboard-divider {
-    border: 0;
-    border-top: 1px solid var(--evt-border);
-    margin-bottom: 25px;
-    margin-top: -10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
 }
 
-.evt-btn-ver-todas {
-    transition: all 0.2s ease;
+.btn-logout-cancel {
+    background: #FFFFFF;
+    color: #334155;
+    border: 1px solid #E2E8F0;
 }
 
-@media (max-width: 600px) {
-    .evt-btn-ver-todas {
-        width: 100% !important;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 5px;
-        padding: 12px !important;
-        gap: 8px;
-    }
+.btn-logout-cancel:hover {
+    background: #F8FAFC;
+}
+
+.btn-logout-area {
+    background: #F8FAFC;
+    color: #0F172A;
+    border: 1px solid #E2E8F0;
+}
+
+.btn-logout-area:hover {
+    background: #F1F5F9;
+}
+
+.btn-logout-confirm {
+    background: #DC2626;
+    color: #FFF;
+}
+
+.btn-logout-confirm:hover {
+    background: #B91C1C;
 }
 
 /* ==========================================================================
@@ -1298,39 +972,46 @@ body.eventos-portal-page {
    ========================================================================== */
 
 .evt-reputation-badge {
-    background: linear-gradient(135deg, #F59E0B, #D97706);
-    color: #fff;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 700;
+    background: #ECFDF5;
+    color: #047857;
+    border: 1px solid #A7F3D0;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
 }
 
 .com-subpanel {
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.2s ease;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .com-chat-layout {
     display: flex;
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 16px;
     border: 1px solid var(--evt-border);
     box-shadow: var(--evt-shadow);
-    height: 600px;
+    height: 540px;
     overflow: hidden;
 }
 
 .com-chat-sidebar {
-    width: 320px;
+    width: 280px;
     border-right: 1px solid var(--evt-border);
     display: flex;
     flex-direction: column;
@@ -1339,7 +1020,7 @@ body.eventos-portal-page {
 }
 
 .com-chat-sidebar-header {
-    padding: 15px 20px;
+    padding: 14px 18px;
     border-bottom: 1px solid var(--evt-border);
     background: #ffffff;
 }
@@ -1353,101 +1034,102 @@ body.eventos-portal-page {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--evt-border);
+    padding: 14px 18px;
+    border-bottom: 1px solid #F1F5F9;
     cursor: pointer;
     transition: background 0.2s;
 }
 
 .com-chat-item:hover {
-    background: #F1F5F9;
+    background: #FFFFFF;
 }
 
 .com-chat-avatar {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: var(--evt-primary);
-    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: #ECFDF5;
+    border: 1px solid #A7F3D0;
+    color: #047857;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     flex-shrink: 0;
 }
 
 .com-chat-info h4 {
-    margin: 0 0 4px 0;
-    font-size: 0.95rem;
-    color: var(--evt-primary);
+    margin: 0 0 2px 0;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #0F172A;
 }
 
 .com-chat-info p {
     margin: 0;
-    font-size: 0.8rem;
-    color: var(--evt-text-muted);
+    font-size: 0.74rem;
+    color: #64748B;
 }
 
 .com-chat-main {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    background: #F1F5F9;
+    background: #F8FAFC;
 }
 
 .com-chat-main-header {
-    padding: 15px 20px;
+    padding: 14px 18px;
     background: #ffffff;
     border-bottom: 1px solid var(--evt-border);
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .com-chat-messages-container {
     flex-grow: 1;
-    padding: 20px;
+    padding: 18px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .com-chat-message {
     max-width: 75%;
     padding: 10px 14px;
-    border-radius: 12px;
+    border-radius: 14px;
     position: relative;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .com-chat-message.received {
     align-self: flex-start;
     background: #ffffff;
     border: 1px solid var(--evt-border);
-    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
 }
 
 .com-chat-message.sent {
     align-self: flex-end;
-    background: #DCF8C6; /* Whatsapp-like light green */
-    border: 1px solid #c8ebb0;
-    border-bottom-right-radius: 2px;
+    background: #ECFDF5;
+    border: 1px solid #A7F3D0;
+    border-top-right-radius: 2px;
 }
 
 .com-chat-message p {
-    margin: 0 0 5px 0;
-    font-size: 0.9rem;
-    color: var(--evt-text-main);
-    line-height: 1.4;
+    margin: 0 0 4px 0;
+    font-size: 0.82rem;
+    color: #0F172A;
+    line-height: 1.45;
 }
 
 .com-chat-sender {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    color: var(--evt-secondary);
-    margin-bottom: 4px;
+    color: #059669;
+    margin-bottom: 2px;
 }
 
 .com-chat-message.sent .com-chat-sender {
@@ -1456,13 +1138,13 @@ body.eventos-portal-page {
 
 .com-chat-time {
     display: block;
-    font-size: 0.7rem;
-    color: var(--evt-text-muted);
+    font-size: 0.65rem;
+    color: #64748B;
     text-align: right;
 }
 
 .com-chat-input-area {
-    padding: 15px 20px;
+    padding: 12px 16px;
     background: #ffffff;
     border-top: 1px solid var(--evt-border);
     display: flex;
@@ -1472,13 +1154,14 @@ body.eventos-portal-page {
 @media (max-width: 768px) {
     .com-chat-layout {
         flex-direction: column;
-        height: 700px;
+        height: 640px;
     }
+
     .com-chat-sidebar {
         width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--evt-border);
-        max-height: 250px;
+        max-height: 210px;
     }
 }
 
@@ -1492,7 +1175,7 @@ body.eventos-portal-page {
     align-items: center;
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 16px 20px;
     margin-bottom: 18px;
     gap: 15px;
@@ -1500,12 +1183,13 @@ body.eventos-portal-page {
 
 .evt-pay-badge-type {
     display: inline-block;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    background: #E2E8F0;
-    color: #334155;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    background: #ECFDF5;
+    color: #047857;
+    border: 1px solid #A7F3D0;
     text-transform: uppercase;
 }
 
@@ -1515,7 +1199,7 @@ body.eventos-portal-page {
 }
 
 .evt-pay-price {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 800;
     color: #059669;
     line-height: 1.2;
@@ -1526,19 +1210,19 @@ body.eventos-portal-page {
     display: flex;
     background: #F1F5F9;
     padding: 4px;
-    border-radius: 10px;
+    border-radius: 12px;
     margin-bottom: 16px;
     gap: 4px;
 }
 
 .evt-pay-tab-btn {
     flex: 1;
-    padding: 10px 14px;
+    padding: 9px 14px;
     border: none;
     background: transparent;
-    border-radius: 8px;
+    border-radius: 9px;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #64748B;
     cursor: pointer;
     display: flex;
@@ -1551,7 +1235,7 @@ body.eventos-portal-page {
 .evt-pay-tab-btn.active {
     background: #ffffff;
     color: #0F172A;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .evt-pay-pix-container {
@@ -1560,7 +1244,7 @@ body.eventos-portal-page {
     gap: 20px;
     background: #ffffff;
     border: 1px solid #E2E8F0;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 16px;
 }
 
@@ -1575,9 +1259,9 @@ body.eventos-portal-page {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #FFFBEB;
-    border: 1px dashed #F59E0B;
-    border-radius: 10px;
+    background: #F8FAFC;
+    border: 1px dashed #CBD5E1;
+    border-radius: 12px;
     padding: 12px 16px;
     margin-top: 18px;
     gap: 12px;
@@ -1585,12 +1269,13 @@ body.eventos-portal-page {
 }
 
 .evt-badge-test {
-    background: #FEF3C7;
-    color: #B45309;
-    font-weight: 700;
-    font-size: 0.72rem;
-    padding: 3px 8px;
-    border-radius: 6px;
+    background: #ECFDF5;
+    color: #047857;
+    border: 1px solid #A7F3D0;
+    font-weight: 600;
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 9999px;
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -1598,15 +1283,14 @@ body.eventos-portal-page {
 }
 
 .evt-btn-simulate-pay {
-    background: linear-gradient(135deg, #F59E0B, #D97706);
+    background: #0F172A;
     color: #ffffff;
     border: none;
-    border-radius: 8px;
-    padding: 9px 16px;
-    font-weight: 700;
-    font-size: 0.82rem;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-weight: 600;
+    font-size: 0.78rem;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(217, 119, 6, 0.25);
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
@@ -1614,18 +1298,17 @@ body.eventos-portal-page {
 }
 
 .evt-btn-simulate-pay:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(217, 119, 6, 0.35);
+    background: #047857;
 }
 
 .evt-pay-success-icon {
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
     background: #ECFDF5;
+    border: 1px solid #A7F3D0;
     color: #059669;
-    font-size: 2.4rem;
-    border-radius: 50%;
+    font-size: 1.5rem;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1635,12 +1318,12 @@ body.eventos-portal-page {
 .evt-receipt-box {
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 16px;
     text-align: left;
     max-width: 440px;
     margin: 0 auto;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .evt-receipt-row {
@@ -1648,13 +1331,14 @@ body.eventos-portal-page {
     justify-content: space-between;
     padding: 6px 0;
     border-bottom: 1px dashed #E2E8F0;
+    color: #475569;
 }
 
 .evt-receipt-row:last-child {
     border-bottom: none;
     font-weight: 700;
     color: #059669;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     padding-top: 10px;
 }
 
@@ -1663,9 +1347,9 @@ body.eventos-portal-page {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, #F8FAFC, #EFF6FF);
-    border: 1px solid #BFDBFE;
-    border-radius: 12px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
     padding: 18px 22px;
     margin-bottom: 20px;
     gap: 15px;
@@ -1673,52 +1357,53 @@ body.eventos-portal-page {
 
 .evt-badge-status-ativo {
     background: #ECFDF5;
-    color: #059669;
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 6px;
+    color: #047857;
+    border: 1px solid #A7F3D0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
     display: inline-flex;
     align-items: center;
     gap: 4px;
 }
 
 .evt-quota-progress-circle {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
     background: #ffffff;
-    border: 4px solid #10B981;
+    border: 2px solid #A7F3D0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
     flex-shrink: 0;
 }
 
 .evt-quota-progress-circle span {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 800;
-    color: #0F172A;
+    color: #047857;
     line-height: 1;
 }
 
 .evt-quota-progress-circle small {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: #64748B;
     text-transform: uppercase;
+    margin-top: 2px;
 }
 
 .evt-choice-cards-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 14px;
 }
 
 .evt-choice-card {
-    border: 2px solid #E2E8F0;
-    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
     padding: 18px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -1730,13 +1415,12 @@ body.eventos-portal-page {
 
 .evt-choice-card:hover {
     border-color: #CBD5E1;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
 }
 
 .evt-choice-card.active {
-    border-color: #0F3B5F;
+    border-color: #059669;
     background: #F8FAFC;
-    box-shadow: 0 0 0 1px #0F3B5F;
+    box-shadow: 0 0 0 1px #059669;
 }
 
 .evt-choice-card-header {
@@ -1747,34 +1431,36 @@ body.eventos-portal-page {
 }
 
 .evt-badge-opt {
-    font-size: 0.72rem;
-    font-weight: 800;
-    color: #0F3B5F;
-    background: #E2E8F0;
-    padding: 2px 7px;
-    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #334155;
+    background: #F1F5F9;
+    padding: 2px 8px;
+    border-radius: 6px;
     text-transform: uppercase;
 }
 
 .evt-badge-pill {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #059669;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #047857;
     background: #ECFDF5;
-    padding: 2px 7px;
-    border-radius: 10px;
+    border: 1px solid #A7F3D0;
+    padding: 2px 8px;
+    border-radius: 9999px;
 }
 
 .evt-choice-card h3 {
     margin: 4px 0 6px 0;
-    font-size: 1.05rem;
+    font-size: 0.95rem;
+    font-weight: 700;
     color: #0F172A;
 }
 
 .evt-choice-card p {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: #64748B;
-    line-height: 1.4;
+    line-height: 1.45;
     margin: 0 0 12px 0;
     flex: 1;
 }
@@ -1784,14 +1470,14 @@ body.eventos-portal-page {
 }
 
 .evt-choice-price strong {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 800;
     color: #0F172A;
     display: block;
 }
 
 .evt-choice-price small {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     color: #64748B;
 }
 
@@ -1799,10 +1485,10 @@ body.eventos-portal-page {
     background: #F1F5F9;
     color: #334155;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     padding: 8px 12px;
-    font-weight: 700;
-    font-size: 0.8rem;
+    font-weight: 600;
+    font-size: 0.78rem;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -1812,11 +1498,10 @@ body.eventos-portal-page {
 }
 
 .evt-choice-card.active .evt-btn-select-choice {
-    background: #0F3B5F;
+    background: #0F172A;
     color: #ffffff;
 }
 
-/* Grade de Pacotes Mensais (5 em 5) */
 .evt-packages-table-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -1824,8 +1509,8 @@ body.eventos-portal-page {
 }
 
 .evt-pkg-item {
-    border: 2px solid #E2E8F0;
-    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
     padding: 12px 8px;
     text-align: center;
     cursor: pointer;
@@ -1835,13 +1520,13 @@ body.eventos-portal-page {
 }
 
 .evt-pkg-item:hover {
-    border-color: #94A3B8;
+    border-color: #CBD5E1;
 }
 
 .evt-pkg-item.active {
-    border-color: #8B5CF6;
-    background: #F5F3FF;
-    box-shadow: 0 0 0 1px #8B5CF6;
+    border-color: #059669;
+    background: #ECFDF5;
+    box-shadow: 0 0 0 1px #059669;
 }
 
 .pkg-ribbon {
@@ -1849,30 +1534,30 @@ body.eventos-portal-page {
     top: -8px;
     left: 50%;
     transform: translateX(-50%);
-    background: #8B5CF6;
+    background: #0F172A;
     color: #ffffff;
     font-size: 0.6rem;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 8px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 9999px;
     white-space: nowrap;
 }
 
 .pkg-header {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    color: #334155;
+    color: #0F172A;
     margin-bottom: 2px;
 }
 
 .pkg-limit {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     color: #64748B;
     margin-bottom: 6px;
 }
 
 .pkg-price {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 800;
     color: #0F172A;
 }
@@ -1886,7 +1571,7 @@ body.eventos-portal-page {
 .evt-palestrante-checkout-box {
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 16px 20px;
 }
 
@@ -1898,30 +1583,30 @@ body.eventos-portal-page {
     border-bottom: 1px solid #E2E8F0;
 }
 
-/* Alerta de Cota Esgotada em Criar Evento */
 .evt-quota-alert-box {
     background: #FEF2F2;
     border: 1px solid #FECACA;
-    border-left: 4px solid #EF4444;
-    border-radius: 8px;
-    padding: 14px 18px;
+    border-radius: 14px;
+    padding: 16px 20px;
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .evt-quota-alert-text h4 {
     margin: 0 0 4px 0;
     color: #991B1B;
-    font-size: 0.92rem;
+    font-size: 0.88rem;
+    font-weight: 700;
 }
 
 .evt-quota-alert-text p {
     margin: 0;
     color: #7F1D1D;
-    font-size: 0.82rem;
+    font-size: 0.78rem;
 }
 
 @media (max-width: 768px) {
@@ -1929,16 +1614,20 @@ body.eventos-portal-page {
         flex-direction: column;
         align-items: flex-start;
     }
+
     .evt-pay-value-box {
         text-align: left;
     }
+
     .evt-pay-pix-container {
         flex-direction: column;
         text-align: center;
     }
+
     .evt-choice-cards-grid {
         grid-template-columns: 1fr;
     }
+
     .evt-packages-table-grid {
         grid-template-columns: repeat(2, 1fr);
     }

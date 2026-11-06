@@ -16,6 +16,129 @@ const TAB_TITLES = {
     'outros': '9. Outros & Ajuda'
 };
 
+function escapeHTML(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function syncSidebarNavState(activeTabId) {
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        const isActive = btn.dataset.tab === activeTabId;
+        if (isActive) {
+            btn.classList.remove('text-slate-400');
+            btn.classList.add('text-slate-800', 'bg-slate-100');
+        } else {
+            btn.classList.remove('text-slate-800', 'bg-slate-100');
+            btn.classList.add('text-slate-400');
+        }
+    });
+}
+
+window.openModal = function(title, description) {
+    const titleEl = document.getElementById('modalTitle');
+    const descEl = document.getElementById('modalDescription');
+    const modalEl = document.getElementById('actionModal');
+    if (titleEl) titleEl.textContent = title;
+    if (descEl) descEl.textContent = description;
+    if (modalEl) modalEl.classList.remove('hidden');
+};
+
+window.closeModal = function() {
+    const modalEl = document.getElementById('actionModal');
+    if (modalEl) modalEl.classList.add('hidden');
+};
+
+window.toggleChatSidebar = function() {
+    const drawer = document.getElementById('chatDrawer');
+    if (drawer) drawer.classList.toggle('translate-x-full');
+};
+
+window.sendChatMessage = function(e) {
+    e.preventDefault();
+    const input = document.getElementById('chatInput');
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    const container = document.getElementById('chatMessages');
+    if (!container) return;
+
+    const userMsg = document.createElement('div');
+    userMsg.className = 'flex justify-end';
+    const bubble = document.createElement('div');
+    bubble.className = 'bg-emerald-700 text-white p-2.5 rounded-2xl rounded-tr-none text-xs max-w-[85%]';
+    bubble.textContent = text;
+    userMsg.appendChild(bubble);
+    container.appendChild(userMsg);
+    input.value = '';
+
+    setTimeout(() => {
+        const botMsg = document.createElement('div');
+        botMsg.className = 'flex items-start gap-2';
+        botMsg.innerHTML = `
+          <div class="w-6 h-6 rounded-full bg-emerald-800 text-white flex items-center justify-center font-bold text-[10px]">S</div>
+          <div class="bg-white p-2.5 rounded-2xl rounded-tl-none border border-slate-200 text-xs text-slate-700 shadow-sm">
+            Mensagem registrada! Um consultor SBPS entrará em contato em instantes.
+          </div>
+        `;
+        container.appendChild(botMsg);
+    }, 600);
+};
+
+window.showToast = function(message) {
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMessage');
+    if (!toast || !toastMsg) return;
+    toastMsg.textContent = message;
+    toast.classList.remove('translate-y-20', 'opacity-0');
+    if (toast._hideTimer) clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+    }, 2500);
+};
+
+window.showToastMessage = window.showToast;
+
+window.togglePasswordVisibility = function(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button ? button.querySelector('i') : null;
+    if (input && icon) {
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+};
+
+window.setActiveNav = function(element, title) {
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('text-slate-800', 'bg-slate-100');
+        btn.classList.add('text-slate-400');
+    });
+    if (element) {
+        element.classList.remove('text-slate-400');
+        element.classList.add('text-slate-800', 'bg-slate-100');
+    }
+    if (title) window.showToast('Visualizando: ' + title);
+};
+
+window.addEventListener('click', (event) => {
+    const modal = document.getElementById('actionModal');
+    if (modal && event.target === modal) {
+        window.closeModal();
+    }
+});
+
 window.switchTab = function(tabId, tabTitle, fromPopState = false) {
     if (!tabId) return;
 
@@ -53,10 +176,7 @@ window.switchTab = function(tabId, tabTitle, fromPopState = false) {
     const titleToUse = tabTitle || TAB_TITLES[tabId] || tabId;
     if (currentPageBreadcrumb) currentPageBreadcrumb.textContent = titleToUse;
 
-    // Update active state in Horizontal Tabs Bar
-    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === tabId);
-    });
+    syncSidebarNavState(tabId);
 
     // Update active state in quick dropdown
     document.querySelectorAll('.quick-menu-item').forEach(item => {
@@ -67,6 +187,8 @@ window.switchTab = function(tabId, tabTitle, fromPopState = false) {
     if (!fromPopState && window.location.hash !== `#${tabId}`) {
         history.pushState({ internal: true, tab: tabId }, '', `#${tabId}`);
     }
+
+    if (tabId === 'templates' && typeof window.renderTemplates === 'function') window.renderTemplates();
 
     // Scroll to top smoothly
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -95,9 +217,7 @@ window.showDashboard = function(fromPopState = false) {
     const currentPageBreadcrumb = document.getElementById('breadcrumb-current');
     if (currentPageBreadcrumb) currentPageBreadcrumb.textContent = 'Visão Geral';
 
-    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === 'dashboard');
-    });
+    syncSidebarNavState('dashboard');
 
     document.querySelectorAll('.quick-menu-item').forEach(item => {
         item.classList.toggle('active', item.dataset.tab === 'dashboard');
@@ -212,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function ensureActiveSession() {
         if (!currentUser) {
             currentUser = {
-                nome: 'Vinícius Mota',
+                nome: 'Thiago',
                 cpf: '123.456.789-00',
                 rg: '12.345.678-9',
                 nascimento: '1990-05-15',
@@ -222,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 celular: '(11) 98765-4321',
                 fixo: '(11) 3456-7890',
                 recado: '',
-                email: 'vinicius.mota@sbps.org.br',
+                email: 'thiago@sbps.org.br',
                 email_secundario: '',
                 cep: '01310-100',
                 logradouro: 'Avenida Paulista',
@@ -231,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 bairro: 'Bela Vista',
                 cidade: 'São Paulo',
                 uf: 'SP',
-                login_usuario: 'vinimota',
+                login_usuario: 'thiago',
                 status: 'Ativo'
             };
             localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
@@ -245,31 +365,150 @@ document.addEventListener('DOMContentLoaded', () => {
         renderUserData();
     }
 
-    let memberShortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY_SHORTCUTS)) || [
-        { id: 1, title: 'Calculadora de Benefícios INSS', url: '#templates', icon: 'fa-solid fa-calculator' },
-        { id: 2, title: 'Estatuto Social SBPS', url: 'estatuto.html', icon: 'fa-solid fa-file-contract' },
-        { id: 3, title: 'Vitrine de Autores', url: '#livraria', icon: 'fa-solid fa-book-open' }
-    ];
-    let enrolledCourses = JSON.parse(localStorage.getItem(STORAGE_KEY_COURSES)) || [];
-    let enrolledSeminars = JSON.parse(localStorage.getItem(STORAGE_KEY_SEMINARS)) || [];
-    let activeTickets = JSON.parse(localStorage.getItem(STORAGE_KEY_TICKETS)) || [];
-    let authorBooks = JSON.parse(localStorage.getItem(STORAGE_KEY_AUTHOR_BOOKS)) || [
-        { title: 'Reforma Previdenciária Prática', autor: 'Dr. Carlos Eduardo', preco: 'R$ 65,00', desc: 'Guia definitivo de transição e cálculos.' },
-        { title: 'Aposentadoria Biopsicossocial', autor: 'Dra. Mariana Costa', preco: 'R$ 80,00', desc: 'Avaliação em PCD e laudos periciais.' }
+    let memberShortcuts = [];
+    let enrolledCourses = [];
+    let enrolledSeminars = [];
+    let activeTickets = [];
+    let authorBooks = [];
+
+    try {
+        memberShortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY_SHORTCUTS)) || [
+            { id: 1, title: 'Calculadora de Benefícios INSS', url: '#templates', icon: 'fa-solid fa-calculator' },
+            { id: 2, title: 'Estatuto Social SBPS', url: 'estatuto.html', icon: 'fa-solid fa-file-contract' },
+            { id: 3, title: 'Vitrine de Autores', url: '#livraria', icon: 'fa-solid fa-book-open' }
+        ];
+    } catch (e) { console.error(e); }
+
+    try { enrolledCourses = JSON.parse(localStorage.getItem(STORAGE_KEY_COURSES)) || []; } catch (e) {}
+    try { enrolledSeminars = JSON.parse(localStorage.getItem(STORAGE_KEY_SEMINARS)) || []; } catch (e) {}
+    try { activeTickets = JSON.parse(localStorage.getItem(STORAGE_KEY_TICKETS)) || []; } catch (e) {}
+    try {
+        authorBooks = JSON.parse(localStorage.getItem(STORAGE_KEY_AUTHOR_BOOKS)) || [
+            { title: 'Reforma Previdenciária Prática', autor: 'Dr. Carlos Eduardo', preco: 'R$ 65,00', desc: 'Guia definitivo de transição e cálculos.' },
+            { title: 'Aposentadoria Biopsicossocial', autor: 'Dra. Mariana Costa', preco: 'R$ 80,00', desc: 'Avaliação em PCD e laudos periciais.' }
+        ];
+    } catch (e) {}
+
+    // --------------------------------------------------------------------------
+    // 8. Aba Templates Hub (Estilo Canva para Documentos Advocatícios)
+    // --------------------------------------------------------------------------
+    var realTemplatesData = {
+        'ementa-padrao': {
+            id: 'ementa-padrao',
+            title: 'EMENTA-PADRÃO',
+            filename: 'EMENTA-PADRÃO.docx',
+            filePath: '../templates/EMENTA-PADRÃO.docx',
+            fileSize: '238 KB',
+            cat: 'pecas',
+            formats: ['DOCX'],
+            desc: 'Estrutura técnica padronizada para ementas jurídicas e acórdãos com divisão em Caso em Exame, Questão em Discussão, Razões de Decidir e Dispositivo.',
+            paragraphs: [
+                { type: 'title', text: 'EMENTA-PADRÃO' },
+                { type: 'lead', text: 'Ementa: Ramo do Direito. Classe processual. Frase ou palavras que indiquem o assunto principal. Conclusão.' },
+                { type: 'section', text: 'I. Caso em exame' },
+                { type: 'p', text: '1. Apresentação do caso, com a indicação dos fatos relevantes, do pedido principal da ação ou do recurso e, se for o caso, da decisão recorrida.' },
+                { type: 'section', text: 'II. Questão em discussão' },
+                { type: 'p', text: '2. A questão em discussão consiste em (...). / Há duas questões em discussão: (i) saber se (...); e (ii) saber se (...). (incluir todas as questões, com os seus respectivos fatos e fundamentos, utilizando-se de numeração em romano, letras minúsculas e entre parênteses).' },
+                { type: 'section', text: 'III. Razões de decidir' },
+                { type: 'p', text: '3. Exposição do fundamento de maneira resumida (cada fundamento deve integrar um item).' },
+                { type: 'p', text: '4. Exposição de outro fundamento de maneira resumida.' },
+                { type: 'section', text: 'IV. Dispositivo e tese' },
+                { type: 'p', text: '5. Ex: Pedido procedente/improcedente. Recurso provido/desprovido.' },
+                { type: 'quote', text: 'Tese de julgamento: frases objetivas das conclusões da decisão, ordenadas por numerais cardinais entre aspas e sem itálico. “1. [texto da tese]. 2. [texto da tese]” (quando houver tese).' },
+                { type: 'hr', text: '' },
+                { type: 'meta', text: 'Dispositivos relevantes citados: ex.: CF/1988, art. 1º, III e IV; CC, arts. 1.641, II, e 1.639, § 2º.' },
+                { type: 'meta', text: 'Jurisprudência relevante citada: ex.: STF, ADPF nº 130, Rel. Min. Ayres Britto, Plenário, j. 30.04.2009.' }
+            ]
+        },
+        'procuracao-geral': {
+            id: 'procuracao-geral',
+            title: 'Procuração - Geral',
+            filename: 'Procuração - Geral.docx',
+            filePath: '../templates/Procuração - Geral.docx',
+            fileSize: '7.5 KB',
+            cat: 'docs',
+            formats: ['DOCX'],
+            desc: 'Instrumento particular de mandato com poderes ad judicia e cláusula extrajudicial completa para representação previdenciária e administrativa.',
+            paragraphs: [
+                { type: 'title', text: 'PROCURAÇÃO' },
+                { type: 'section', text: 'OUTORGANTE:' },
+                { type: 'field', text: 'Nome: __________________________________________________________________________' },
+                { type: 'field', text: 'Nacionalidade: _______________________ Estado Civil: _________________________________' },
+                { type: 'field', text: 'RG: ______________ SSP: _________ CPF: ___________________________________________' },
+                { type: 'field', text: 'Endereço: _______________________________________________________________________' },
+                { type: 'field', text: 'Cidade: __________________________ Unidade Federativa: ________________ CEP: _________' },
+                { type: 'field', text: 'Profissão: ________________________ Telefone (s) : ____________________________________' },
+                { type: 'field', text: 'E-mail:__________________________________________________________________________' },
+                { type: 'blank', text: '' },
+                { type: 'p', text: 'OUTORGADOS: Os advogados [NOME], brasileira, casada, OAB/DF xx.xxx, [NOME], brasileiro, casado, OAB/DF x.xxx-x, [NOME], brasileiro, solteiro, OAB/DF xx.xxx, todos com endereço profissional em [ENDEREÇO COMPLETO], CEP: 00000-000.' },
+                { type: 'blank', text: '' },
+                { type: 'p', text: 'PODERES: O (a) OUTORGANTE nomeia e constitui em caráter irrevogável e irretratável os OUTORGADOS, conferindo-lhes poderes para sua representação judicial nos autos do processo NNNNNNN-DD.AAAA.J.TR.OOOO, que tramita na [Seção Judiciária Correspondente], bem como os poderes contidos na cláusula “[EXEMPLO]”, e mais os especiais para confessar, acordar, desistir, transigir, firmar compromisso, reconvir, contestar, receber e dar quitação, levantar e receber precatório e/ou requisição de pequeno valor e propor ação rescisória, podendo os mesmos atuarem em conjunto ou individualmente, em qualquer instância administrativa ou do Poder Judiciário, em defesa dos interesses do outorgante, bem como o que for preciso para o bom e fiel desempenho das obrigações decorrentes deste instrumento, podendo substabelecê-lo, com ou sem reserva de poderes.' },
+                { type: 'blank', text: '' },
+                { type: 'date', text: '________________________, ____ de ____________________, de 20__' },
+                { type: 'sign', text: '_____________________________________________________________\nAssinatura' }
+            ]
+        }
+    };
+
+    var mockTemplates = [
+        {
+            id: 'ementa-padrao',
+            title: 'EMENTA-PADRÃO',
+            filename: 'EMENTA-PADRÃO.docx',
+            filePath: '../templates/EMENTA-PADRÃO.docx',
+            cat: 'pecas',
+            formats: ['DOCX'],
+            isReal: true,
+            desc: 'Modelo oficial de ementa jurídica com padronização técnica de caso, questão, fundamentação e tese.'
+        },
+        {
+            id: 'procuracao-geral',
+            title: 'Procuração - Geral',
+            filename: 'Procuração - Geral.docx',
+            filePath: '../templates/Procuração - Geral.docx',
+            cat: 'docs',
+            formats: ['DOCX'],
+            isReal: true,
+            desc: 'Instrumento completo de mandato ad judicia e extrajudicial para atuação perante a Justiça e o INSS.'
+        },
+        { id: 1, title: 'Petição Inicial - Concessão de Aposentadoria por Idade', cat: 'pecas', formats: ['DOCX', 'TXT', 'PDF'], desc: 'Peça pronta e fundamentada com pedidos de benefício urbano/rural.' },
+        { id: 2, title: 'Contestação Previdenciária - Acidente de Trabalho', cat: 'pecas', formats: ['DOCX', 'PDF'], desc: 'Peça com teses técnicas periciais e nexo de causalidade ocupacional.' },
+        { id: 3, title: 'Ata de Assembleia Geral Extraordinária', cat: 'docs', formats: ['DOCX', 'TXT'], desc: 'Minuta formal de deliberação para entidades e sindicatos.' },
+        { id: 5, title: 'Planilha de Cálculo de Liquidação de Sentença RMI', cat: 'planilhas', formats: ['XLSX', 'CSV'], desc: 'Planilha automatizada com índices de correção monetária previdenciária.' },
+        { id: 6, title: 'Logotipo Genérico & Identidade Visual de Escritório', cat: 'design', formats: ['PNG', 'PDF'], desc: 'Kit de identidade visual vetorizado para advogados previdenciaristas.' }
     ];
 
+    var currentTemplateCategory = 'all';
+
+    var mockCourses = [
+        { id: 1, title: 'Planejamento Previdenciário Integrado - Método 4x4', professor: 'Prof. Carlos Santos', horas: '40h', materia: 'Previdenciário RGPS', precoOriginal: 'R$ 690,00', precoAssociado: 'R$ 290,00', img: '../images/ref2.jpg' },
+        { id: 2, title: 'Avaliação Biopsicossocial na Aposentadoria PCD', professor: 'Dra. Juliana Mendes', horas: '24h', materia: 'Saúde & Biopsicossocial', precoOriginal: 'R$ 450,00', precoAssociado: 'R$ 180,00', img: '../images/ref1.jpg' },
+        { id: 3, title: 'Cálculos Previdenciários de RMI e Revisões', professor: 'Dr. Roberto Lima', horas: '30h', materia: 'Cálculos', precoOriginal: 'R$ 550,00', precoAssociado: 'R$ 220,00', img: '../images/ref3.png' }
+    ];
+
+    var mockSeminars = [
+        { id: 101, title: 'Congresso Brasileiro de Direito Previdenciário 2026', palestrante: 'Painel de Especialistas SBPS', horas: '16h', tema: 'Geral', precoOriginal: 'R$ 380,00', precoAssociado: 'R$ 120,00', img: '../images/capa-sociedade.png' },
+        { id: 102, title: 'Seminário de Reformas Previdenciárias Estaduais', palestrante: 'Dr. Fernando Oliveira', horas: '12h', tema: 'Regimes Próprios (RPPS)', precoOriginal: 'R$ 300,00', precoAssociado: 'R$ 90,00', img: '../images/capa.jpg' }
+    ];
+
+    var courseFilterSearch = '';
+    var courseFilterMateria = 'Todas as Matérias';
+    var courseFilterHoras = 'Qualquer Carga Horária';
+    var seminarFilterSearch = '';
+    var seminarFilterArea = 'Todas as Áreas';
+
     // Initialize User Interface
-    initAuth();
-    initViaCEP();
-    initNavigation();
-    renderUserData();
-    renderShortcuts();
-    renderCourses();
-    renderSeminars();
-    renderCertificates();
-    renderTemplates();
-    renderLivraria();
-    renderAjudaSupport();
+    try { initAuth(); } catch (e) { console.error('initAuth:', e); }
+    try { initViaCEP(); } catch (e) { console.error('initViaCEP:', e); }
+    try { initNavigation(); } catch (e) { console.error('initNavigation:', e); }
+    try { renderUserData(); } catch (e) { console.error('renderUserData:', e); }
+    try { renderShortcuts(); } catch (e) { console.error('renderShortcuts:', e); }
+    try { renderCourses(); } catch (e) { console.error('renderCourses:', e); }
+    try { renderSeminars(); } catch (e) { console.error('renderSeminars:', e); }
+    try { renderCertificates(); } catch (e) { console.error('renderCertificates:', e); }
+    try { renderTemplates(); } catch (e) { console.error('renderTemplates:', e); }
+    try { renderLivraria(); } catch (e) { console.error('renderLivraria:', e); }
+    try { renderAjudaSupport(); } catch (e) { console.error('renderAjudaSupport:', e); }
 
     // Check initial hash in URL
     if (window.location.hash && window.location.hash.length > 1) {
@@ -2302,6 +2541,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateUserBadges() {
         if (!currentUser) return;
+        const firstName = (currentUser.nome && currentUser.nome !== 'Vinícius Mota')
+            ? currentUser.nome.trim().split(' ')[0]
+            : 'Thiago';
+
+        const headerGreeting = document.getElementById('header-user-greeting');
+        if (headerGreeting) headerGreeting.textContent = `Olá, ${firstName}`;
+
+        const chatGreeting = document.getElementById('chat-user-greeting');
+        if (chatGreeting) chatGreeting.textContent = firstName;
+
+        const headerAvatarImg = document.getElementById('header-user-avatar-img');
+        if (headerAvatarImg) {
+            if (currentUser.foto_url) {
+                headerAvatarImg.src = currentUser.foto_url;
+            } else {
+                headerAvatarImg.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80';
+            }
+        }
+
+        const editPhotoPreview = document.getElementById('edit-photo-preview');
+        if (editPhotoPreview) {
+            if (currentUser.foto_url) {
+                editPhotoPreview.innerHTML = `<img src="${currentUser.foto_url}" style="width:100%; height:100%; object-fit:cover;">`;
+            } else {
+                editPhotoPreview.innerHTML = `<i class="fa-solid fa-user"></i>`;
+            }
+        }
+
         document.querySelectorAll('.user-name-display').forEach(el => el.textContent = currentUser.nome);
         document.querySelectorAll('.user-oab-display').forEach(el => {
             el.textContent = currentUser.login_usuario ? `@${currentUser.login_usuario}` : (currentUser.cpf ? `CPF: ${currentUser.cpf}` : 'Associado SBPS');
@@ -2391,10 +2658,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const titleToUse = tabTitle || TAB_TITLES[tabId] || tabId;
                 if (currentPageBreadcrumb) currentPageBreadcrumb.textContent = titleToUse;
 
-                // Update active state in Horizontal Tabs Bar
-                document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.tab === tabId);
-                });
+                syncSidebarNavState(tabId);
 
                 // Update active state in quick dropdown
                 document.querySelectorAll('.quick-menu-item').forEach(item => {
@@ -2444,10 +2708,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentPageBreadcrumb = document.getElementById('breadcrumb-current');
             if (currentPageBreadcrumb) currentPageBreadcrumb.textContent = 'Visão Geral';
 
-            // Update active state in Horizontal Tabs Bar
-            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tab === 'dashboard');
-            });
+            syncSidebarNavState('dashboard');
 
             // Update active state in Quick Menu Dropdown
             document.querySelectorAll('.quick-menu-item').forEach(item => {
@@ -2658,6 +2919,86 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Submissão do Formulário de Edição de Perfil
+        // Upload / Alteração de foto no perfil
+        const photoInput = document.getElementById('edit-foto-input');
+        const btnRemovePhoto = document.getElementById('btn-remove-photo');
+
+        if (photoInput && !photoInput.dataset.bound) {
+            photoInput.dataset.bound = 'true';
+            photoInput.addEventListener('change', (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+
+                if (!file.type.startsWith('image/')) {
+                    alert('Por favor, selecione um arquivo de imagem válido (JPG, PNG, WEBP).');
+                    return;
+                }
+
+                // Compressão em canvas para otimização
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const maxDim = 300;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxDim) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            }
+                        } else {
+                            if (height > maxDim) {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                        currentUser.foto_url = compressedDataUrl;
+                        localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+                        updateUserBadges();
+
+                        if (window.SBPS_Supabase) {
+                            window.SBPS_Supabase.updateProfile(currentUser).catch(console.error);
+                        }
+
+                        showToastMessage('Foto de perfil atualizada com sucesso!');
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        if (btnRemovePhoto && !btnRemovePhoto.dataset.bound) {
+            btnRemovePhoto.dataset.bound = 'true';
+            btnRemovePhoto.addEventListener('click', () => {
+                if (!currentUser.foto_url) {
+                    showToastMessage('Nenhuma foto personalizada definida.');
+                    return;
+                }
+                if (confirm('Deseja remover sua foto de perfil?')) {
+                    delete currentUser.foto_url;
+                    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+                    updateUserBadges();
+
+                    if (window.SBPS_Supabase) {
+                        window.SBPS_Supabase.updateProfile(currentUser).catch(console.error);
+                    }
+
+                    showToastMessage('Foto de perfil removida.');
+                }
+            });
+        }
+
         const formPerfil = document.getElementById('form-edit-perfil');
         if (formPerfil && !formPerfil.dataset.submitBound) {
             formPerfil.dataset.submitBound = 'true';
@@ -2707,23 +3048,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         memberShortcuts.forEach(sc => {
             const card = document.createElement('div');
-            card.className = 'panel-card';
-            card.style.display = 'flex';
-            card.style.justifyContent = 'space-between';
-            card.style.alignItems = 'center';
+            card.className = 'bg-white rounded-2xl p-5 border border-slate-200 custom-shadow transition-all duration-200 flex flex-col justify-between gap-4';
             card.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div class="card-icon-wrapper" style="margin: 0; width: 45px; height: 45px; font-size: 1.2rem;">
-                        <i class="${sc.icon}"></i>
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-center gap-3.5 min-w-0">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50/60 border border-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <h4 class="text-sm sm:text-base font-bold text-slate-900 truncate">${sc.title}</h4>
+                            <span class="text-xs text-slate-400 truncate block">${sc.url}</span>
+                        </div>
                     </div>
-                    <div>
-                        <h4 style="font-size: 1.05rem; color: var(--assoc-primary);">${sc.title}</h4>
-                        <span style="font-size: 0.8rem; color: var(--assoc-text-muted);">${sc.url}</span>
-                    </div>
+                    <button type="button" class="btn-del-sc text-slate-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-xl transition-colors cursor-pointer" title="Remover atalho">
+                        <i class="fa-regular fa-trash-can text-xs"></i>
+                    </button>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-enroll btn-open-sc" style="padding: 8px 14px; font-size: 0.85rem;"><i class="fa-solid fa-external-link"></i> Acessar</button>
-                    <button class="btn-del-sc"><i class="fa-solid fa-trash"></i></button>
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                    <button type="button" class="btn-open-sc inline-flex items-center text-xs font-semibold text-slate-800 hover:text-emerald-700 group transition-colors cursor-pointer">
+                        Acessar Atalho
+                        <svg class="w-3.5 h-3.5 ml-1.5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
                 </div>
             `;
 
@@ -2784,21 +3133,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --------------------------------------------------------------------------
     // 5. Aba Cursos & 6. Aba Seminários (Catálogo, Busca, Filtros & Inscrição)
     // --------------------------------------------------------------------------
-    const mockCourses = [
-        { id: 1, title: 'Planejamento Previdenciário Integrado - Método 4x4', professor: 'Prof. Carlos Santos', horas: '40h', materia: 'Previdenciário RGPS', precoOriginal: 'R$ 690,00', precoAssociado: 'R$ 290,00', img: '../images/ref2.jpg' },
-        { id: 2, title: 'Avaliação Biopsicossocial na Aposentadoria PCD', professor: 'Dra. Juliana Mendes', horas: '24h', materia: 'Saúde & Biopsicossocial', precoOriginal: 'R$ 450,00', precoAssociado: 'R$ 180,00', img: '../images/ref1.jpg' },
-        { id: 3, title: 'Cálculos Previdenciários de RMI e Revisões', professor: 'Dr. Roberto Lima', horas: '30h', materia: 'Cálculos', precoOriginal: 'R$ 550,00', precoAssociado: 'R$ 220,00', img: '../images/ref3.png' }
-    ];
-
-    const mockSeminars = [
-        { id: 101, title: 'Congresso Brasileiro de Direito Previdenciário 2026', palestrante: 'Painel de Especialistas SBPS', horas: '16h', tema: 'Geral', precoOriginal: 'R$ 380,00', precoAssociado: 'R$ 120,00', img: '../images/capa-sociedade.png' },
-        { id: 102, title: 'Seminário de Reformas Previdenciárias Estaduais', palestrante: 'Dr. Fernando Oliveira', horas: '12h', tema: 'Regimes Próprios (RPPS)', precoOriginal: 'R$ 300,00', precoAssociado: 'R$ 90,00', img: '../images/capa.jpg' }
-    ];
-
-    let courseFilterSearch = '';
-    let courseFilterMateria = 'Todas as Matérias';
-    let courseFilterHoras = 'Qualquer Carga Horária';
-
     function renderCourses() {
         const grid = document.getElementById('courses-grid');
         const myCoursesList = document.getElementById('my-courses-list');
@@ -2851,38 +3185,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (filteredCourses.length === 0) {
-            grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--assoc-text-muted);">Nenhum curso encontrado com os filtros selecionados.</div>';
+            grid.innerHTML = '<div class="col-span-full text-center py-10 text-xs sm:text-sm text-slate-400">Nenhum curso encontrado com os filtros selecionados.</div>';
         }
 
         filteredCourses.forEach(c => {
             const isEnrolled = enrolledCourses.includes(c.id);
 
-            // Card no Catálogo
+            // Card no Catálogo (Seguindo o estilo limpo da tela inicial)
             const card = document.createElement('div');
-            card.className = 'item-card';
+            card.className = 'bg-white rounded-2xl border border-slate-200 custom-shadow overflow-hidden flex flex-col justify-between transition-all duration-200';
             card.innerHTML = `
-                <div class="item-img">
-                    <img src="${c.img}" alt="${c.title}">
-                    <span class="item-badge-discount">Desconto Associado</span>
+                <div>
+                    <div class="h-44 relative bg-slate-100 overflow-hidden">
+                        <img src="${c.img}" alt="${c.title}" class="w-full h-full object-cover">
+                        <span class="absolute top-3 right-3 px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-white/95 text-blue-700 border border-blue-200 shadow-sm">Desconto Associado</span>
+                    </div>
+                    <div class="p-6 pb-4">
+                        <div class="flex items-center gap-2 mb-2.5">
+                            <span class="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-slate-100 text-slate-600 border border-slate-200">${c.materia}</span>
+                            <span class="text-xs text-slate-400">• ${c.horas}</span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 leading-snug">${c.title}</h3>
+                        <p class="text-xs text-slate-500 mt-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-chalkboard-user text-slate-400"></i> ${c.professor}
+                        </p>
+                    </div>
                 </div>
-                <div class="item-body">
-                    <h3 class="item-title">${c.title}</h3>
-                    <div class="item-meta">
-                        <span><i class="fa-solid fa-chalkboard-user"></i> ${c.professor}</span>
-                        <span><i class="fa-solid fa-clock"></i> Carga Horária: ${c.horas}</span>
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 flex flex-col gap-3">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-xs text-slate-400 line-through">${c.precoOriginal}</span>
+                        <span class="text-lg font-bold text-emerald-700">${c.precoAssociado}</span>
                     </div>
-                    <div class="item-price-tag">
-                        <span class="price-old">${c.precoOriginal}</span>
-                        <span class="price-new">${c.precoAssociado}</span>
-                    </div>
-                    <button class="btn-enroll ${isEnrolled ? 'enrolled' : ''}" ${isEnrolled ? 'disabled' : ''}>
-                        ${isEnrolled ? '<i class="fa-solid fa-check"></i> Inscrito' : 'Garantir Vaga com Desconto'}
+                    <button type="button" class="btn-enroll-action w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${isEnrolled ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-default' : 'bg-slate-900 hover:bg-emerald-700 text-white shadow-sm'}" ${isEnrolled ? 'disabled' : ''}>
+                        ${isEnrolled ? '<i class="fa-solid fa-check mr-1"></i> Inscrito' : 'Garantir Vaga com Desconto'}
                     </button>
                 </div>
             `;
 
             if (!isEnrolled) {
-                card.querySelector('.btn-enroll').addEventListener('click', () => {
+                card.querySelector('.btn-enroll-action').addEventListener('click', () => {
                     enrolledCourses.push(c.id);
                     localStorage.setItem(STORAGE_KEY_COURSES, JSON.stringify(enrolledCourses));
                     renderCourses();
@@ -2897,30 +3238,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (myCoursesList) {
             const myEnrolledCourses = mockCourses.filter(c => enrolledCourses.includes(c.id));
             if (myEnrolledCourses.length === 0) {
-                myCoursesList.innerHTML = '<p style="color:var(--assoc-text-muted); font-size:0.9rem;">Você ainda não possui cursos inscritos. Explore a aba <strong>4. Cursos</strong> para se inscrever com desconto.</p>';
+                myCoursesList.innerHTML = '<p class="text-xs sm:text-[13px] text-slate-500 leading-relaxed">Você ainda não possui cursos inscritos. Explore a aba <strong class="text-slate-700">4. Cursos</strong> para se inscrever com desconto.</p>';
             } else {
                 myEnrolledCourses.forEach(c => {
                     const myCard = document.createElement('div');
-                    myCard.className = 'panel-card';
-                    myCard.style.padding = '16px 20px';
-                    myCard.style.marginBottom = '12px';
+                    myCard.className = 'bg-slate-50/70 rounded-xl p-4 border border-slate-200/80 mb-3 flex items-center justify-between gap-3 flex-wrap';
                     myCard.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                            <div>
-                                <h4 style="color:var(--assoc-primary); font-size:1.05rem; margin-bottom:4px;">${c.title}</h4>
-                                <span style="font-size:0.85rem; color:var(--assoc-text-muted);">${c.professor} | ${c.horas}</span>
-                            </div>
-                            <button class="btn-enroll" style="width:auto; padding:8px 16px; font-size:0.85rem;" onclick="showToastMessage('Acessando sala de aula virtual do curso...')"><i class="fa-solid fa-play"></i> Acessar Sala Virtual</button>
+                        <div>
+                            <h4 class="text-xs sm:text-sm font-bold text-slate-900 mb-0.5">${c.title}</h4>
+                            <span class="text-xs text-slate-500">${c.professor} • ${c.horas}</span>
                         </div>
+                        <button type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-emerald-700 rounded-xl transition-colors cursor-pointer" onclick="showToastMessage('Acessando sala de aula virtual do curso...')">
+                            <i class="fa-solid fa-play text-[10px]"></i> Sala Virtual
+                        </button>
                     `;
                     myCoursesList.appendChild(myCard);
                 });
             }
         }
     }
-
-    let seminarFilterSearch = '';
-    let seminarFilterArea = 'Todas as Áreas';
 
     function renderSeminars() {
         const grid = document.getElementById('seminars-grid');
@@ -2962,37 +3298,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (filteredSeminars.length === 0) {
-            grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--assoc-text-muted);">Nenhum seminário encontrado com os filtros selecionados.</div>';
+            grid.innerHTML = '<div class="col-span-full text-center py-10 text-xs sm:text-sm text-slate-400">Nenhum seminário encontrado com os filtros selecionados.</div>';
         }
 
         filteredSeminars.forEach(s => {
             const isEnrolled = enrolledSeminars.includes(s.id);
 
             const card = document.createElement('div');
-            card.className = 'item-card';
+            card.className = 'bg-white rounded-2xl border border-slate-200 custom-shadow overflow-hidden flex flex-col justify-between transition-all duration-200';
             card.innerHTML = `
-                <div class="item-img">
-                    <img src="${s.img}" alt="${s.title}">
-                    <span class="item-badge-discount">Exclusivo SBPS</span>
+                <div>
+                    <div class="h-44 relative bg-slate-100 overflow-hidden">
+                        <img src="${s.img}" alt="${s.title}" class="w-full h-full object-cover">
+                        <span class="absolute top-3 right-3 px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-white/95 text-emerald-700 border border-emerald-200 shadow-sm">Exclusivo SBPS</span>
+                    </div>
+                    <div class="p-6 pb-4">
+                        <div class="flex items-center gap-2 mb-2.5">
+                            <span class="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">${s.tema}</span>
+                            <span class="text-xs text-slate-400">• ${s.horas}</span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 leading-snug">${s.title}</h3>
+                        <p class="text-xs text-slate-500 mt-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-tie text-slate-400"></i> ${s.palestrante}
+                        </p>
+                    </div>
                 </div>
-                <div class="item-body">
-                    <h3 class="item-title">${s.title}</h3>
-                    <div class="item-meta">
-                        <span><i class="fa-solid fa-user-tie"></i> ${s.palestrante}</span>
-                        <span><i class="fa-solid fa-clock"></i> ${s.horas} | Tema: ${s.tema}</span>
+                <div class="px-6 pb-6 pt-3 border-t border-slate-100 flex flex-col gap-3">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-xs text-slate-400 line-through">${s.precoOriginal}</span>
+                        <span class="text-lg font-bold text-emerald-700">${s.precoAssociado}</span>
                     </div>
-                    <div class="item-price-tag">
-                        <span class="price-old">${s.precoOriginal}</span>
-                        <span class="price-new">${s.precoAssociado}</span>
-                    </div>
-                    <button class="btn-enroll ${isEnrolled ? 'enrolled' : ''}" ${isEnrolled ? 'disabled' : ''}>
-                        ${isEnrolled ? '<i class="fa-solid fa-check"></i> Inscrito' : 'Participar do Seminário'}
+                    <button type="button" class="btn-enroll-action w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${isEnrolled ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-default' : 'bg-slate-900 hover:bg-emerald-700 text-white shadow-sm'}" ${isEnrolled ? 'disabled' : ''}>
+                        ${isEnrolled ? '<i class="fa-solid fa-check mr-1"></i> Inscrito' : 'Participar do Seminário'}
                     </button>
                 </div>
             `;
 
             if (!isEnrolled) {
-                card.querySelector('.btn-enroll').addEventListener('click', () => {
+                card.querySelector('.btn-enroll-action').addEventListener('click', () => {
                     enrolledSeminars.push(s.id);
                     localStorage.setItem(STORAGE_KEY_SEMINARS, JSON.stringify(enrolledSeminars));
                     renderSeminars();
@@ -3007,21 +3350,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mySeminarsList) {
             const myEnrolledSeminars = mockSeminars.filter(s => enrolledSeminars.includes(s.id));
             if (myEnrolledSeminars.length === 0) {
-                mySeminarsList.innerHTML = '<p style="color:var(--assoc-text-muted); font-size:0.9rem;">Você ainda não possui seminários inscritos. Explore a aba <strong>5. Seminários</strong> para participar.</p>';
+                mySeminarsList.innerHTML = '<p class="text-xs sm:text-[13px] text-slate-500 leading-relaxed">Você ainda não possui seminários inscritos. Explore a aba <strong class="text-slate-700">5. Seminários</strong> para participar.</p>';
             } else {
                 myEnrolledSeminars.forEach(s => {
                     const myCard = document.createElement('div');
-                    myCard.className = 'panel-card';
-                    myCard.style.padding = '16px 20px';
-                    myCard.style.marginBottom = '12px';
+                    myCard.className = 'bg-slate-50/70 rounded-xl p-4 border border-slate-200/80 mb-3 flex items-center justify-between gap-3 flex-wrap';
                     myCard.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                            <div>
-                                <h4 style="color:var(--assoc-primary); font-size:1.05rem; margin-bottom:4px;">${s.title}</h4>
-                                <span style="font-size:0.85rem; color:var(--assoc-text-muted);">${s.palestrante} | ${s.horas}</span>
-                            </div>
-                            <button class="btn-enroll" style="width:auto; padding:8px 16px; font-size:0.85rem;" onclick="showToastMessage('Conectando ao canal de transmissão ao vivo...')"><i class="fa-solid fa-video"></i> Ver Transmissão</button>
+                        <div>
+                            <h4 class="text-xs sm:text-sm font-bold text-slate-900 mb-0.5">${s.title}</h4>
+                            <span class="text-xs text-slate-500">${s.palestrante} • ${s.horas}</span>
                         </div>
+                        <button type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-emerald-700 rounded-xl transition-colors cursor-pointer" onclick="showToastMessage('Conectando ao canal de transmissão ao vivo...')">
+                            <i class="fa-solid fa-video text-[10px]"></i> Transmissão
+                        </button>
                     `;
                     mySeminarsList.appendChild(myCard);
                 });
@@ -3036,7 +3377,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function renderCertificates() {
         const list = document.getElementById('certificates-list');
         if (!list) return;
-        list.innerHTML = '<p style="color:var(--assoc-text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Carregando certificados do Supabase...</p>';
+        list.innerHTML = '<p class="text-xs text-slate-500 py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Carregando certificados do Supabase...</p>';
 
         const userEmail = (currentUser && currentUser.email ? currentUser.email : '').toLowerCase().trim();
         const userCpf = (currentUser && currentUser.cpf ? currentUser.cpf : '').replace(/\D/g, '');
@@ -3074,10 +3415,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!certsToDisplay || certsToDisplay.length === 0) {
             list.innerHTML = `
-                <div class="panel-card" style="text-align:center; padding:35px 20px;">
-                    <i class="fa-solid fa-certificate" style="font-size:2.5rem; color:var(--assoc-text-muted); margin-bottom:12px;"></i>
-                    <h3 style="color:var(--assoc-primary); margin-bottom:8px;">Nenhum certificado emitido</h3>
-                    <p style="color:var(--assoc-text-muted); font-size:0.9rem;">Não há certificados registrados para o e-mail <strong>${userEmail || 'conectado'}</strong> na base de dados do Supabase.</p>
+                <div class="bg-slate-50/70 rounded-2xl border border-dashed border-slate-200 p-10 text-center">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700 mx-auto mb-3">
+                        <svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="10" r="6" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 10l2 2 4-4"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 16l-2 5 4-2 4 2-2-5"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900 mb-1">Nenhum certificado emitido</h3>
+                    <p class="text-xs sm:text-[13px] text-slate-500 max-w-md mx-auto leading-relaxed">Não há certificados registrados para o e-mail <strong class="text-slate-700">${userEmail || 'conectado'}</strong> na base de dados do Supabase.</p>
                 </div>
             `;
             return;
@@ -3085,25 +3432,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         certsToDisplay.forEach(cert => {
             const card = document.createElement('div');
-            card.className = 'panel-card';
-            card.style.display = 'flex';
-            card.style.justifyContent = 'space-between';
-            card.style.alignItems = 'center';
-            card.style.flexWrap = 'wrap';
-            card.style.gap = '15px';
+            card.className = 'bg-white rounded-2xl p-5 border border-slate-200 custom-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3.5 transition-all';
 
             const emailTarget = userEmail || cert.email || '';
             const driveLink = cert.driveUrl || cert.drive_url || cert.pdfUrl || '';
 
             card.innerHTML = `
-                <div>
-                    <span class="format-badge" style="background:var(--assoc-secondary); color:#fff; font-size:0.8rem;">${cert.type}</span>
-                    <h4 style="color:var(--assoc-primary); font-size:1.1rem; margin-top:6px;">${cert.title}</h4>
-                    <span style="font-size:0.85rem; color:var(--assoc-text-muted);">Carga Horária: ${cert.horas} | Emitido em: ${cert.data}</span>
+                <div class="flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50/60 border border-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
+                        <svg class="w-5 h-5 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="10" r="6" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 10l2 2 4-4"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 16l-2 5 4-2 4 2-2-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">${cert.type}</span>
+                        <h4 class="text-sm sm:text-base font-bold text-slate-900 mt-1.5">${cert.title}</h4>
+                        <span class="text-xs text-slate-500 block mt-0.5">Carga Horária: ${cert.horas} • Emitido em: ${cert.data}</span>
+                    </div>
                 </div>
-                <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <button type="button" class="btn-enroll btn-download-pdf" style="width:auto; padding:9px 18px; background:var(--assoc-secondary); cursor:pointer;"><i class="fa-solid fa-file-pdf"></i> Baixar PDF</button>
-                    <button type="button" class="btn-enroll btn-view-cert" style="width:auto; padding:9px 18px; cursor:pointer;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visualizar Certificado (Drive)</button>
+                <div class="flex gap-2.5 flex-wrap">
+                    <button type="button" class="btn-download-pdf inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition-colors cursor-pointer">
+                        <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+                    </button>
+                    <button type="button" class="btn-view-cert inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors cursor-pointer">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Visualizar
+                    </button>
                 </div>
             `;
 
@@ -3237,26 +3592,26 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="assoc-modal-content" style="max-width:750px; border: 4px double var(--assoc-primary); text-align:center;">
                 <span class="close-assoc-modal" onclick="document.getElementById('modal-certificate').classList.remove('show')">&times;</span>
                 <div style="padding:20px;">
-                    <img src="../images/image-header.png" alt="SBPS Logo" style="height:60px; margin-bottom:15px;">
-                    <h2 style="color:var(--assoc-primary); font-size:1.8rem; margin-bottom:10px;">CERTIFICADO DE ${cert.type ? cert.type.toUpperCase() : 'CONCLUSÃO'}</h2>
-                    <p style="font-size:1rem; color:#444; line-height:1.8;">
+                    <img src="../images/logo.png" alt="SBPS Logo" style="height:56px; margin:0 auto 15px auto;">
+                    <h2 style="color:var(--assoc-primary); font-size:1.6rem; font-weight:700; margin-bottom:10px;">CERTIFICADO DE ${cert.type ? cert.type.toUpperCase() : 'CONCLUSÃO'}</h2>
+                    <p style="font-size:0.95rem; color:#475569; line-height:1.8;">
                         Certificamos que <strong>${currentUser ? currentUser.nome : 'Associado(a)'}</strong>, portador(a) do registro OAB/Documento <strong>${currentUser ? currentUser.oab : 'Pessoa Física'}</strong>, concluiu com êxito o ${cert.type || 'evento'} de <strong>"${cert.title}"</strong> promovido pela Sociedade Brasileira de Previdência Social (SBPS), perfazendo carga horária total de <strong>${cert.horas}</strong>.
                     </p>
                     <br>
-                    <p style="font-size:0.85rem; color:#777;">Recife/PE, ${cert.data}</p>
+                    <p style="font-size:0.85rem; color:#64748b;">Recife/PE, ${cert.data}</p>
                     <br>
-                    <div style="display:flex; justify-content:space-around; margin-top:30px; border-top:1px solid #ccc; padding-top:15px;">
+                    <div style="display:flex; justify-content:space-around; margin-top:30px; border-top:1px solid #e2e8f0; padding-top:15px;">
                         <div>
-                            <strong>Diretoria Acadêmica SBPS</strong>
+                            <strong style="font-size:0.88rem; color:#0f172a;">Diretoria Acadêmica SBPS</strong>
                         </div>
                         <div>
-                            <strong>Presidente Executivo</strong>
+                            <strong style="font-size:0.88rem; color:#0f172a;">Presidente Executivo</strong>
                         </div>
                     </div>
                 </div>
                 <div style="display:flex; justify-content:center; gap:10px; margin-top:20px; flex-wrap:wrap;">
-                    <button type="button" id="btn-modal-dl-pdf" class="btn-auth-submit" style="width:auto; padding:10px 20px; background:var(--assoc-secondary); cursor:pointer;"><i class="fa-solid fa-download"></i> Baixar PDF Seguro</button>
-                    ${driveLink && driveLink !== '#' ? `<a href="${driveLink}" target="_blank" class="btn-auth-submit" style="width:auto; padding:10px 20px; text-decoration:none;"><i class="fa-brands fa-google-drive"></i> Abrir no Google Drive</a>` : ''}
+                    <button type="button" id="btn-modal-dl-pdf" class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition-colors cursor-pointer"><i class="fa-solid fa-download"></i> Baixar PDF Seguro</button>
+                    ${driveLink && driveLink !== '#' ? `<a href="${driveLink}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-xl shadow-sm transition-colors no-underline"><i class="fa-brands fa-google-drive"></i> Abrir no Google Drive</a>` : ''}
                 </div>
             </div>
         `;
@@ -3274,17 +3629,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --------------------------------------------------------------------------
     // 8. Aba Templates Hub (Estilo Canva para Documentos Advocatícios)
     // --------------------------------------------------------------------------
-    const mockTemplates = [
-        { id: 1, title: 'Petição Inicial - Concessão de Aposentadoria por Idade', cat: 'pecas', formats: ['DOCX', 'TXT', 'PDF'] },
-        { id: 2, title: 'Contestação Previdenciária - Acidente de Trabalho', cat: 'pecas', formats: ['DOCX', 'PDF'] },
-        { id: 3, title: 'Ata de Assembleia Geral Extraordinária', cat: 'docs', formats: ['DOCX', 'TXT'] },
-        { id: 4, title: 'Procuração Ad Judicia Previdenciária com Poderes Especiais', cat: 'docs', formats: ['DOCX', 'PDF'] },
-        { id: 5, title: 'Planilha de Cálculo de Liquidação de Sentença RMI', cat: 'planilhas', formats: ['XLSX', 'CSV'] },
-        { id: 6, title: 'Logotipo Genérico & Identidade Visual de Escritório', cat: 'design', formats: ['PNG', 'PDF'] }
-    ];
-
-    let currentTemplateCategory = 'all';
-
     function renderTemplates() {
         const grid = document.getElementById('templates-grid');
         if (!grid) return;
@@ -3311,77 +3655,250 @@ document.addEventListener('DOMContentLoaded', () => {
         const filtered = mockTemplates.filter(t => currentTemplateCategory === 'all' || t.cat === currentTemplateCategory);
 
         if (filtered.length === 0) {
-            grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 30px; color: var(--assoc-text-muted);">Nenhum template encontrado para esta categoria.</div>';
+            grid.innerHTML = '<div class="col-span-full text-center py-10 text-xs sm:text-sm text-slate-400">Nenhum template encontrado para esta categoria.</div>';
         }
 
         filtered.forEach(t => {
             const card = document.createElement('div');
-            card.className = 'template-item-card';
+            card.className = 'bg-white rounded-2xl p-6 border border-slate-200 custom-shadow transition-all duration-200 flex flex-col justify-between';
+            
+            const badgeReal = t.isReal ? '<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fa-solid fa-file-word mr-1"></i>Arquivo Oficial</span>' : '';
+            
             card.innerHTML = `
-                <div style="font-size:1.8rem; color:var(--assoc-secondary); margin-bottom:12px;"><i class="fa-solid fa-file-signature"></i></div>
-                <h4 style="color:var(--assoc-primary); font-size:1.05rem; margin-bottom:8px;">${t.title}</h4>
-                <div class="format-badges">
-                    ${t.formats.map(f => `<span class="format-badge">${f}</span>`).join('')}
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-800 shrink-0">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="2.5" y="3" width="19" height="18" rx="3" stroke="currentColor" stroke-width="1.8"/>
+                                <line x1="2.5" y1="7.5" x2="21.5" y2="7.5" stroke="currentColor" stroke-width="1.5"/>
+                                <circle cx="5.5" cy="5.2" r="0.8" fill="currentColor"/>
+                                <circle cx="8" cy="5.2" r="0.8" fill="currentColor"/>
+                                <circle cx="10.5" cy="5.2" r="0.8" fill="currentColor"/>
+                                <rect x="5" y="10" width="4" height="4" rx="0.5" fill="currentColor"/>
+                                <rect x="10" y="10" width="4" height="4" rx="0.5" fill="currentColor"/>
+                                <rect x="15" y="10" width="4" height="8" rx="0.5" fill="currentColor"/>
+                                <rect x="5" y="15" width="9" height="3" rx="0.5" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-wrap justify-end">
+                            ${badgeReal}
+                            ${t.formats.map(f => `<span class="px-2 py-0.5 text-[10px] font-semibold rounded-md bg-slate-100 text-slate-600 border border-slate-200">${f}</span>`).join('')}
+                        </div>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-900 leading-snug">${t.title}</h4>
+                    <p class="text-slate-500 text-xs mt-2 leading-relaxed">${t.desc || 'Modelo advocatício editável e pronto para preenchimento imediato.'}</p>
                 </div>
-                <button class="btn-enroll btn-use-tpl" style="margin-top:15px; padding:8px 12px; font-size:0.85rem;"><i class="fa-solid fa-pen-to-square"></i> Usar e Editar Template</button>
+                <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2 flex-wrap">
+                    <button type="button" class="btn-view-tpl inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-emerald-700 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 rounded-xl transition-colors cursor-pointer">
+                        <i class="fa-solid fa-eye text-emerald-600"></i> Visualizar
+                    </button>
+                    <button type="button" class="btn-dl-tpl inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-emerald-700 rounded-xl shadow-sm transition-colors cursor-pointer">
+                        <i class="fa-solid fa-download"></i> Baixar ${t.formats[0] || 'Arquivo'}
+                    </button>
+                </div>
             `;
 
-            card.querySelector('.btn-use-tpl').addEventListener('click', () => {
-                openTemplateEditor(t);
+            // Botão Visualizar
+            card.querySelector('.btn-view-tpl').addEventListener('click', () => {
+                openTemplateViewer(t);
+            });
+
+            // Botão Baixar
+            card.querySelector('.btn-dl-tpl').addEventListener('click', () => {
+                downloadTemplateFile(t);
             });
 
             grid.appendChild(card);
         });
     }
 
-    function openTemplateEditor(tpl) {
-        let modal = document.getElementById('modal-tpl-editor');
+    function downloadTemplateFile(tpl) {
+        if (tpl.filePath) {
+            const link = document.createElement('a');
+            link.href = tpl.filePath;
+            link.download = tpl.filename || (tpl.title + '.docx');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToastMessage(`Download de "${tpl.title}" iniciado com sucesso!`);
+        } else {
+            // Download simulado com arquivo de texto gerado instantaneamente
+            const content = `SBPS - Sociedade Brasileira de Previdência Social\nModelo: ${tpl.title}\nCategoria: ${tpl.cat}\n\nDocumento gerado para associado SBPS.\nUtilize este conteúdo em seu software jurídico de preferência.`;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${tpl.title.replace(/[^a-zA-Z0-9_-]/g, '_')}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToastMessage(`Download de "${tpl.title}" concluído!`);
+        }
+    }
+
+    function openTemplateViewer(tpl) {
+        let modal = document.getElementById('modal-tpl-viewer');
         if (!modal) {
             modal = document.createElement('div');
-            modal.id = 'modal-tpl-editor';
+            modal.id = 'modal-tpl-viewer';
             modal.className = 'assoc-modal';
             modal.innerHTML = `
-                <div class="assoc-modal-content">
-                    <span class="close-assoc-modal">&times;</span>
-                    <h3 style="color:var(--assoc-primary); margin-bottom:15px;" id="tpl-modal-title">Editar Modelo</h3>
-                    <p style="font-size:0.9rem; color:var(--assoc-text-muted); margin-bottom:20px;">Preencha os campos para personalizar seu documento e baixar no formato desejado:</p>
-                    
-                    <div class="form-group">
-                        <label>Nome do Cliente / Requerente</label>
-                        <input type="text" id="tpl-client-name" class="form-control" placeholder="Ex: João da Silva">
-                    </div>
-                    <div class="form-group">
-                        <label>Réu / Órgão Responsável</label>
-                        <input type="text" id="tpl-target-name" class="form-control" value="Instituto Nacional do Seguro Social - INSS">
-                    </div>
-                    <div class="form-group">
-                        <label>Vara / Comarca</label>
-                        <input type="text" id="tpl-vara" class="form-control" placeholder="Ex: 5ª Vara Federal da Seção Judiciária de Pernambuco">
+                <div class="assoc-modal-content" style="max-width: 820px; max-height: 92vh; display: flex; flex-direction: column;">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-lg border border-emerald-200">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900 m-0 leading-tight" id="tpl-viewer-title">Visualizar Modelo</h3>
+                                <p class="text-xs text-slate-500 m-0 mt-0.5" id="tpl-viewer-subtitle">Visualização do documento na íntegra</p>
+                            </div>
+                        </div>
+                        <button type="button" class="close-tpl-viewer text-slate-400 hover:text-slate-700 text-2xl font-bold cursor-pointer transition-colors p-1" style="background:none; border:none; line-height:1;">&times;</button>
                     </div>
 
-                    <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
-                        <button id="btn-dl-docx" class="btn-enroll" style="flex:1;"><i class="fa-solid fa-file-word"></i> Baixar DOCX</button>
-                        <button id="btn-dl-txt" class="btn-enroll" style="flex:1; background:var(--assoc-primary);"><i class="fa-solid fa-file-lines"></i> Baixar TXT</button>
+                    <!-- Folha A4 Simulação Visual -->
+                    <div id="tpl-viewer-body" class="overflow-y-auto flex-1 p-6 sm:p-8 bg-slate-50/70 border border-slate-200 rounded-xl text-slate-800 text-xs sm:text-sm font-sans" style="max-height: 60vh; font-family: 'Times New Roman', Times, serif; background-color: #fafbfc;">
+                        <!-- Conteúdo injetado dinamicamente -->
+                    </div>
+
+                    <!-- Rodapé com Ações -->
+                    <div class="flex items-center justify-between pt-4 mt-4 border-t border-slate-100 flex-wrap gap-3">
+                        <div class="flex items-center gap-2 text-xs text-slate-500">
+                            <i class="fa-solid fa-shield-halved text-emerald-600"></i> Modelo oficial verificado pela SBPS
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="btn-tpl-copy-text" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors cursor-pointer">
+                                <i class="fa-regular fa-copy"></i> Copiar Texto
+                            </button>
+                            <button type="button" id="btn-tpl-download-direct" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition-colors cursor-pointer">
+                                <i class="fa-solid fa-download"></i> Baixar Arquivo Original
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
             document.body.appendChild(modal);
-            modal.querySelector('.close-assoc-modal').onclick = () => modal.classList.remove('show');
 
-            modal.querySelector('#btn-dl-docx').onclick = () => {
-                showToastMessage('Download do modelo DOCX iniciado!');
-                modal.classList.remove('show');
-            };
-
-            modal.querySelector('#btn-dl-txt').onclick = () => {
-                showToastMessage('Download do arquivo TXT concluído!');
-                modal.classList.remove('show');
-            };
+            modal.querySelector('.close-tpl-viewer').onclick = () => modal.classList.remove('show');
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.remove('show');
+            });
         }
 
-        modal.querySelector('#tpl-modal-title').textContent = tpl.title;
+        const titleEl = modal.querySelector('#tpl-viewer-title');
+        const subtitleEl = modal.querySelector('#tpl-viewer-subtitle');
+        const bodyEl = modal.querySelector('#tpl-viewer-body');
+        const btnDownload = modal.querySelector('#btn-tpl-download-direct');
+        const btnCopy = modal.querySelector('#btn-tpl-copy-text');
+
+        titleEl.textContent = tpl.title;
+        subtitleEl.textContent = tpl.filename ? `Arquivo: ${tpl.filename} • Disponível para download imediato` : 'Modelo padrão SBPS';
+
+        let rawTextToCopy = '';
+
+        if (realTemplatesData[tpl.id]) {
+            const data = realTemplatesData[tpl.id];
+            const htmlParts = data.paragraphs.map(p => {
+                if (p.type === 'title') {
+                    return `<div class="text-center font-bold text-base sm:text-lg mb-6 pb-2 border-b border-slate-300 tracking-wide text-slate-900">${escapeHTML(p.text)}</div>`;
+                }
+                if (p.type === 'section') {
+                    return `<div class="font-bold text-slate-900 mt-4 mb-2 uppercase text-xs sm:text-sm tracking-wider">${escapeHTML(p.text)}</div>`;
+                }
+                if (p.type === 'lead') {
+                    return `<div class="font-semibold text-slate-800 italic mb-4 leading-relaxed">${escapeHTML(p.text)}</div>`;
+                }
+                if (p.type === 'quote') {
+                    return `<div class="my-3 p-3 bg-amber-50/70 border-l-4 border-amber-400 text-slate-700 rounded-r-md leading-relaxed italic">${escapeHTML(p.text)}</div>`;
+                }
+                if (p.type === 'hr') {
+                    return `<hr class="my-4 border-slate-300">`;
+                }
+                if (p.type === 'meta') {
+                    return `<div class="text-[11px] text-slate-500 mb-1 leading-snug"><strong>${escapeHTML(p.text.split(':')[0])}:</strong>${escapeHTML(p.text.substring(p.text.indexOf(':') + 1))}</div>`;
+                }
+                if (p.type === 'blank') {
+                    return `<div class="h-3"></div>`;
+                }
+                if (p.type === 'sign') {
+                    return `<div class="mt-8 text-center text-slate-700 whitespace-pre-line font-medium">${escapeHTML(p.text)}</div>`;
+                }
+                if (p.type === 'date') {
+                    return `<div class="mt-6 text-right text-slate-600 italic">${escapeHTML(p.text)}</div>`;
+                }
+                return `<div class="mb-3 text-slate-700 leading-relaxed text-justify">${escapeHTML(p.text)}</div>`;
+            });
+            bodyEl.innerHTML = `
+                <div class="max-w-2xl mx-auto bg-white p-6 sm:p-10 rounded-lg shadow-sm border border-slate-200">
+                    ${htmlParts.join('')}
+                </div>
+            `;
+            rawTextToCopy = data.paragraphs.map(p => p.text).filter(Boolean).join('\n\n');
+        } else {
+            // Template padrão
+            bodyEl.innerHTML = `
+                <div class="max-w-2xl mx-auto bg-white p-6 sm:p-10 rounded-lg shadow-sm border border-slate-200">
+                    <div class="text-center font-bold text-base sm:text-lg mb-6 pb-2 border-b border-slate-300 text-slate-900">${escapeHTML(tpl.title)}</div>
+                    <div class="font-bold text-slate-900 mt-4 mb-2">EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) FEDERAL DA ___ VARA DA SUBSEÇÃO JUDICIÁRIA</div>
+                    <p class="mb-4 text-slate-700 leading-relaxed text-justify">[QUALIFICAÇÃO COMPLETA DA PARTE AUTORA: Nome completo, nacionalidade, estado civil, profissão, portador do RG nº ..., inscrito no CPF sob o nº ..., residente e domiciliado em ...], por seu advogado infra-assinado, com instrumento de mandato anexo, vem, respeitosamente, à presença de Vossa Excelência, propor a presente:</p>
+                    <div class="text-center font-bold text-slate-900 my-4 uppercase tracking-wider">${escapeHTML(tpl.title)}</div>
+                    <p class="mb-3 text-slate-700 leading-relaxed text-justify">em face do <strong>INSTITUTO NACIONAL DO SEGURO SOCIAL (INSS)</strong>, pessoa jurídica de direito público, pelos fatos e fundamentos jurídicos a seguir expostos.</p>
+                    <div class="font-bold text-slate-900 mt-5 mb-2">I - DOS FATOS</div>
+                    <p class="mb-3 text-slate-700 leading-relaxed text-justify">A parte autora pleiteou perante a Autarquia Previdenciária a concessão do benefício em comento, o qual foi indevidamente indeferido/cessado.</p>
+                    <div class="font-bold text-slate-900 mt-5 mb-2">II - DO DIREITO</div>
+                    <p class="mb-3 text-slate-700 leading-relaxed text-justify">Conforme legislação previdenciária de regência (Lei nº 8.213/91) e sólida jurisprudência dos Tribunais Regionais Federais e do Superior Tribunal de Justiça, restam preenchidos todos os requisitos legais.</p>
+                    <div class="font-bold text-slate-900 mt-5 mb-2">III - DOS PEDIDOS</div>
+                    <p class="mb-2 text-slate-700 leading-relaxed">Ante o exposto, requer a citação do Réu, a total procedência da demanda e a condenação do INSS ao pagamento das parcelas vencidas e vincendas acrescidas de juros e correção monetária.</p>
+                    <div class="mt-8 text-right text-slate-600 italic">Nestes termos, pede deferimento.</div>
+                    <div class="mt-6 text-center text-slate-700">__________________________________________<br>Advogado(a) - OAB/___ nº ______</div>
+                </div>
+            `;
+            rawTextToCopy = `${tpl.title}\n\nEXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) FEDERAL DA ___ VARA DA SUBSEÇÃO JUDICIÁRIA\n\n[QUALIFICAÇÃO COMPLETA DA PARTE AUTORA], vem propor a presente demanda em face do INSTITUTO NACIONAL DO SEGURO SOCIAL (INSS)...\n\nNestes termos, pede deferimento.`;
+        }
+
+        btnDownload.onclick = () => {
+            downloadTemplateFile(tpl);
+        };
+
+        btnCopy.onclick = () => {
+            navigator.clipboard.writeText(rawTextToCopy).then(() => {
+                showToastMessage('Texto do template copiado para a área de transferência!');
+            }).catch(() => {
+                showToastMessage('Não foi possível copiar o texto automaticamente.');
+            });
+        };
+
         requestAnimationFrame(() => modal.classList.add('show'));
     }
+
+    function openTemplateEditor(tpl) {
+        // Redireciona para o novo visualizador integrado com download
+        openTemplateViewer(tpl);
+    }
+
+    window.renderTemplates = renderTemplates;
+    window.downloadTemplateFile = downloadTemplateFile;
+    window.openTemplateViewer = openTemplateViewer;
+    window.openTemplateById = function(id) {
+        const found = mockTemplates.find(t => String(t.id) === String(id));
+        if (found) openTemplateViewer(found);
+    };
+    window.downloadTemplateById = function(id) {
+        const found = mockTemplates.find(t => String(t.id) === String(id));
+        if (found) downloadTemplateFile(found);
+    };
+    window.filterTemplatesByCategory = function(cat, btnEl) {
+        const tabTemplates = document.getElementById('tab-templates');
+        if (tabTemplates) {
+            const catButtons = tabTemplates.querySelectorAll('.template-cat-btn');
+            catButtons.forEach(b => b.classList.remove('active'));
+        }
+        if (btnEl) btnEl.classList.add('active');
+        currentTemplateCategory = cat || 'all';
+        renderTemplates();
+    };
 
     // --------------------------------------------------------------------------
     // 9. Aba Livraria (Ebooks, Livros Físicos e Vitrine de Autores)
@@ -3393,16 +3910,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         authorBooks.forEach(b => {
             const card = document.createElement('div');
-            card.className = 'panel-card';
+            card.className = 'bg-white rounded-2xl p-6 border border-slate-200 custom-shadow transition-all duration-200 flex flex-col justify-between';
             card.innerHTML = `
-                <div style="display:flex; gap:15px; align-items:flex-start;">
-                    <div style="font-size:2.5rem; color:var(--assoc-secondary);"><i class="fa-solid fa-book-bookmark"></i></div>
-                    <div>
-                        <h4 style="color:var(--assoc-primary); font-size:1.1rem;">${b.title}</h4>
-                        <span style="font-size:0.85rem; color:var(--assoc-text-muted); font-weight:700;">Autor(a): ${b.autor}</span>
-                        <p style="font-size:0.9rem; color:#555; margin:8px 0;">${b.desc}</p>
-                        <span style="color:var(--assoc-secondary); font-weight:700; font-size:1.1rem;">${b.preco}</span>
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50/60 border border-emerald-100 flex items-center justify-center text-emerald-800 shrink-0">
+                            <svg class="w-6 h-6" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 8L16 3L27 8L16 13L5 8Z"/>
+                                <path d="M5 8V12L16 17L27 12V8"/>
+                                <path d="M9 10V18L12 16L15 18V12" fill="#047857" stroke="none"/>
+                                <path d="M5 15V19L16 24L27 19V15"/>
+                                <path d="M5 22V26L16 31L27 26V22"/>
+                            </svg>
+                        </div>
+                        <span class="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">${b.preco}</span>
                     </div>
+                    <h4 class="text-base font-bold text-slate-900 leading-snug">${b.title}</h4>
+                    <span class="text-xs font-medium text-slate-400 block mt-1">Autor(a): <strong class="text-slate-600">${b.autor}</strong></span>
+                    <p class="text-slate-500 text-xs sm:text-[13px] mt-2.5 leading-relaxed">${b.desc}</p>
+                </div>
+                <div class="mt-5 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="showToastMessage('Abrindo detalhes da obra: ${b.title.replace(/'/g, "\\'")}')" class="inline-flex items-center text-xs font-semibold text-slate-800 hover:text-emerald-700 group transition-colors cursor-pointer">
+                        Consultar Obra
+                        <svg class="w-3.5 h-3.5 ml-1.5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
                 </div>
             `;
             showcaseGrid.appendChild(card);
@@ -3436,28 +3967,29 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderAjudaSupport() {
         const ticketsList = document.getElementById('tickets-list');
         const formTicket = document.getElementById('form-new-ticket');
-        const limitNotice = document.getElementById('ticket-limit-notice');
 
         if (ticketsList) {
             ticketsList.innerHTML = '';
-            activeTickets.forEach(t => {
-                const item = document.createElement('div');
-                item.className = 'panel-card';
-                item.style.padding = '15px 20px';
-                item.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
+            if (activeTickets.length === 0) {
+                ticketsList.innerHTML = '<p class="text-xs text-slate-400">Nenhum chamado aberto no momento.</p>';
+            } else {
+                activeTickets.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-white rounded-xl p-4 border border-slate-200 flex items-center justify-between gap-3 flex-wrap';
+                    item.innerHTML = `
                         <div>
-                            <strong style="color:var(--assoc-primary);"># Chamado: ${t.assunto}</strong>
-                            <span style="display:block; font-size:0.8rem; color:var(--assoc-text-muted);">Tema: ${t.tema} | Data: ${t.data}</span>
+                            <strong class="text-xs sm:text-sm font-bold text-slate-900 block"># Chamado: ${t.assunto}</strong>
+                            <span class="text-xs text-slate-500">Tema: ${t.tema} • Data: ${t.data}</span>
                         </div>
-                        <span class="format-badge" style="background:var(--assoc-accent); color:var(--assoc-primary);">${t.status}</span>
-                    </div>
-                `;
-                ticketsList.appendChild(item);
-            });
+                        <span class="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">${t.status}</span>
+                    `;
+                    ticketsList.appendChild(item);
+                });
+            }
         }
 
-        if (formTicket) {
+        if (formTicket && !formTicket.dataset.ticketBound) {
+            formTicket.dataset.ticketBound = 'true';
             formTicket.addEventListener('submit', async (e) => {
                 e.preventDefault();
 

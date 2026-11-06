@@ -1,26 +1,100 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área de Eventos - Sociedade Brasileira de Previdência Social</title>
+    <title>Portal de Eventos SBPS</title>
     <link rel="icon" type="image/png" href="../images/logo.png">
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style/style.css">
-    <link rel="stylesheet" href="../style/eventos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style/eventos.css?v=25">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            },
+            colors: {
+              sbps: {
+                navy: '#0f172a',
+                navySoft: '#1e293b',
+                green: '#059669',
+                greenHover: '#047857',
+                greenLight: '#ecfdf5',
+                greenBorder: '#a7f3d0',
+                gold: '#d97706',
+                goldLight: '#fef3c7',
+                blueSoft: '#eff6ff',
+                blueBorder: '#bfdbfe',
+                bg: '#f8fafc',
+                card: '#ffffff',
+                border: '#e2e8f0',
+                textTitle: '#0f172a',
+                textBody: '#475569',
+                greenPrimary: '#059669',
+                greenDark: '#065f46',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+      }
+      .custom-shadow {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+      }
+      .custom-shadow-hover:hover {
+        box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
+      }
+      .drawer-transition {
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+    </style>
 </head>
-<body class="eventos-portal-page">
+<body class="min-h-screen text-slate-800 antialiased select-none bg-[#f8fafc] eventos-portal-page">
 
     <!-- ==========================================================================
          SEÇÃO DE AUTENTICAÇÃO DUAL (PARTICIPANTE E PALESTRANTE)
          ========================================================================== -->
-    <div id="evt-auth-container" class="evt-auth-container">
-        <div class="evt-auth-card">
+    <div id="evt-auth-container" class="evt-auth-container py-10 px-4">
+        <!-- Cabeçalho Institucional Limpo Acima do Card de Login -->
+        <div class="max-w-[880px] mx-auto mb-6 flex items-center justify-between flex-wrap gap-4">
+            <a href="../index.html" class="inline-flex items-center gap-3 group">
+                <img src="../images/logo.png" alt="SBPS" class="w-11 h-auto object-contain transition-transform group-hover:scale-105">
+                <div>
+                    <span class="block text-base font-bold text-slate-900 leading-tight">Portal de Eventos SBPS</span>
+                    <span class="block text-xs text-slate-500">Sociedade Brasileira de Previdência Social</span>
+                </div>
+            </a>
+            <a href="../index.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 px-3.5 py-2 rounded-xl shadow-sm transition-colors">
+                <i class="fa-solid fa-arrow-left"></i> Voltar ao Site Principal
+            </a>
+        </div>
+
+        <div class="evt-auth-card max-w-[880px] mx-auto bg-white rounded-2xl border border-slate-200 custom-shadow overflow-hidden">
             <!-- Seletor Principal de Tipo de Perfil -->
             <div class="evt-type-selector">
                 <button type="button" id="btn-select-participante" class="evt-type-btn active">
@@ -42,20 +116,20 @@
                     <!-- Form Login Participante -->
                     <form id="form-login-participante">
                         <h2 class="evt-form-title">Login do Participante</h2>
-                        <p class="evt-form-desc">Informe suas credenciais para gerenciar suas inscrições e certificados.</p>
+                        <p class="evt-form-desc">Informe suas credenciais para gerenciar suas inscrições, eventos e certificados.</p>
                         
                         <div class="evt-notice-box">
                             <i class="fa-solid fa-circle-info"></i> <strong>Atenção Associados SBPS:</strong> Se você já possui cadastro como associado, utilize o mesmo e-mail e senha cadastrados para acessar a Área de Participante.
                         </div>
 
                         <div class="evt-form-group" style="margin-bottom: 15px;">
-                            <label>E-mail ou CPF <span style="color:red;">*</span></label>
+                            <label>E-mail ou CPF <span class="text-red-500">*</span></label>
                             <input type="text" id="login-part-user" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
                         </div>
                         <div class="evt-form-group" style="margin-bottom: 15px;">
                             <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <label>Senha <span style="color:red;">*</span></label>
-                                <a href="#" style="font-size: 0.8rem; color: var(--evt-secondary); text-decoration: none; font-weight: 600;">Esqueceu a senha?</a>
+                                <label>Senha <span class="text-red-500">*</span></label>
+                                <a href="javascript:void(0)" onclick="showToast('Instruções de recuperação enviadas para seu e-mail.')" class="text-xs font-semibold text-emerald-700 hover:underline">Esqueceu a senha?</a>
                             </div>
                             <div style="position: relative;">
                                 <input type="password" id="login-part-password" class="evt-form-control" placeholder="••••••••" required style="padding-right: 40px;">
@@ -65,41 +139,48 @@
                             </div>
                         </div>
                         <button type="submit" class="evt-btn-primary">Acessar portal do participante</button>
+
+                        <div class="mt-5 pt-5 border-t border-slate-100 text-center">
+                            <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Acesso Rápido de Demonstração</span>
+                            <button type="button" onclick="window.quickDemoLoginEventos('participante')" class="w-full py-2.5 px-4 rounded-xl border border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100/80 text-emerald-800 font-semibold text-xs transition-colors inline-flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-bolt"></i> Acessar demonstração como Participante em 1 clique
+                            </button>
+                        </div>
                     </form>
 
-                                        <!-- Form Cadastro Participante -->
+                    <!-- Form Cadastro Participante -->
                     <form id="form-register-participante" style="display: none;">
                         <h2 class="evt-form-title">Cadastro de Participante</h2>
-                        <p class="evt-form-desc">Preencha seus dados para se inscrever nos eventos e cursos SBPS.</p>
+                        <p class="evt-form-desc">Preencha seus dados para se inscrever nos eventos, seminários e cursos SBPS.</p>
                         
                         <div class="evt-notice-box" style="background:#FFFBEB; border-color:#F59E0B; color:#B45309;">
                             <i class="fa-solid fa-triangle-exclamation"></i> O participante cadastrado nesta área terá acesso exclusivo aos eventos, não possuindo acesso à Área de Associados a menos que efetue a associação oficial.
                         </div>
 
                         <!-- SEÇÃO 1: Informações Pessoais -->
-                        <div style="margin-bottom: 28px;">
-                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
-                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">INFORMAÇÕES PESSOAIS</h3>
+                        <div class="mb-7">
+                            <div class="evt-section-heading">
+                                <h3>Informações Pessoais</h3>
                             </div>
                             <div class="evt-grid-2">
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Nome Completo <span style="color:red;">*</span></label>
+                                    <label>Nome Completo <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-part-nome" class="evt-form-control" placeholder="Digite seu nome completo" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>CPF <span style="color:red;">*</span></label>
+                                    <label>CPF <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-part-cpf" class="evt-form-control" placeholder="000.000.000-00" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>RG <span style="color:red;">*</span></label>
+                                    <label>RG <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-part-rg" class="evt-form-control" placeholder="00.000.000-0" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Data de Nascimento <span style="color:red;">*</span></label>
+                                    <label>Data de Nascimento <span class="text-red-500">*</span></label>
                                     <input type="date" id="reg-part-nasc" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Gênero <span style="color:red;">*</span></label>
+                                    <label>Gênero <span class="text-red-500">*</span></label>
                                     <select id="reg-part-genero" class="evt-form-control" required>
                                         <option value="">Selecione...</option>
                                         <option value="Masculino">Masculino</option>
@@ -113,13 +194,13 @@
                         </div>
 
                         <!-- SEÇÃO 2: Informações de Contato -->
-                        <div style="margin-bottom: 28px;">
-                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
-                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">INFORMAÇÕES DE CONTATO</h3>
+                        <div class="mb-7">
+                            <div class="evt-section-heading">
+                                <h3>Informações de Contato</h3>
                             </div>
                             <div class="evt-grid-2">
                                 <div class="evt-form-group">
-                                    <label>Celular / WhatsApp <span style="color:red;">*</span></label>
+                                    <label>Celular / WhatsApp <span class="text-red-500">*</span></label>
                                     <input type="tel" id="reg-part-celular" class="evt-form-control" placeholder="(00) 90000-0000" required>
                                 </div>
                                 <div class="evt-form-group">
@@ -127,69 +208,69 @@
                                     <input type="tel" id="reg-part-fixo" class="evt-form-control" placeholder="(00) 0000-0000">
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>E-mail Principal <span style="color:red;">*</span></label>
+                                    <label>E-mail Principal <span class="text-red-500">*</span></label>
                                     <input type="email" id="reg-part-email" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Confirmação do E-mail <span style="color:red;">*</span></label>
+                                    <label>Confirmação do E-mail <span class="text-red-500">*</span></label>
                                     <input type="email" id="reg-part-email-confirm" class="evt-form-control" placeholder="Repita seu e-mail" required>
                                 </div>
                             </div>
                         </div>
 
                         <!-- SEÇÃO 3: Endereço Residencial -->
-                        <div style="margin-bottom: 28px;">
-                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
-                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">ENDEREÇO RESIDENCIAL</h3>
+                        <div class="mb-7">
+                            <div class="evt-section-heading">
+                                <h3>Endereço Residencial</h3>
                             </div>
                             <div class="evt-grid-2">
                                 <div class="evt-form-group">
-                                    <label>CEP <span style="color:red;">*</span></label>
+                                    <label>CEP <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-part-cep" class="evt-form-control" placeholder="00000-000" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Logradouro <span style="color:red;">*</span></label>
+                                    <label>Logradouro <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-part-rua" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Número <span style="color:red;">*</span></label>
+                                    <label>Número <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-part-numero" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Bairro <span style="color:red;">*</span></label>
+                                    <label>Bairro <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-part-bairro" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>UF <span style="color:red;">*</span></label>
-                                    <input type="text" id="reg-part-uf" class="evt-form-control" readonly required style="background:#F1F5F9;">
+                                    <label>UF <span class="text-red-500">*</span></label>
+                                    <input type="text" id="reg-part-uf" class="evt-form-control" readonly required style="background:#F8FAFC;">
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Cidade <span style="color:red;">*</span></label>
-                                    <input type="text" id="reg-part-cidade" class="evt-form-control" readonly required style="background:#F1F5F9;">
+                                    <label>Cidade <span class="text-red-500">*</span></label>
+                                    <input type="text" id="reg-part-cidade" class="evt-form-control" readonly required style="background:#F8FAFC;">
                                 </div>
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Complemento <span style="color:red;">*</span></label>
+                                    <label>Complemento <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-part-complemento" class="evt-form-control" required>
                                 </div>
                             </div>
                         </div>
 
                         <!-- SEÇÃO 4: Acesso -->
-                        <div style="margin-bottom: 28px;">
-                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
-                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">ACESSO</h3>
+                        <div class="mb-7">
+                            <div class="evt-section-heading">
+                                <h3>Credenciais de Acesso</h3>
                             </div>
                             <div class="evt-grid-2">
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Login / Usuário <span style="color:red;">*</span></label>
+                                    <label>Login / Usuário <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-part-login-user" class="evt-form-control" placeholder="Ex: seunome" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Senha <span style="color:red;">*</span></label>
+                                    <label>Senha <span class="text-red-500">*</span></label>
                                     <input type="password" id="reg-part-password" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Confirmar Senha <span style="color:red;">*</span></label>
+                                    <label>Confirmar Senha <span class="text-red-500">*</span></label>
                                     <input type="password" id="reg-part-password-confirm" class="evt-form-control" required>
                                 </div>
                             </div>
@@ -211,16 +292,16 @@
                     <!-- Form Login Palestrante -->
                     <form id="form-login-palestrante">
                         <h2 class="evt-form-title">Login do Palestrante</h2>
-                        <p class="evt-form-desc">Acesse para gerenciar seus eventos criados, palestras e conferências.</p>
+                        <p class="evt-form-desc">Acesse para gerenciar seus eventos criados, palestras, cursos e conferências.</p>
                         
                         <div class="evt-form-group" style="margin-bottom: 15px;">
-                            <label>E-mail ou CPF <span style="color:red;">*</span></label>
+                            <label>E-mail ou CPF <span class="text-red-500">*</span></label>
                             <input type="text" id="login-pal-user" class="evt-form-control" placeholder="seu.email@exemplo.com" required>
                         </div>
                         <div class="evt-form-group" style="margin-bottom: 15px;">
                             <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <label>Senha <span style="color:red;">*</span></label>
-                                <a href="#" style="font-size: 0.8rem; color: var(--evt-purple); text-decoration: none; font-weight: 600;">Esqueceu a senha?</a>
+                                <label>Senha <span class="text-red-500">*</span></label>
+                                <a href="javascript:void(0)" onclick="showToast('Instruções de recuperação enviadas para seu e-mail.')" class="text-xs font-semibold text-emerald-700 hover:underline">Esqueceu a senha?</a>
                             </div>
                             <div style="position: relative;">
                                 <input type="password" id="login-pal-password" class="evt-form-control" placeholder="••••••••" required style="padding-right: 40px;">
@@ -229,38 +310,45 @@
                                 </button>
                             </div>
                         </div>
-                        <button type="submit" class="evt-btn-primary" style="background:linear-gradient(135deg, #0F3B5F, #8B5CF6);">Acessar portal do palestrante</button>
+                        <button type="submit" class="evt-btn-primary">Acessar portal do palestrante</button>
+
+                        <div class="mt-5 pt-5 border-t border-slate-100 text-center">
+                            <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-3">Acesso Rápido de Demonstração</span>
+                            <button type="button" onclick="window.quickDemoLoginEventos('palestrante')" class="w-full py-2.5 px-4 rounded-xl border border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100/80 text-emerald-800 font-semibold text-xs transition-colors inline-flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-bolt"></i> Acessar demonstração como Palestrante em 1 clique
+                            </button>
+                        </div>
                     </form>
 
-                                        <!-- Form Cadastro Palestrante -->
+                    <!-- Form Cadastro Palestrante -->
                     <form id="form-register-palestrante" style="display: none;">
                         <h2 class="evt-form-title">Cadastro Completo de Palestrante</h2>
                         <p class="evt-form-desc">Preencha seus dados acadêmicos, profissionais e bancários para ministrar eventos na SBPS.</p>
 
                         <!-- SEÇÃO 1: Informações Pessoais -->
-                        <div style="margin-bottom: 28px;">
-                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
-                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">INFORMAÇÕES PESSOAIS</h3>
+                        <div class="mb-7">
+                            <div class="evt-section-heading">
+                                <h3>Informações Pessoais</h3>
                             </div>
                             <div class="evt-grid-2">
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Nome Completo <span style="color:red;">*</span></label>
+                                    <label>Nome Completo <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-pal-nome" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>CPF <span style="color:red;">*</span></label>
+                                    <label>CPF <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-pal-cpf" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>RG <span style="color:red;">*</span></label>
+                                    <label>RG <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-pal-rg" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Data de Nascimento <span style="color:red;">*</span></label>
+                                    <label>Data de Nascimento <span class="text-red-500">*</span></label>
                                     <input type="date" id="reg-pal-nasc" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Gênero <span style="color:red;">*</span></label>
+                                    <label>Gênero <span class="text-red-500">*</span></label>
                                     <select id="reg-pal-genero" class="evt-form-control" required>
                                         <option value="">Selecione...</option>
                                         <option value="Masculino">Masculino</option>
@@ -274,42 +362,42 @@
                         </div>
 
                         <!-- SEÇÃO 2: Informações de Contato e Endereço -->
-                        <div style="margin-bottom: 28px;">
-                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
-                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">CONTATO E ENDEREÇO</h3>
+                        <div class="mb-7">
+                            <div class="evt-section-heading">
+                                <h3>Contato e Endereço</h3>
                             </div>
                             <div class="evt-grid-2">
                                 <div class="evt-form-group">
-                                    <label>Celular / WhatsApp <span style="color:red;">*</span></label>
+                                    <label>Celular / WhatsApp <span class="text-red-500">*</span></label>
                                     <input type="tel" id="reg-pal-celular" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>E-mail Principal <span style="color:red;">*</span></label>
+                                    <label>E-mail Principal <span class="text-red-500">*</span></label>
                                     <input type="email" id="reg-pal-email" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>CEP <span style="color:red;">*</span></label>
+                                    <label>CEP <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-pal-cep" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>UF <span style="color:red;">*</span></label>
-                                    <input type="text" id="reg-pal-uf" class="evt-form-control" readonly required style="background:#F1F5F9;">
+                                    <label>UF <span class="text-red-500">*</span></label>
+                                    <input type="text" id="reg-pal-uf" class="evt-form-control" readonly required style="background:#F8FAFC;">
                                 </div>
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Endereço Completo <span style="color:red;">*</span></label>
+                                    <label>Endereço Completo <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-pal-endereco" class="evt-form-control" required>
                                 </div>
                             </div>
                         </div>
 
                         <!-- SEÇÃO 3: Formação e Qualificação -->
-                        <div style="margin-bottom: 28px;">
-                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
-                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;"><i class="fa-solid fa-graduation-cap"></i> FORMAÇÃO E QUALIFICAÇÃO</h3>
+                        <div class="mb-7">
+                            <div class="evt-section-heading">
+                                <h3>Formação e Qualificação</h3>
                             </div>
                             <div class="evt-grid-2">
                                 <div class="evt-form-group">
-                                    <label>Nível de Escolaridade <span style="color:red;">*</span></label>
+                                    <label>Nível de Escolaridade <span class="text-red-500">*</span></label>
                                     <select id="reg-pal-escolaridade" class="evt-form-control" required>
                                         <option value="">Selecione...</option>
                                         <option value="Graduação">Graduação</option>
@@ -320,11 +408,11 @@
                                     </select>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Área de Atuação Principal <span style="color:red;">*</span></label>
+                                    <label>Área de Atuação Principal <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-pal-area" class="evt-form-control" placeholder="Ex: Direito Previdenciário RGPS / RPPS" required>
                                 </div>
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Cursos de Formação (com Ano de Início e Conclusão) <span style="color:red;">*</span></label>
+                                    <label>Cursos de Formação (com Ano de Início e Conclusão) <span class="text-red-500">*</span></label>
                                     <div id="edu-courses-container">
                                         <div class="evt-edu-row">
                                             <input type="text" class="evt-form-control edu-nome" placeholder="Ex: Direito Previdenciário - USP" required>
@@ -335,7 +423,7 @@
                                     <button type="button" id="btn-add-edu-item" class="evt-btn-add-item"><i class="fa-solid fa-plus"></i> Adicionar Mais um Curso</button>
                                 </div>
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Profissão Atual & Anos de Experiência <span style="color:red;">*</span></label>
+                                    <label>Profissão Atual & Anos de Experiência <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-pal-profissao" class="evt-form-control" placeholder="Ex: Advogado e Professor (12 anos de experiência)" required>
                                 </div>
                                 <div class="evt-form-group evt-full-width">
@@ -343,47 +431,47 @@
                                     <textarea id="reg-pal-experiencia" class="evt-form-control" rows="2" placeholder="Descreva brevemente suas principais atuações..."></textarea>
                                 </div>
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Resumo "Sobre Mim" <span style="color:red;">*</span></label>
+                                    <label>Resumo "Sobre Mim" <span class="text-red-500">*</span></label>
                                     <textarea id="reg-pal-sobre" class="evt-form-control" rows="3" placeholder="Apresentação curta para os participantes do evento..." required></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <!-- SEÇÃO 4: Dados Bancários -->
-                        <div style="margin-bottom: 28px;">
-                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
-                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;"><i class="fa-solid fa-building-columns"></i> DADOS BANCÁRIOS</h3>
+                        <div class="mb-7">
+                            <div class="evt-section-heading">
+                                <h3>Dados Bancários</h3>
                             </div>
                             <div class="evt-grid-2">
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Chave PIX / Dados Bancários (Agência, Conta, Banco) <span style="color:red;">*</span></label>
+                                    <label>Chave PIX / Dados Bancários (Agência, Conta, Banco) <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-pal-pix" class="evt-form-control" placeholder="Ex: Chave PIX E-mail ou Ag: 0001 C/C: 12345-6 Banco do BB" required>
                                 </div>
                             </div>
                         </div>
 
                         <!-- SEÇÃO 5: Acesso -->
-                        <div style="margin-bottom: 28px;">
-                            <div style="border-bottom: 2px solid var(--evt-primary); padding-bottom: 6px; margin-bottom: 18px;">
-                                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--evt-primary); text-transform: uppercase; margin: 0;">ACESSO</h3>
+                        <div class="mb-7">
+                            <div class="evt-section-heading">
+                                <h3>Credenciais de Acesso</h3>
                             </div>
                             <div class="evt-grid-2">
                                 <div class="evt-form-group evt-full-width">
-                                    <label>Login / Usuário <span style="color:red;">*</span></label>
+                                    <label>Login / Usuário <span class="text-red-500">*</span></label>
                                     <input type="text" id="reg-pal-login-user" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Senha <span style="color:red;">*</span></label>
+                                    <label>Senha <span class="text-red-500">*</span></label>
                                     <input type="password" id="reg-pal-password" class="evt-form-control" required>
                                 </div>
                                 <div class="evt-form-group">
-                                    <label>Confirmar Senha <span style="color:red;">*</span></label>
+                                    <label>Confirmar Senha <span class="text-red-500">*</span></label>
                                     <input type="password" id="reg-pal-password-confirm" class="evt-form-control" required>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="submit" class="evt-btn-primary" style="background:linear-gradient(135deg, #0F3B5F, #8B5CF6);"><i class="fa-solid fa-user-check"></i> Finalizar Cadastro de Palestrante</button>
+                        <button type="submit" class="evt-btn-primary"><i class="fa-solid fa-user-check"></i> Finalizar Cadastro de Palestrante</button>
                     </form>
                 </div>
             </div>
@@ -391,243 +479,597 @@
     </div>
 
     <!-- ==========================================================================
-         HEADER MOBILE LIMPO (APENAS 3 TRAÇOS E FOTINHA DO PERFIL)
+         WORKSPACE AUTENTICADO DA ÁREA DE EVENTOS (PADRÃO PORTAL DO ASSOCIADO)
          ========================================================================== -->
-    <div id="evt-mobile-header" class="evt-mobile-header">
-        <button type="button" id="btn-mobile-menu-toggle" class="evt-mobile-menu-btn" title="Abrir Menu Lateral">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-        <div id="btn-mobile-profile-shortcut" class="evt-mobile-profile-btn" title="Ir para Meu Perfil">
-            U
-        </div>
-    </div>
+    <div id="evt-workspace-container" style="display: none;">
+        <div class="min-h-screen text-slate-800 flex flex-col md:flex-row antialiased select-none bg-[#f8fafc] w-full">
 
-    <!-- BACKDROP DO MENU MOBILE GAVETA -->
-    <div id="evt-sidebar-backdrop" class="evt-sidebar-backdrop"></div>
+            <!-- ================= BARRA LATERAL ESQUERDA ================= -->
+            <aside id="evt-sidebar" class="w-full md:w-[76px] bg-white border-r border-slate-200/90 flex md:flex-col items-center justify-between py-5 px-3 md:px-0 shrink-0 z-30 sticky top-0 md:h-screen">
+                
+                <!-- Topo: Logo SBPS + Ícones de Navegação Vertical -->
+                <div class="flex md:flex-col items-center justify-between md:justify-start gap-5 w-full">
+                    <div onclick="window.switchTab('dashboard', true); showToast('SBPS - Sociedade Brasileira de Previdência Social')" class="cursor-pointer transition-transform hover:scale-105 px-2 shrink-0" title="SBPS - Início">
+                        <img src="../images/logo.png" alt="SBPS" class="w-12 h-auto object-contain" />
+                    </div>
 
-    <!-- ==========================================================================
-         WORKSPACE AUTENTICADO DA ÁREA DE EVENTOS
-         ========================================================================== -->
-    <div id="evt-workspace-container" class="evt-workspace" style="display: none;">
-        <!-- Sidebar Menu Lateral (Estrutura Flex Limpa Sem Colisões) -->
-        <aside id="evt-sidebar" class="evt-sidebar">
-            <div class="evt-sidebar-main-content">
-                <div class="evt-user-profile-summary">
-                    <div id="workspace-user-avatar" class="evt-user-avatar" onclick="window.switchTab('perfil', true)" title="Ir para Meu Perfil">U</div>
-                    <div class="evt-user-info-text">
-                        <h4 id="workspace-user-name">Usuário SBPS</h4>
-                        <span id="workspace-user-badge" class="evt-role-badge participante">Participante</span>
+                    <!-- Ícones de Navegação Vertical (Injetados via scripts/eventos.js com os mesmos SVGs dos Cards) -->
+                    <nav id="workspace-sidebar-nav" class="flex md:flex-col items-center gap-1.5 overflow-x-auto md:overflow-visible w-full justify-center px-2">
+                        <!-- Injetado dinamicamente via eventos.js -->
+                    </nav>
+                </div>
+
+                <!-- Base da Barra Lateral: CHAT / SUPORTE + LOGOUT -->
+                <div class="hidden md:flex md:flex-col items-center gap-2 pt-3 border-t border-slate-100 w-full justify-center">
+                    <!-- ÍCONE DE CHAT / SUPORTE NA BARRA LATERAL (3 PONTINHOS NO BALÃO) -->
+                    <button type="button" id="btn-ai-fab" onclick="window.toggleAiChatDrawer()" title="Atendimento Online / IA Suporte" class="group relative p-2.5 rounded-xl text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-all">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.5162 20 9.11607 19.6606 7.88196 19.0587L3 20.5L4.39724 16.2188C3.51178 14.8726 3 13.249 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="8" cy="11.5" r="1.5" fill="currentColor"/>
+                            <circle cx="12" cy="11.5" r="1.5" fill="currentColor"/>
+                            <circle cx="16" cy="11.5" r="1.5" fill="currentColor"/>
+                        </svg>
+                        <span class="absolute left-16 bg-slate-900 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none hidden md:block whitespace-nowrap z-50">Suporte / Chat</span>
+                    </button>
+
+                    <!-- Botão Sair da barra lateral -->
+                    <button type="button" id="btn-logout-workspace" title="Sair da Conta" class="group relative p-2.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all">
+                        <svg class="w-5 h-5 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        <span class="absolute left-16 bg-slate-900 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none hidden md:block whitespace-nowrap z-50">Sair</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- ================= CONTEÚDO PRINCIPAL ================= -->
+            <main class="evt-content-area flex-1 flex flex-col min-h-screen px-5 sm:px-8 lg:px-12 py-7 overflow-x-hidden">
+                
+                <!-- CABEÇALHO DA ÁREA DE EVENTOS -->
+                <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+                    <div>
+                        <button type="button" id="btn-back-evt-dashboard" onclick="window.switchTab('dashboard', true)" style="display: none;" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg mb-3 transition-colors">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar ao Painel Geral
+                        </button>
+                        <div class="flex items-center gap-2.5 flex-wrap">
+                            <h1 id="workspace-header-title" class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Painel do Palestrante</h1>
+                            <span id="workspace-header-pill" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> <span id="workspace-header-pill-text">Corpo Docente SBPS</span>
+                            </span>
+                        </div>
+                        <p id="workspace-header-subtitle" class="text-slate-500 text-sm mt-1">Gerencie suas apresentações agendadas, envie materiais didáticos, confira a lista de inscritos e proponha novos eventos.</p>
+                    </div>
+
+                    <!-- PILL EXATO DO PERFIL (Palestrante SBPS / Participante SBPS | Olá, Thiago | Sair) -->
+                    <div class="flex items-center gap-3 bg-white px-3.5 py-1.5 rounded-full border border-slate-200 shadow-sm self-start sm:self-auto hover:border-slate-300 transition-colors">
+                        <div id="workspace-user-avatar" onclick="window.switchTab('perfil', true)" title="Clique para gerenciar seu perfil e foto" class="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shrink-0 cursor-pointer hover:ring-2 hover:ring-emerald-500 transition-all">
+                            <img 
+                                id="workspace-user-avatar-img"
+                                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80" 
+                                alt="Palestrante Thiago"
+                                class="w-full h-full object-cover"
+                                onerror="this.src='https://placehold.co/80x80/059669/ffffff?text=P'"
+                            />
+                        </div>
+                        <div onclick="window.switchTab('perfil', true)" title="Clique para gerenciar seu perfil" class="flex flex-col pr-1 cursor-pointer">
+                            <span id="workspace-user-badge" class="text-[11px] font-medium text-emerald-700 leading-tight">Palestrante SBPS</span>
+                            <span id="workspace-user-name" class="text-[13px] font-bold text-slate-900 leading-tight">Olá, Thiago</span>
+                        </div>
+                        <div class="h-5 w-[1px] bg-slate-200"></div>
+                        <button type="button" onclick="window.openLogoutModalEventos()" title="Sair da Conta" class="text-slate-400 hover:text-slate-600 transition-colors p-0.5">
+                            <svg class="w-4 h-4 stroke-[1.9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- ABA DASHBOARD -->
+                <div id="panel-dashboard" class="evt-tab-panel"></div>
+
+                <!-- ABA PERFIL -->
+                <div id="panel-perfil" class="evt-tab-panel" style="display:none;"></div>
+
+                <!-- ABA EVENTOS (DISPONÍVEIS PARA INSCRIÇÃO) -->
+                <div id="panel-eventos" class="evt-tab-panel" style="display:none;"></div>
+
+                <!-- ABA INSCRIÇÕES -->
+                <div id="panel-inscricoes" class="evt-tab-panel" style="display:none;"></div>
+
+                <!-- ABA PARTICIPAÇÕES -->
+                <div id="panel-participacoes" class="evt-tab-panel" style="display:none;"></div>
+
+                <!-- ABA CRIAR EVENTOS (EXCLUSIVO PALESTRANTE) -->
+                <div id="panel-criar-eventos" class="evt-tab-panel mt-6" style="display:none;">
+                    <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 custom-shadow mb-6">
+                        <!-- Cabeçalho da Aba Propor / Criar Palestra com o Mesmo Ícone (+) da Barra Lateral -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-100">
+                            <div class="flex items-start sm:items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-50/80 border border-emerald-200 flex items-center justify-center text-emerald-700 shrink-0">
+                                    <svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 leading-tight">Propor & Publicar Novo Evento / Palestra</h2>
+                                    <p class="text-slate-500 text-xs sm:text-[13px] mt-0.5">Cadastre e publique um novo workshop, simpósio, palestra ou curso prático na grade oficial da SBPS.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 self-start sm:self-auto">
+                                <button type="button" onclick="window.openCreateProposalModal()" class="px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold transition-colors">
+                                    Proposta Rápida à Coordenação
+                                </button>
+                                <span class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-900 text-white">Publicação Direta</span>
+                            </div>
+                        </div>
+
+                        <!-- Banner Dinâmico de Cota e Publicações do Palestrante -->
+                        <div id="quota-criar-evento-banner-container" class="mb-6"></div>
+
+                        <form id="form-criar-evento-palestrante">
+                            <div class="mb-7">
+                                <div class="evt-section-heading">
+                                    <h3>1. Dados Principais e Integração</h3>
+                                </div>
+                                <div class="evt-grid-2">
+                                    <div class="evt-form-group evt-full-width">
+                                        <label>Nome do Evento / Capacitação <span class="text-red-500">*</span></label>
+                                        <input type="text" id="create-evt-titulo" class="evt-form-control" placeholder="Ex: Curso Prático de Recursos Previdenciários" required>
+                                    </div>
+                                    <div class="evt-form-group evt-full-width">
+                                        <label>Imagem de Capa do Evento <span class="text-red-500">*</span></label>
+                                        <div class="flex flex-col sm:flex-row gap-3">
+                                            <input type="file" id="create-evt-capa" class="evt-form-control flex-1" accept="image/*" required>
+                                            <select id="create-evt-imgpos" class="evt-form-control sm:w-48" title="Posicionamento da imagem">
+                                                <option value="center">Posição: Centralizado</option>
+                                                <option value="top">Posição: Superior</option>
+                                                <option value="bottom">Posição: Inferior</option>
+                                                <option value="left">Posição: Esquerda</option>
+                                                <option value="right">Posição: Direita</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="evt-form-group">
+                                        <label>Carga Horária (em horas) <span class="text-red-500">*</span></label>
+                                        <input type="number" id="create-evt-carga" class="evt-form-control" placeholder="Ex: 20" required>
+                                    </div>
+                                    <div class="evt-form-group">
+                                        <label>Data de Realização <span class="text-red-500">*</span></label>
+                                        <input type="date" id="create-evt-data" class="evt-form-control" required>
+                                    </div>
+                                    <div class="evt-form-group evt-full-width">
+                                        <label>Palavra-Chave / Tag Identificadora <span class="text-red-500">*</span></label>
+                                        <input type="text" id="create-evt-palavra" class="evt-form-control" placeholder="Ex: CURSO_RECURSOS_2026" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-7">
+                                <div class="evt-section-heading">
+                                    <h3>2. Detalhes de Transmissão, Valor e Conteúdo</h3>
+                                </div>
+                                <div class="evt-grid-2">
+                                    <div class="evt-form-group">
+                                        <label>Local ou Link de Transmissão <span class="text-red-500">*</span></label>
+                                        <input type="text" id="create-evt-local" class="evt-form-control" placeholder="Ex: Online via Zoom ou Endereço Presencial" required>
+                                    </div>
+                                    <div class="evt-form-group">
+                                        <label>Taxa de Inscrição / Valor (R$) <span class="text-red-500">*</span></label>
+                                        <input type="number" step="0.01" id="create-evt-taxas" class="evt-form-control" placeholder="Ex: 150.00 (digite 0 para Gratuito)" required>
+                                    </div>
+                                    <div class="evt-form-group evt-full-width">
+                                        <label>Programação do Evento <span class="text-red-500">*</span></label>
+                                        <textarea id="create-evt-programacao" class="evt-form-control" rows="2" placeholder="Cronograma das aulas, módulos ou palestras..." required></textarea>
+                                    </div>
+                                    <div class="evt-form-group evt-full-width">
+                                        <label>Resumo do Evento (Objetivos e Público-Alvo) <span class="text-red-500">*</span></label>
+                                        <textarea id="create-evt-resumo" class="evt-form-control" rows="3" placeholder="Descreva os objetivos práticos e conteúdo da capacitação..." required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Informações Estáticas da Plataforma -->
+                            <div class="bg-slate-50/80 border border-slate-200/90 rounded-2xl p-5 mb-6">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-shield-halved text-emerald-600"></i> Informações Regulamentares da Plataforma SBPS
+                                </h4>
+                                <ul class="space-y-1.5 text-xs text-slate-600 leading-relaxed">
+                                    <li>• <strong>Política de Cancelamento:</strong> Cancelamentos pelo palestrante devem ser solicitados com no mínimo 30 dias de antecedência.</li>
+                                    <li>• <strong>Política de Reagendamento:</strong> Solicitada com no mínimo 7 dias de antecedência. Caso extrapole, o palestrante poderá propor um substituto para avaliação.</li>
+                                    <li>• <strong>Métodos de Pagamento:</strong> Cartão de Crédito, PIX e Boleto Bancário via gateway integrado SBPS.</li>
+                                </ul>
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 text-xs font-semibold text-white bg-slate-900 hover:bg-emerald-700 rounded-xl shadow-sm transition-colors cursor-pointer">
+                                    <i class="fa-solid fa-paper-plane"></i> Publicar Evento na Plataforma
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
-                <!-- Navegação Lateral -->
-                <ul id="workspace-sidebar-nav" class="evt-sidebar-nav">
-                    <!-- Injetado dinamicamente via eventos.js -->
-                </ul>
-            </div>
+                <!-- ABA MEUS EVENTOS -->
+                <div id="panel-meus-eventos" class="evt-tab-panel" style="display:none;"></div>
 
-            <div class="evt-sidebar-footer">
-                <button type="button" id="btn-logout-workspace" class="evt-btn-logout-sidebar" title="Sair da Conta">
-                    <i class="fa-solid fa-right-from-bracket"></i> Sair da Conta
+                <!-- ABA REALIZADOS -->
+                <div id="panel-realizados" class="evt-tab-panel" style="display:none;"></div>
+
+                <!-- ABA COMUNIDADE -->
+                <div id="panel-comunidade" class="evt-tab-panel" style="display:none;"></div>
+
+                <!-- ABA SUGESTÕES -->
+                <div id="panel-sugestoes" class="evt-tab-panel" style="display:none;"></div>
+
+                <!-- ABA AJUDA -->
+                <div id="panel-ajuda" class="evt-tab-panel" style="display:none;"></div>
+
+                <!-- ABA VISUALIZAR EVENTO (DETALHES) -->
+                <div id="panel-visualizar-evento" class="evt-tab-panel" style="display:none;"></div>
+
+                <!-- RODAPÉ EXECUTIVO -->
+                <footer class="mt-12 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2">
+                    <span id="workspace-footer-copy">© 2026 Sociedade Brasileira de Previdência Social (SBPS) • Módulo Acadêmico do Palestrante</span>
+                    <div class="flex items-center gap-4">
+                        <a href="javascript:void(0)" onclick="showToast('Regulamento do Corpo Docente e Palestrantes')" class="hover:underline">Diretrizes Docentes</a>
+                        <span>•</span>
+                        <a href="javascript:void(0)" onclick="showToast('Canal da Coordenação Científica')" class="hover:underline">Coordenação Científica</a>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: PROPOR NOVA PALESTRA / EVENTO ================= -->
+    <div id="proposalModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">Propor Nova Palestra ou Workshop</h3>
+                </div>
+                <button type="button" onclick="window.closeCreateProposalModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
-        </aside>
 
-        <!-- Conteúdo Principal do Dashboard e Abas -->
-        <main class="evt-content-area">
-            
-            <!-- ABA DASHBOARD -->
-            <div id="panel-dashboard" class="evt-tab-panel"></div>
-
-            <!-- ABA PERFIL -->
-            <div id="panel-perfil" class="evt-tab-panel" style="display:none;"></div>
-
-            <!-- ABA EVENTOS (DISPONÍVEIS PARA INSCRIÇÃO) -->
-            <div id="panel-eventos" class="evt-tab-panel" style="display:none;"></div>
-
-            <!-- ABA INSCRIÇÕES -->
-            <div id="panel-inscricoes" class="evt-tab-panel" style="display:none;"></div>
-
-            <!-- ABA PARTICIPAÇÕES -->
-            <div id="panel-participacoes" class="evt-tab-panel" style="display:none;"></div>
-
-            <!-- ABA CRIAR EVENTOS (EXCLUSIVO PALESTRANTE) -->
-            <div id="panel-criar-eventos" class="evt-tab-panel" style="display:none;">
-                <div class="evt-page-header">
-                    <h1 class="evt-page-title"><i class="fa-solid fa-calendar-plus"></i> Criar Novo Evento / Capacitação</h1>
+            <form onsubmit="window.handleProposalSubmit(event)" class="mt-4 space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Título da Palestra / Apresentação *</label>
+                    <input type="text" id="propTitle" placeholder="Ex: Prática Previdenciária na Advocacia Trabalhista" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-600">
                 </div>
 
-                <!-- Banner Dinâmico de Cota e Publicações do Palestrante -->
-                <div id="quota-criar-evento-banner-container" style="margin-bottom: 20px;"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Carga Horária Estimada *</label>
+                        <select id="propHours" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                            <option value="1h">1 hora (Palestra Rápida)</option>
+                            <option value="2h" selected>2 horas (Workshop com Perguntas)</option>
+                            <option value="4h">4 horas (Minicurso Intensivo)</option>
+                            <option value="8h">8 horas (Imersão de Fim de Semana)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Formato Preferencial *</label>
+                        <select id="propFormat" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                            <option value="Online Ao Vivo (Zoom SBPS)">Online Ao Vivo (Zoom SBPS)</option>
+                            <option value="Presencial (Sede Brasília)">Presencial (Sede Brasília)</option>
+                            <option value="Híbrido">Híbrido</option>
+                        </select>
+                    </div>
+                </div>
 
-                <div class="evt-auth-card" style="padding:25px;">
-                    <form id="form-criar-evento-palestrante">
-                        <h3 style="color:var(--evt-primary); margin-bottom:15px;"><i class="fa-solid fa-network-wired"></i> 1. Dados para Webhook / Integração</h3>
-                        <div class="evt-grid-2">
-                            <div class="evt-form-group evt-full-width">
-                                <label>Nome do Evento <span style="color:red;">*</span></label>
-                                <input type="text" id="create-evt-titulo" class="evt-form-control" placeholder="Ex: Curso Prático de Recursos Previdenciários" required>
-                            </div>
-                            <div class="evt-form-group evt-full-width">
-                                <label>Imagem de Capa do Evento <span style="color:red;">*</span></label>
-                                <div style="display: flex; gap: 10px;">
-                                    <input type="file" id="create-evt-capa" class="evt-form-control" accept="image/*" required style="flex: 1;">
-                                    <select id="create-evt-imgpos" class="evt-form-control" style="width: 150px;" title="Posicionamento da imagem">
-                                        <option value="center">Centralizado</option>
-                                        <option value="top">Superior</option>
-                                        <option value="bottom">Inferior</option>
-                                        <option value="left">Esquerda</option>
-                                        <option value="right">Direita</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="evt-form-group">
-                                <label>Carga Horária <span style="color:red;">*</span></label>
-                                <input type="number" id="create-evt-carga" class="evt-form-control" placeholder="Ex: 20" required>
-                            </div>
-                            <div class="evt-form-group">
-                                <label>Data <span style="color:red;">*</span></label>
-                                <input type="date" id="create-evt-data" class="evt-form-control" required>
-                            </div>
-                            <div class="evt-form-group evt-full-width">
-                                <label>Palavra-Chave / Tag Identificadora <span style="color:red;">*</span></label>
-                                <input type="text" id="create-evt-palavra" class="evt-form-control" placeholder="Ex: CURSO_RECURSOS_2026" required>
-                            </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Previsão de Mês Pretendido</label>
+                        <input type="month" id="propMonth" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Público-Alvo Recomendado</label>
+                        <select id="propAudience" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                            <option>Advogados e Bacharéis</option>
+                            <option>Peritos e Contadores</option>
+                            <option>Servidores Públicos do INSS</option>
+                            <option>Geral (Todos os Associados)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Ementa e Objetivos Pedagógicos *</label>
+                    <textarea id="propEmenta" rows="3" placeholder="Descreva os tópicos a serem ensinados e a bibliografia/jurisprudência de base..." required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-600"></textarea>
+                </div>
+
+                <div class="p-3 bg-slate-50 border border-dashed border-slate-300 rounded-xl text-center">
+                    <span class="text-xs font-semibold text-slate-700 block">Anexar Proposta / Ementa Completa (Opcional)</span>
+                    <span class="text-[11px] text-slate-400 block mt-0.5">Formatos suportados: PDF ou DOCX (até 15MB)</span>
+                    <input type="file" class="hidden" id="fileProp">
+                    <button type="button" onclick="document.getElementById('fileProp').click()" class="mt-2 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 rounded-lg text-xs font-semibold text-slate-700">
+                        Selecionar Documento
+                    </button>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <button type="button" onclick="window.closeCreateProposalModal(); window.switchTab('criar-eventos', true);" class="text-xs font-semibold text-emerald-700 hover:underline">
+                        Formulário Completo &rarr;
+                    </button>
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="window.closeCreateProposalModal()" class="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">Cancelar</button>
+                        <button type="submit" class="px-5 py-2 font-semibold text-white bg-emerald-700 hover:bg-emerald-800 rounded-xl shadow-sm transition-colors">Submeter à Coordenação</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: UPLOAD DE SLIDES / MATERIAL DIDÁTICO ================= -->
+    <div id="uploadSlidesModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900">Submeter Material Didático</h3>
+                    <p id="slideModalSubtitle" class="text-xs text-slate-500 mt-0.5">Evento selecionado</p>
+                </div>
+                <button type="button" onclick="window.closeUploadSlidesModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <form onsubmit="window.handleSlideUpload(event)" class="mt-4 space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Tipo de Material</label>
+                    <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+                        <option>Slides Oficiais da Apresentação (PPTX / PDF)</option>
+                        <option>Material de Apoio Complementar / Modelos</option>
+                        <option>Lista de Questões e Casos Práticos</option>
+                    </select>
+                </div>
+
+                <div class="border-2 border-dashed border-emerald-300 bg-emerald-50/40 rounded-xl p-6 text-center">
+                    <svg class="w-8 h-8 mx-auto text-emerald-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    <span class="font-bold text-slate-800 block">Arraste seu arquivo de apresentação aqui</span>
+                    <span class="text-[11px] text-slate-500 block mt-1">Formatos aceitos: PDF, PPTX ou ZIP (até 50MB)</span>
+                    <input type="file" id="slideInputFile" class="hidden" onchange="window.previewUpload(this)">
+                    <button type="button" onclick="document.getElementById('slideInputFile').click()" class="mt-3 px-3 py-1.5 bg-emerald-700 text-white rounded-lg text-xs font-semibold hover:bg-emerald-800 transition-colors">
+                        Escolher Arquivo do Computador
+                    </button>
+                    <span id="fileNameSelected" class="block text-[11px] text-emerald-800 font-bold mt-2"></span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="allowDl" checked class="rounded text-emerald-600">
+                    <label for="allowDl" class="text-slate-600">Permitir download do PDF na área dos associados inscritos</label>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
+                    <button type="button" onclick="window.closeUploadSlidesModal()" class="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 font-semibold text-white bg-emerald-700 hover:bg-emerald-800 rounded-xl shadow-sm transition-colors">Enviar Arquivo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: LISTA DE INSCRITOS / OUVINTES ================= -->
+    <div id="attendeesModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                    <h3 id="attEventName" class="text-base font-bold text-slate-900">Lista de Participantes</h3>
+                    <span id="attCount" class="text-xs text-slate-500">142 associados inscritos confirmados</span>
+                </div>
+                <button type="button" onclick="window.closeAttendeesModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Barra de busca do palestrante -->
+            <div class="my-3">
+                <input type="text" placeholder="Buscar associado por nome ou número OAB/matrícula..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
+            </div>
+
+            <!-- Lista rolável de inscritos -->
+            <div class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs">
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs">MC</div>
+                        <div>
+                            <span class="font-bold text-slate-900 block">Dra. Mariana Castro Alves</span>
+                            <span class="text-[11px] text-slate-500">OAB/SP 412.890 • Membro Ativo SBPS</span>
                         </div>
+                    </div>
+                    <span class="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">Check-in Confirmado</span>
+                </div>
 
-                        <h3 style="color:var(--evt-primary); margin:25px 0 15px 0;"><i class="fa-solid fa-layer-group"></i> 2. Detalhes da Plataforma</h3>
-                        <div class="evt-grid-2">
-                            <div class="evt-form-group">
-                                <label>Local ou Link de Transmissão <span style="color:red;">*</span></label>
-                                <input type="text" id="create-evt-local" class="evt-form-control" placeholder="Ex: Online via Zoom ou Endereço Presencial" required>
-                            </div>
-                            <div class="evt-form-group">
-                                <label>Taxas de Inscrição / Valor <span style="color:red;">*</span></label>
-                                <input type="number" step="0.01" id="create-evt-taxas" class="evt-form-control" placeholder="Ex: 150.00 (deixe 0 para Gratuito)" required>
-                            </div>
-                            <div class="evt-form-group evt-full-width">
-                                <label>Programação do Evento <span style="color:red;">*</span></label>
-                                <textarea id="create-evt-programacao" class="evt-form-control" rows="2" placeholder="Cronograma das aulas ou palestras..." required></textarea>
-                            </div>
-                            <div class="evt-form-group evt-full-width">
-                                <label>Resumo do Evento (O que é e para que serve) <span style="color:red;">*</span></label>
-                                <textarea id="create-evt-resumo" class="evt-form-control" rows="3" required></textarea>
-                            </div>
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs">RS</div>
+                        <div>
+                            <span class="font-bold text-slate-900 block">Dr. Roberto Silveira Netto</span>
+                            <span class="text-[11px] text-slate-500">OAB/DF 58.120 • Membro Ativo SBPS</span>
                         </div>
+                    </div>
+                    <span class="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">Check-in Confirmado</span>
+                </div>
 
-                        <!-- Informações Estáticas da Plataforma -->
-                        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:18px; margin-top:22px;">
-                            <h4 style="color:var(--evt-primary); margin:0 0 10px 0;"><i class="fa-solid fa-shield-halved"></i> Informações Regulamentares da Plataforma SBPS</h4>
-                            <p style="font-size:0.82rem; color:#475569; margin-bottom:6px;">• <strong>Política de Cancelamento:</strong> Cancelamentos pelo palestrante devem ser solicitados com no mínimo 30 dias de antecedência.</p>
-                            <p style="font-size:0.82rem; color:#475569; margin-bottom:6px;">• <strong>Política de Reagendamento:</strong> Solicitada com no mínimo 7 dias de antecedência. Caso extrapole, o palestrante poderá propor um Substituto para avaliação.</p>
-                            <p style="font-size:0.82rem; color:#475569;">• <strong>Métodos de Pagamento:</strong> Cartão de Crédito, PIX e Boleto Bancário via gateway integrado SBPS.</p>
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs">AF</div>
+                        <div>
+                            <span class="font-bold text-slate-900 block">Aline Fontes Mendes</span>
+                            <span class="text-[11px] text-slate-500">Estudante de Pós-Graduação Previdenciária</span>
                         </div>
-
-                        <button type="submit" class="evt-btn-primary" style="margin-top:20px;"><i class="fa-solid fa-paper-plane"></i> Publicar Evento na Plataforma</button>
-                    </form>
+                    </div>
+                    <span class="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md">Inscrito Online</span>
                 </div>
             </div>
 
-            <!-- ABA MEUS EVENTOS -->
-            <div id="panel-meus-eventos" class="evt-tab-panel" style="display:none;"></div>
-
-            <!-- ABA REALIZADOS -->
-            <div id="panel-realizados" class="evt-tab-panel" style="display:none;"></div>
-
-            <!-- ABA COMUNIDADE -->
-            <div id="panel-comunidade" class="evt-tab-panel" style="display:none;"></div>
-
-            <!-- ABA SUGESTÕES -->
-            <div id="panel-sugestoes" class="evt-tab-panel" style="display:none;"></div>
-
-            <!-- ABA AJUDA -->
-            <div id="panel-ajuda" class="evt-tab-panel" style="display:none;"></div>
-
-            <!-- ABA VISUALIZAR EVENTO (DETALHES) -->
-            <div id="panel-visualizar-evento" class="evt-tab-panel" style="display:none;"></div>
-
-        </main>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between mt-3">
+                <button type="button" onclick="showToast('Exportando Lista de Frequência em Excel (.XLSX)')" class="text-xs font-semibold text-emerald-700 hover:underline">
+                    Exportar Lista em Excel (.xlsx)
+                </button>
+                <button type="button" onclick="window.closeAttendeesModal()" class="px-4 py-1.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800">
+                    Fechar
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- CHAT PRIVADO OVERLAY DA COMUNIDADE -->
+    <!-- ================= GAVETA LATERAL: BANCO DE PAUTAS SOLICITADAS ================= -->
+    <div id="topicsDrawer" class="fixed inset-y-0 right-0 w-80 sm:w-96 bg-white shadow-2xl border-l border-slate-200 z-50 transform translate-x-full drawer-transition flex flex-col">
+        <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-900 text-white">
+            <div class="flex items-center gap-2.5">
+                <span class="p-1.5 bg-white/10 rounded-lg text-amber-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </span>
+                <div>
+                    <h3 class="text-sm font-semibold">Temas Demandados</h3>
+                    <span class="text-[11px] text-slate-300">Sugestões enviadas pelos associados</span>
+                </div>
+            </div>
+            <button type="button" onclick="window.closeTopicsDrawer()" class="text-white/80 hover:text-white p-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div class="flex-1 p-5 overflow-y-auto space-y-3.5 text-xs">
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-900 leading-relaxed">
+                💡 Como palestrante credenciado, você pode adotar qualquer um destes temas para organizar um workshop oficial com o selo SBPS.
+            </div>
+
+            <div class="border border-slate-200 rounded-xl p-3.5 space-y-2 hover:border-emerald-500 transition-colors">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">128 VOTOS DOS MEMBROS</span>
+                    <span class="text-[10px] text-slate-400">Há 2 dias</span>
+                </div>
+                <h4 class="font-bold text-slate-900">Liquidação de Sentença e Honorários Contratuais em 2027</h4>
+                <p class="text-slate-500 leading-relaxed">Os associados pedem modelos práticos de impugnação ao cumprimento de sentença contra o INSS.</p>
+                <button type="button" onclick="window.adoptTopic('Liquidação de Sentença')" class="w-full py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-semibold transition-colors">
+                    Candidatar-se para Ministrar
+                </button>
+            </div>
+
+            <div class="border border-slate-200 rounded-xl p-3.5 space-y-2 hover:border-emerald-500 transition-colors">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">94 VOTOS DOS MEMBROS</span>
+                    <span class="text-[10px] text-slate-400">Há 5 dias</span>
+                </div>
+                <h4 class="font-bold text-slate-900">Perícia Médica e Doenças Ocupacionais no RGPS</h4>
+                <p class="text-slate-500 leading-relaxed">Guia de quesitos técnicos e atuação conjunta com médicos assistentes técnicos.</p>
+                <button type="button" onclick="window.adoptTopic('Perícia Médica')" class="w-full py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-semibold transition-colors">
+                    Candidatar-se para Ministrar
+                </button>
+            </div>
+
+            <div class="pt-2">
+                <button type="button" onclick="window.closeTopicsDrawer(); window.switchTab('sugestoes', true);" class="w-full py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold transition-colors">
+                    Abrir Mural Completo de Pautas &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL GENÉRICO DE APOIO ================= -->
+    <div id="genericModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 id="gModalTitle" class="text-base font-bold text-slate-900">Seção</h3>
+                <button type="button" onclick="window.closeGenericModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <p id="gModalDesc" class="text-sm text-slate-600 mt-4 leading-relaxed"></p>
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="button" onclick="window.closeGenericModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">Fechar</button>
+                <button type="button" onclick="showToast('Ação confirmada!'); window.closeGenericModal();" class="px-4 py-2 text-xs font-semibold text-white bg-emerald-700 hover:bg-emerald-800 rounded-xl shadow-sm transition-colors">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= GAVETA LATERAL: CHAT SUPORTE DO PALESTRANTE / PARTICIPANTE ================= -->
+    <div id="ai-chat-window" class="fixed inset-y-0 right-0 w-80 sm:w-96 bg-white shadow-2xl border-l border-slate-200 z-50 transform translate-x-full drawer-transition flex flex-col">
+        <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-emerald-800 text-white">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-emerald-700 flex items-center justify-center text-white">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.5162 20 9.11607 19.6606 7.88196 19.0587L3 20.5L4.39724 16.2188C3.51178 14.8726 3 13.249 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="8" cy="11.5" r="1.5" fill="currentColor"/>
+                        <circle cx="12" cy="11.5" r="1.5" fill="currentColor"/>
+                        <circle cx="16" cy="11.5" r="1.5" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="chat-drawer-title" class="text-sm font-semibold leading-tight">Canal do Palestrante</h3>
+                    <span class="text-[11px] text-emerald-200 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Coordenação Científica Online
+                    </span>
+                </div>
+            </div>
+            <button type="button" onclick="window.toggleAiChatDrawer()" class="text-white/80 hover:text-white p-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="ai-messages-list" class="evt-chat-messages flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50 text-xs">
+            <div class="flex items-start gap-2.5">
+                <div class="w-6 h-6 rounded-full bg-emerald-800 text-white flex items-center justify-center font-bold text-[10px] shrink-0">C</div>
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[85%] text-slate-700 leading-relaxed">
+                    Olá, <strong id="chat-drawer-greeting">Professor Thiago</strong>! Este é o canal direto da coordenação técnica e científica da SBPS. Precisa de apoio com sua transmissão, slides ou datas?
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 border-t border-slate-100 bg-white">
+            <form id="form-ai-chat" class="flex gap-2">
+                <input type="text" id="ai-input-text" placeholder="Falar com a coordenação SBPS..." required class="flex-1 bg-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors">
+                    Enviar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= DRAWER DE CHAT PRIVADO DA COMUNIDADE ================= -->
     <div id="chat-private-drawer" class="evt-chat-drawer">
-        <div class="evt-chat-header">
-            <span style="font-weight:700;"><i class="fa-solid fa-comments"></i> Mensagens Privadas</span>
-            <button style="background:transparent; border:none; color:#fff; cursor:pointer;" onclick="document.getElementById('chat-private-drawer').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
+        <div class="evt-chat-header bg-slate-900 text-white px-4 py-3.5 flex items-center justify-between">
+            <span class="font-semibold text-xs flex items-center gap-2"><i class="fa-solid fa-comments text-emerald-400"></i> Mensagens Privadas</span>
+            <button type="button" class="text-white/80 hover:text-white p-1" onclick="document.getElementById('chat-private-drawer').classList.remove('open')">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
-        <div id="chat-privado-box" class="evt-chat-messages">
-            <div class="evt-chat-msg received">Olá! Bem-vindo ao chat da comunidade SBPS.</div>
+        <div id="chat-privado-box" class="evt-chat-messages flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50 text-xs">
+            <div class="evt-chat-msg received">Olá! Bem-vindo ao chat privado da comunidade SBPS.</div>
         </div>
-        <form id="form-chat-privado" class="evt-chat-input-bar">
-            <input type="text" id="chat-privado-input" class="evt-form-control" placeholder="Escreva uma mensagem..." required>
-            <button type="submit" class="evt-btn-primary" style="width:auto; margin:0; padding:8px 14px;"><i class="fa-solid fa-paper-plane"></i></button>
+        <form id="form-chat-privado" class="p-3 border-t border-slate-100 bg-white flex gap-2">
+            <input type="text" id="chat-privado-input" class="flex-1 bg-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600" placeholder="Escreva uma mensagem..." required>
+            <button type="submit" class="bg-slate-900 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
         </form>
     </div>
 
-    <!-- FLOATING AI CHATBOT -->
-    <button id="btn-ai-fab" class="evt-ai-fab-btn" title="Assistente Virtual SBPS">
-        <i class="fa-solid fa-robot"></i>
-    </button>
-
-    <div id="ai-chat-window" class="evt-ai-chat-window">
-        <div class="evt-chat-header">
-            <span><i class="fa-solid fa-robot"></i> IA Suporte SBPS</span>
-            <button style="background:transparent; border:none; color:#fff; cursor:pointer;" onclick="document.getElementById('ai-chat-window').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div id="ai-messages-list" class="evt-chat-messages">
-            <div class="evt-chat-msg received">Olá! Sou o assistente virtual com Inteligência Artificial da SBPS. Como posso te ajudar hoje?</div>
-        </div>
-        <form id="form-ai-chat" class="evt-chat-input-bar">
-            <input type="text" id="ai-input-text" class="evt-form-control" placeholder="Tire sua dúvida..." required>
-            <button type="submit" class="evt-btn-primary" style="width:auto; margin:0; padding:8px 14px;"><i class="fa-solid fa-paper-plane"></i></button>
-        </form>
+    <!-- ================= NOTIFICAÇÃO TOAST ================= -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white text-xs font-medium px-4 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <span id="toastMessage">Ação realizada com sucesso!</span>
     </div>
-
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="container footer-grid">
-            <div class="footer-col">
-                <h3>Onde estamos</h3>
-                <p><strong>Sociedade Brasileira de Previdência Social</strong></p>
-                <p>Endereço completo da sede da SBPS.</p>
-                <p>CEP: 00000-000</p>
-            </div>
-            <div class="footer-col">
-                <h3>Acesso rápido</h3>
-                <ul>
-                    <li><a href="associado.html" target="_blank" rel="noopener noreferrer">Área do associado</a></li>
-                    <li><a href="eventos.html" target="_blank" rel="noopener noreferrer">Área de Eventos</a></li>
-                    <li><a href="noticias.html">Publicações</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h3>Contatos</h3>
-                <p>(00) 0000-0000</p>
-                <p>contato@sbps.org.br</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="container">
-                <p>&copy; 2026 Sociedade Brasileira de Previdência Social. Todos os direitos reservados.</p>
-            </div>
-        </div>
-    </footer>
 
     <!-- MODAL NOVO TÓPICO DA COMUNIDADE -->
     <div id="com-modal-novo-topico" class="evt-modal" style="display: none;">
-        <div class="evt-modal-content" style="max-width: 600px;">
+        <div class="evt-modal-content" style="max-width: 560px;">
             <div class="evt-modal-header">
-                <h2><i class="fa-solid fa-comment-medical"></i> Criar Novo Tópico</h2>
+                <h2>Criar Novo Tópico na Comunidade</h2>
                 <button type="button" class="btn-fechar-modal" onclick="window.closeNewTopicModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="form-novo-topico" onsubmit="window.submitNewCommunityTopic(event)">
                 <div class="evt-modal-body">
-                    <div class="evt-form-group" style="margin-bottom: 15px;">
-                        <label style="display:block; margin-bottom:5px; font-weight:600; color:var(--evt-text-main);">Título da Discussão <span style="color:red;">*</span></label>
+                    <div class="evt-form-group mb-4">
+                        <label>Título da Discussão <span class="text-red-500">*</span></label>
                         <input type="text" id="topico-titulo" class="evt-form-control" placeholder="Ex: Aplicação da Revisão da Vida Toda em 2026" required>
                     </div>
-                    <div class="evt-form-group" style="margin-bottom: 15px;">
-                        <label style="display:block; margin-bottom:5px; font-weight:600; color:var(--evt-text-main);">Categoria <span style="color:red;">*</span></label>
+                    <div class="evt-form-group mb-4">
+                        <label>Categoria <span class="text-red-500">*</span></label>
                         <select id="topico-categoria" class="evt-form-control" required>
                             <option value="Jurisprudência">Jurisprudência & Tribunais Superiores</option>
                             <option value="Teses Previdenciárias">Teses Previdenciárias</option>
@@ -637,14 +1079,14 @@
                             <option value="Dúvidas Gerais">Dúvidas Gerais & Networking</option>
                         </select>
                     </div>
-                    <div class="evt-form-group" style="margin-bottom: 15px;">
-                        <label style="display:block; margin-bottom:5px; font-weight:600; color:var(--evt-text-main);">Conteúdo / Explicação <span style="color:red;">*</span></label>
+                    <div class="evt-form-group mb-2">
+                        <label>Conteúdo / Explicação <span class="text-red-500">*</span></label>
                         <textarea id="topico-conteudo" class="evt-form-control" rows="5" placeholder="Descreva sua tese, dúvida prática ou caso para debate com os colegas..." required></textarea>
                     </div>
                 </div>
                 <div class="evt-modal-footer">
-                    <button type="button" class="evt-btn-card-secondary" onclick="window.closeNewTopicModal()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-                    <button type="submit" class="evt-btn-primary" style="width: auto; margin: 0;"><i class="fa-solid fa-paper-plane"></i> Publicar Tópico</button>
+                    <button type="button" class="evt-btn-card-secondary" style="flex:0 0 auto; padding:9px 16px;" onclick="window.closeNewTopicModal()">Cancelar</button>
+                    <button type="submit" class="evt-btn-primary" style="width: auto; margin: 0; padding:9px 18px;"><i class="fa-solid fa-paper-plane"></i> Publicar Tópico</button>
                 </div>
             </form>
         </div>
@@ -652,13 +1094,13 @@
 
     <!-- MODAL DE CONFIRMAÇÃO DE EVENTO -->
     <div id="evt-modal-confirmar-evento" class="evt-modal" style="display: none;">
-        <div class="evt-modal-content">
+        <div class="evt-modal-content" style="max-width: 540px;">
             <div class="evt-modal-header">
                 <h2>Revisar Publicação do Evento</h2>
                 <button type="button" class="btn-fechar-modal" onclick="document.getElementById('evt-modal-confirmar-evento').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="evt-modal-body">
-                <p>Revise os dados antes de publicar o evento para a comunidade.</p>
+                <p class="text-xs text-slate-500 mb-4">Confira os dados abaixo antes de confirmar a publicação oficial na plataforma SBPS.</p>
                 <div class="evt-resumo-evento">
                     <p><strong>Nome do Evento:</strong> <span id="resumo-evt-titulo"></span></p>
                     <p><strong>Carga Horária:</strong> <span id="resumo-evt-carga"></span>h</p>
@@ -668,8 +1110,8 @@
                     <p><strong>Taxa/Valor:</strong> R$ <span id="resumo-evt-taxas"></span></p>
                 </div>
                 <div class="evt-modal-footer">
-                    <button type="button" class="evt-btn-card-secondary" onclick="document.getElementById('evt-modal-confirmar-evento').style.display='none'"><i class="fa-solid fa-pen"></i> Voltar e Editar</button>
-                    <button type="button" id="btn-confirmar-publicacao" class="evt-btn-primary" style="width: auto; margin: 0;"><i class="fa-solid fa-check"></i> Confirmar e Publicar</button>
+                    <button type="button" class="evt-btn-card-secondary" style="flex:0 0 auto; padding:9px 16px;" onclick="document.getElementById('evt-modal-confirmar-evento').style.display='none'"><i class="fa-solid fa-pen"></i> Voltar e Editar</button>
+                    <button type="button" id="btn-confirmar-publicacao" class="evt-btn-primary" style="width: auto; margin: 0; padding:9px 18px;"><i class="fa-solid fa-check"></i> Confirmar e Publicar</button>
                 </div>
             </div>
         </div>
@@ -680,12 +1122,14 @@
          ========================================================================== -->
     <div id="modal-pagamento-inscricao" class="evt-modal" style="display: none;">
         <div class="evt-modal-content" style="max-width: 620px;">
-            <div class="evt-modal-header" style="background: linear-gradient(135deg, #0F3B5F, #1E293B); color: #fff;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <i class="fa-solid fa-credit-card" style="font-size:1.3rem; color:#10B981;"></i>
+            <div class="evt-modal-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
                     <div>
-                        <h2 style="margin:0; font-size:1.15rem; color:#fff;">Pagamento da Inscrição</h2>
-                        <p style="margin:2px 0 0 0; font-size:0.75rem; color:#94A3B8;">Área de Eventos & Cursos SBPS</p>
+                        <h2 class="text-base font-bold text-slate-900 m-0">Pagamento da Inscrição</h2>
+                        <p class="text-xs text-slate-500 m-0">Portal de Eventos & Capacitações SBPS</p>
                     </div>
                 </div>
                 <button type="button" class="btn-fechar-modal" onclick="window.fecharModalPagamentoInscricao()"><i class="fa-solid fa-xmark"></i></button>
@@ -697,24 +1141,24 @@
                 <div class="evt-pay-event-summary">
                     <div style="flex:1;">
                         <span class="evt-pay-badge-type" id="pay-insc-tipo">CURSO PRESENCIAL</span>
-                        <h3 id="pay-insc-titulo" style="margin:6px 0 4px 0; font-size:1.05rem; color:var(--evt-primary);">Título do Evento</h3>
-                        <p id="pay-insc-palestrante" style="margin:0; font-size:0.82rem; color:var(--evt-text-muted);"><i class="fa-solid fa-user-tie"></i> Palestrante</p>
-                        <p id="pay-insc-data" style="margin:2px 0 0 0; font-size:0.82rem; color:var(--evt-text-muted);"><i class="fa-solid fa-calendar"></i> Data</p>
+                        <h3 id="pay-insc-titulo" class="text-sm font-bold text-slate-900 mt-1.5 mb-1">Título do Evento</h3>
+                        <p id="pay-insc-palestrante" class="text-xs text-slate-500 m-0"><i class="fa-solid fa-user-tie"></i> Palestrante</p>
+                        <p id="pay-insc-data" class="text-xs text-slate-500 mt-0.5 m-0"><i class="fa-solid fa-calendar"></i> Data</p>
                     </div>
                     <div class="evt-pay-value-box">
-                        <span style="font-size:0.75rem; text-transform:uppercase; color:#64748B; font-weight:600;">Total da Inscrição</span>
+                        <span class="text-[11px] uppercase text-slate-400 font-semibold">Total da Inscrição</span>
                         <div class="evt-pay-price" id="pay-insc-valor">R$ 0,00</div>
-                        <span style="font-size:0.7rem; color:#059669; font-weight:600;"><i class="fa-solid fa-shield-check"></i> Pagamento Seguro</span>
+                        <span class="text-[11px] text-emerald-600 font-semibold"><i class="fa-solid fa-shield-halved"></i> Ambiente Seguro</span>
                     </div>
                 </div>
 
                 <!-- Seletor de Método de Pagamento -->
                 <div class="evt-pay-methods-tabs">
                     <button type="button" class="evt-pay-tab-btn active" id="tab-btn-pay-pix" onclick="window.switchInscricaoPaymentMethod('pix')">
-                        <i class="fa-brands fa-pix" style="color:#32BCAD;"></i> PIX Instantâneo
+                        <i class="fa-brands fa-pix text-emerald-600"></i> PIX Instantâneo
                     </button>
                     <button type="button" class="evt-pay-tab-btn" id="tab-btn-pay-card" onclick="window.switchInscricaoPaymentMethod('card')">
-                        <i class="fa-solid fa-credit-card" style="color:#0F3B5F;"></i> Cartão de Crédito
+                        <i class="fa-solid fa-credit-card text-slate-700"></i> Cartão de Crédito
                     </button>
                 </div>
 
@@ -722,19 +1166,19 @@
                 <div id="pay-insc-method-pix" class="evt-pay-method-content">
                     <div class="evt-pay-pix-container">
                         <div class="evt-pix-qr-wrapper">
-                            <img id="pay-insc-qr-img" src="" alt="QR Code PIX SBPS" style="width:150px; height:150px; border-radius:8px; border:1px solid #E2E8F0;">
-                            <div style="font-size:0.75rem; color:#64748B; margin-top:6px;"><i class="fa-solid fa-qrcode"></i> Aponte a câmera do seu banco</div>
+                            <img id="pay-insc-qr-img" src="" alt="QR Code PIX SBPS" style="width:140px; height:140px; border-radius:12px; border:1px solid #E2E8F0;">
+                            <div class="text-[11px] text-slate-400 mt-1.5"><i class="fa-solid fa-qrcode"></i> Escaneie no app do banco</div>
                         </div>
                         <div class="evt-pix-copy-wrapper" style="flex:1;">
-                            <label style="font-size:0.8rem; font-weight:600; color:#334155; margin-bottom:5px; display:block;">Código Pix Copia e Cola:</label>
-                            <div style="display:flex; gap:8px;">
+                            <label class="text-xs font-semibold text-slate-700 mb-1.5 block">Código Pix Copia e Cola:</label>
+                            <div class="flex gap-2">
                                 <input type="text" id="pay-insc-pix-copia" class="evt-form-control" readonly style="font-size:0.75rem; background:#F8FAFC; color:#475569; font-family:monospace;">
-                                <button type="button" class="evt-btn-primary" style="width:auto; padding:8px 14px; font-size:0.82rem; margin:0;" onclick="window.copiarCodigoPixInscricao()">
+                                <button type="button" class="evt-btn-primary" style="width:auto; padding:8px 14px; font-size:0.78rem; margin:0;" onclick="window.copiarCodigoPixInscricao()">
                                     <i class="fa-solid fa-copy"></i> Copiar
                                 </button>
                             </div>
-                            <p style="font-size:0.75rem; color:#64748B; margin:8px 0 0 0; line-height:1.4;">
-                                O pagamento é identificado em segundos. Após a aprovação, sua vaga é confirmada na aba "Inscrições".
+                            <p class="text-xs text-slate-500 mt-2 mb-0 leading-relaxed">
+                                O pagamento é identificado em segundos. Após a aprovação, sua vaga fica disponível na aba "Minhas Inscrições".
                             </p>
                         </div>
                     </div>
@@ -744,23 +1188,23 @@
                 <div id="pay-insc-method-card" class="evt-pay-method-content" style="display:none;">
                     <div class="evt-grid-2" style="gap:12px;">
                         <div class="evt-form-group evt-full-width">
-                            <label style="font-size:0.8rem; font-weight:600;">Número do Cartão</label>
+                            <label>Número do Cartão</label>
                             <input type="text" id="pay-card-num" class="evt-form-control" placeholder="0000 0000 0000 0000" maxlength="19">
                         </div>
                         <div class="evt-form-group evt-full-width">
-                            <label style="font-size:0.8rem; font-weight:600;">Nome Impresso no Cartão</label>
+                            <label>Nome Impresso no Cartão</label>
                             <input type="text" id="pay-card-nome" class="evt-form-control" placeholder="Nome como no cartão">
                         </div>
                         <div class="evt-form-group">
-                            <label style="font-size:0.8rem; font-weight:600;">Validade</label>
+                            <label>Validade</label>
                             <input type="text" id="pay-card-val" class="evt-form-control" placeholder="MM/AA" maxlength="5">
                         </div>
                         <div class="evt-form-group">
-                            <label style="font-size:0.8rem; font-weight:600;">CVV</label>
+                            <label>CVV</label>
                             <input type="text" id="pay-card-cvv" class="evt-form-control" placeholder="123" maxlength="4">
                         </div>
                         <div class="evt-form-group evt-full-width">
-                            <label style="font-size:0.8rem; font-weight:600;">Parcelamento</label>
+                            <label>Parcelamento</label>
                             <select id="pay-card-parcelas" class="evt-form-control">
                                 <option value="1">1x sem juros (À vista)</option>
                                 <option value="2">2x sem juros</option>
@@ -772,9 +1216,9 @@
 
                 <!-- Banner Sandbox / Simulação Imediata de Teste -->
                 <div class="evt-pay-sandbox-banner">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span class="evt-badge-test"><i class="fa-solid fa-flask"></i> Modo de Testes</span>
-                        <span style="font-size:0.8rem; color:#475569;">Simule a aprovação em tempo real:</span>
+                    <div class="flex items-center gap-2">
+                        <span class="evt-badge-test"><i class="fa-solid fa-flask"></i> Ambiente de Testes</span>
+                        <span class="text-xs text-slate-600">Simule a aprovação em tempo real:</span>
                     </div>
                     <button type="button" id="btn-simular-pay-inscricao" class="evt-btn-simulate-pay" onclick="window.simularAprovacaoPagamentoInscricao()">
                         <i class="fa-solid fa-bolt"></i> Simular Pagamento Aprovado
@@ -783,25 +1227,23 @@
             </div>
 
             <!-- Estado de Sucesso / Comprovante -->
-            <div class="evt-modal-body" id="modal-inscricao-success" style="display:none; text-align:center; padding:30px 20px;">
-                <div class="evt-pay-success-icon"><i class="fa-solid fa-circle-check"></i></div>
-                <h3 style="color:#059669; margin:12px 0 6px 0;">Inscrição Confirmada com Sucesso!</h3>
-                <p style="color:#475569; font-size:0.9rem; max-width:400px; margin:0 auto 20px auto;">
-                    O pagamento da taxa de inscrição foi aprovado e seu acesso ao evento foi liberado com sucesso.
+            <div class="evt-modal-body" id="modal-inscricao-success" style="display:none; text-align:center; padding:30px 24px;">
+                <div class="evt-pay-success-icon"><i class="fa-solid fa-check"></i></div>
+                <h3 class="text-lg font-bold text-emerald-700 mt-3 mb-1">Inscrição Confirmada com Sucesso!</h3>
+                <p class="text-xs text-slate-500 max-w-md mx-auto mb-5">
+                    O pagamento da taxa de inscrição foi aprovado e seu acesso ao evento já está liberado.
                 </p>
-                <div class="evt-receipt-box" id="pay-insc-receipt-details">
-                    <!-- Detalhes do comprovante -->
-                </div>
-                <div style="margin-top:25px; display:flex; justify-content:center; gap:12px;">
-                    <button type="button" class="evt-btn-primary" style="width:auto;" onclick="window.concluirInscricaoSucesso()">
+                <div class="evt-receipt-box" id="pay-insc-receipt-details"></div>
+                <div class="mt-6 flex justify-center gap-3">
+                    <button type="button" class="evt-btn-primary" style="width:auto; margin:0;" onclick="window.concluirInscricaoSucesso()">
                         <i class="fa-solid fa-ticket"></i> Acessar Minhas Inscrições
                     </button>
                 </div>
             </div>
 
             <div class="evt-modal-footer" id="modal-inscricao-footer">
-                <button type="button" class="evt-btn-card-secondary" onclick="window.fecharModalPagamentoInscricao()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-                <button type="button" class="evt-btn-primary" id="btn-processar-card-inscricao" style="width:auto; margin:0; display:none;" onclick="window.processarCartaoInscricao()">
+                <button type="button" class="evt-btn-card-secondary" style="flex:0 0 auto; padding:9px 16px;" onclick="window.fecharModalPagamentoInscricao()">Cancelar</button>
+                <button type="button" class="evt-btn-primary" id="btn-processar-card-inscricao" style="width:auto; margin:0; display:none; padding:9px 18px;" onclick="window.processarCartaoInscricao()">
                     <i class="fa-solid fa-lock"></i> Pagar com Cartão
                 </button>
             </div>
@@ -812,13 +1254,15 @@
          MODAL DE PLANOS, MENSALIDADE E COTAS DO PALESTRANTE
          ========================================================================== -->
     <div id="modal-pagamento-palestrante" class="evt-modal" style="display: none;">
-        <div class="evt-modal-content" style="max-width: 760px;">
-            <div class="evt-modal-header" style="background: linear-gradient(135deg, #0F3B5F, #8B5CF6); color: #fff;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <i class="fa-solid fa-crown" style="font-size:1.3rem; color:#FBBF24;"></i>
+        <div class="evt-modal-content" style="max-width: 740px;">
+            <div class="evt-modal-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
                     <div>
-                        <h2 style="margin:0; font-size:1.15rem; color:#fff;">Planos & Publicações de Palestrante</h2>
-                        <p style="margin:2px 0 0 0; font-size:0.75rem; color:#E2E8F0;">Mensalidade Base de R$ 50,00 (até 5 publicações no mês)</p>
+                        <h2 class="text-base font-bold text-slate-900 m-0">Planos & Publicações de Palestrante</h2>
+                        <p class="text-xs text-slate-500 m-0">Mensalidade Base de R$ 50,00 (até 5 publicações no mês)</p>
                     </div>
                 </div>
                 <button type="button" class="btn-fechar-modal" onclick="window.fecharModalPagamentoPalestrante()"><i class="fa-solid fa-xmark"></i></button>
@@ -828,13 +1272,13 @@
                 <!-- Widget Cota Atual do Palestrante -->
                 <div class="evt-quota-status-banner" id="palestrante-quota-banner">
                     <div style="flex:1;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span class="evt-badge-tag" id="quota-banner-plano" style="background:#0F3B5F; color:#fff; font-weight:700;">Plano Base</span>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-slate-900 text-white" id="quota-banner-plano">Plano Base</span>
                             <span id="quota-banner-status" class="evt-badge-status-ativo"><i class="fa-solid fa-circle-check"></i> Assinatura Ativa</span>
                         </div>
-                        <h4 style="margin:6px 0 2px 0; color:var(--evt-primary);" id="quota-banner-resumo">Você utilizou 0 de 5 publicações no mês</h4>
-                        <p style="margin:0; font-size:0.78rem; color:var(--evt-text-muted);">
-                            Válido para eventos e cursos combinados (ex: 3 eventos e 2 cursos, 5 de um só, etc.)
+                        <h4 class="text-sm font-bold text-slate-900 mt-2 mb-0.5" id="quota-banner-resumo">Você utilizou 0 de 5 publicações no mês</h4>
+                        <p class="text-xs text-slate-500 m-0">
+                            Válido para eventos e cursos combinados na plataforma SBPS.
                         </p>
                     </div>
                     <div class="evt-quota-progress-circle" id="quota-circle-container">
@@ -845,8 +1289,8 @@
 
                 <!-- Seletor das 2 Opções de Publicação -->
                 <div class="evt-choice-options-wrapper">
-                    <h4 style="color:var(--evt-primary); margin:0 0 12px 0; font-size:0.95rem;">
-                        <i class="fa-solid fa-layer-group"></i> Escolha como deseja liberar novas publicações:
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+                        Escolha como deseja liberar novas publicações:
                     </h4>
 
                     <div class="evt-choice-cards-grid">
@@ -871,7 +1315,7 @@
                         <div class="evt-choice-card" id="card-choice-upgrade" onclick="window.selecionarOpcaoPalestrante('upgrade')">
                             <div class="evt-choice-card-header">
                                 <span class="evt-badge-opt">Opção 2</span>
-                                <span class="evt-badge-pill" style="background:#EDE9FE; color:#7C3AED;">Econômico</span>
+                                <span class="evt-badge-pill" style="background:#EFF6FF; color:#1D4ED8;">Econômico</span>
                             </div>
                             <h3>Aumentar o Pacote</h3>
                             <p>Aumente de 5 em 5 eventos/cursos com mensalidade contínua e maior economia por publicação.</p>
@@ -888,8 +1332,8 @@
 
                 <!-- Sub-seleção dos Pacotes (Quando Opção 2 está ativa) -->
                 <div id="section-packages-grid" style="display:none; margin-top:18px;">
-                    <h5 style="margin:0 0 10px 0; color:#334155; font-size:0.85rem; font-weight:700;">
-                        <i class="fa-solid fa-cubes"></i> Selecione o pacote desejado por mês:
+                    <h5 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">
+                        Selecione o pacote desejado por mês:
                     </h5>
                     <div class="evt-packages-table-grid">
                         <div class="evt-pkg-item" data-plan="Base" onclick="window.escolherPacotePalestrante('Base', 50, 5)">
@@ -914,7 +1358,7 @@
                             <div class="pkg-price">R$ 155,00<span>/mês</span></div>
                         </div>
                         <div class="evt-pkg-item" data-plan="Ilimitado" onclick="window.escolherPacotePalestrante('Ilimitado', 170, 999999)">
-                            <span class="pkg-ribbon" style="background:#10B981;">Melhor Valor</span>
+                            <span class="pkg-ribbon" style="background:#059669;">Melhor Valor</span>
                             <div class="pkg-header">Ilimitado</div>
                             <div class="pkg-limit">Ilimitadas</div>
                             <div class="pkg-price">R$ 170,00<span>/mês</span></div>
@@ -926,22 +1370,22 @@
                 <div class="evt-palestrante-checkout-box" id="palestrante-checkout-section" style="margin-top:20px;">
                     <div class="evt-checkout-summary-row">
                         <div>
-                            <span style="font-size:0.75rem; color:#64748B; font-weight:600;">ITEM SELECIONADO</span>
-                            <h4 id="palestrante-selected-item-title" style="margin:2px 0 0 0; color:var(--evt-primary);">Publicação Avulsa (+1 cota)</h4>
+                            <span class="text-[11px] text-slate-400 font-semibold uppercase">Item Selecionado</span>
+                            <h4 id="palestrante-selected-item-title" class="text-sm font-bold text-slate-900 mt-0.5 mb-0">Publicação Avulsa (+1 cota)</h4>
                         </div>
                         <div style="text-align:right;">
-                            <span style="font-size:0.75rem; color:#64748B; font-weight:600;">VALOR A PAGAR</span>
-                            <div id="palestrante-selected-item-price" style="font-size:1.3rem; font-weight:800; color:#059669;">R$ 10,00</div>
+                            <span class="text-[11px] text-slate-400 font-semibold uppercase">Valor a Pagar</span>
+                            <div id="palestrante-selected-item-price" class="text-lg font-extrabold text-emerald-600">R$ 10,00</div>
                         </div>
                     </div>
 
                     <!-- Métodos de Pagamento Palestrante -->
                     <div class="evt-pay-methods-tabs" style="margin-top:15px;">
                         <button type="button" class="evt-pay-tab-btn active" id="tab-btn-pal-pix" onclick="window.switchPalestrantePaymentMethod('pix')">
-                            <i class="fa-brands fa-pix" style="color:#32BCAD;"></i> PIX Instantâneo
+                            <i class="fa-brands fa-pix text-emerald-600"></i> PIX Instantâneo
                         </button>
                         <button type="button" class="evt-pay-tab-btn" id="tab-btn-pal-card" onclick="window.switchPalestrantePaymentMethod('card')">
-                            <i class="fa-solid fa-credit-card" style="color:#0F3B5F;"></i> Cartão de Crédito
+                            <i class="fa-solid fa-credit-card text-slate-700"></i> Cartão de Crédito
                         </button>
                     </div>
 
@@ -949,17 +1393,17 @@
                     <div id="pay-pal-method-pix" class="evt-pay-method-content">
                         <div class="evt-pay-pix-container">
                             <div class="evt-pix-qr-wrapper">
-                                <img id="pay-pal-qr-img" src="" alt="QR Code PIX SBPS" style="width:140px; height:140px; border-radius:8px; border:1px solid #E2E8F0;">
+                                <img id="pay-pal-qr-img" src="" alt="QR Code PIX SBPS" style="width:130px; height:130px; border-radius:12px; border:1px solid #E2E8F0;">
                             </div>
                             <div class="evt-pix-copy-wrapper" style="flex:1;">
-                                <label style="font-size:0.8rem; font-weight:600; color:#334155; margin-bottom:5px; display:block;">Código Pix Copia e Cola:</label>
-                                <div style="display:flex; gap:8px;">
+                                <label class="text-xs font-semibold text-slate-700 mb-1.5 block">Código Pix Copia e Cola:</label>
+                                <div class="flex gap-2">
                                     <input type="text" id="pay-pal-pix-copia" class="evt-form-control" readonly style="font-size:0.75rem; background:#F8FAFC; color:#475569; font-family:monospace;">
-                                    <button type="button" class="evt-btn-primary" style="width:auto; padding:8px 14px; font-size:0.82rem; margin:0;" onclick="window.copiarCodigoPixPalestrante()">
+                                    <button type="button" class="evt-btn-primary" style="width:auto; padding:8px 14px; font-size:0.78rem; margin:0;" onclick="window.copiarCodigoPixPalestrante()">
                                         <i class="fa-solid fa-copy"></i> Copiar
                                     </button>
                                 </div>
-                                <p style="font-size:0.75rem; color:#64748B; margin:8px 0 0 0; line-height:1.4;">
+                                <p class="text-xs text-slate-500 mt-2 mb-0 leading-relaxed">
                                     Ao confirmar o pagamento, sua cota é liberada imediatamente para você criar eventos ou cursos na plataforma.
                                 </p>
                             </div>
@@ -970,19 +1414,19 @@
                     <div id="pay-pal-method-card" class="evt-pay-method-content" style="display:none;">
                         <div class="evt-grid-2" style="gap:10px;">
                             <div class="evt-form-group evt-full-width">
-                                <label style="font-size:0.8rem; font-weight:600;">Número do Cartão</label>
+                                <label>Número do Cartão</label>
                                 <input type="text" id="pal-card-num" class="evt-form-control" placeholder="0000 0000 0000 0000">
                             </div>
                             <div class="evt-form-group evt-full-width">
-                                <label style="font-size:0.8rem; font-weight:600;">Nome no Cartão</label>
+                                <label>Nome no Cartão</label>
                                 <input type="text" id="pal-card-nome" class="evt-form-control" placeholder="Nome como no cartão">
                             </div>
                             <div class="evt-form-group">
-                                <label style="font-size:0.8rem; font-weight:600;">Validade</label>
+                                <label>Validade</label>
                                 <input type="text" id="pal-card-val" class="evt-form-control" placeholder="MM/AA">
                             </div>
                             <div class="evt-form-group">
-                                <label style="font-size:0.8rem; font-weight:600;">CVV</label>
+                                <label>CVV</label>
                                 <input type="text" id="pal-card-cvv" class="evt-form-control" placeholder="123">
                             </div>
                         </div>
@@ -990,9 +1434,9 @@
 
                     <!-- Sandbox Palestrante -->
                     <div class="evt-pay-sandbox-banner" style="margin-top:15px;">
-                        <div style="display:flex; align-items:center; gap:8px;">
+                        <div class="flex items-center gap-2">
                             <span class="evt-badge-test"><i class="fa-solid fa-flask"></i> Modo Sandbox</span>
-                            <span style="font-size:0.8rem; color:#475569;">Aprovação imediata de teste:</span>
+                            <span class="text-xs text-slate-600">Aprovação imediata de teste:</span>
                         </div>
                         <button type="button" id="btn-simular-pay-palestrante" class="evt-btn-simulate-pay" onclick="window.simularAprovacaoPagamentoPalestrante()">
                             <i class="fa-solid fa-bolt"></i> Simular Pagamento Aprovado
@@ -1002,24 +1446,22 @@
             </div>
 
             <!-- Sucesso Palestrante -->
-            <div class="evt-modal-body" id="modal-palestrante-success" style="display:none; text-align:center; padding:30px 20px;">
-                <div class="evt-pay-success-icon"><i class="fa-solid fa-circle-check"></i></div>
-                <h3 style="color:#059669; margin:12px 0 6px 0;" id="pal-success-title">Cota Atualizada com Sucesso!</h3>
-                <p style="color:#475569; font-size:0.9rem; max-width:440px; margin:0 auto 20px auto;" id="pal-success-desc">
+            <div class="evt-modal-body" id="modal-palestrante-success" style="display:none; text-align:center; padding:30px 24px;">
+                <div class="evt-pay-success-icon"><i class="fa-solid fa-check"></i></div>
+                <h3 class="text-lg font-bold text-emerald-700 mt-3 mb-1" id="pal-success-title">Cota Atualizada com Sucesso!</h3>
+                <p class="text-xs text-slate-500 max-w-md mx-auto mb-5" id="pal-success-desc">
                     Seu pagamento foi confirmado e a liberação para novas publicações já está disponível.
                 </p>
-                <div class="evt-receipt-box" id="pay-pal-receipt-details">
-                    <!-- Detalhes do recibo do palestrante -->
-                </div>
-                <div style="margin-top:25px; display:flex; justify-content:center; gap:12px;">
-                    <button type="button" class="evt-btn-primary" style="width:auto;" onclick="window.concluirPagamentoPalestranteSucesso()">
+                <div class="evt-receipt-box" id="pay-pal-receipt-details"></div>
+                <div class="mt-6 flex justify-center gap-3">
+                    <button type="button" class="evt-btn-primary" style="width:auto; margin:0;" onclick="window.concluirPagamentoPalestranteSucesso()">
                         <i class="fa-solid fa-calendar-plus"></i> Continuar Criando Evento
                     </button>
                 </div>
             </div>
 
             <div class="evt-modal-footer" id="modal-palestrante-footer">
-                <button type="button" class="evt-btn-card-secondary" onclick="window.fecharModalPagamentoPalestrante()"><i class="fa-solid fa-xmark"></i> Fechar</button>
+                <button type="button" class="evt-btn-card-secondary" style="flex:0 0 auto; padding:9px 16px;" onclick="window.fecharModalPagamentoPalestrante()">Fechar</button>
             </div>
         </div>
     </div>
@@ -1030,11 +1472,11 @@
             <div class="logout-icon">
                 <i class="fa-solid fa-right-from-bracket"></i>
             </div>
-            <h3>Sair da Área de Eventos</h3>
+            <h3>Sair do Portal de Eventos</h3>
             <p>Você tem certeza que deseja sair da sua conta?</p>
             <div class="logout-actions">
                 <button type="button" class="btn-logout-cancel" onclick="cancelLogoutEventos()">Cancelar</button>
-                <button type="button" class="btn-logout-area" onclick="leaveAreaEventos()">Sair da Área de Eventos</button>
+                <button type="button" class="btn-logout-area" onclick="leaveAreaEventos()">Voltar ao Site Principal</button>
                 <button type="button" class="btn-logout-confirm" onclick="confirmLogoutEventos()">Sair da Conta</button>
             </div>
         </div>
@@ -1042,8 +1484,7 @@
 
     <!-- Scripts da Aplicação -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../scripts/supabase-client.js?v=2"></script>
-    <script src="../scripts/script.js?v=9999"></script>
-    <script src="../scripts/eventos.js?v=9999"></script>
+    <script src="../scripts/supabase-client.js?v=4"></script>
+    <script src="../scripts/eventos.js?v=100005"></script>
 </body>
 </html>
