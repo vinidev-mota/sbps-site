@@ -1,5 +1,13 @@
 [
   {
+    "id": "160",
+    "title": "Desburocratização: Novas Regras para Saque do FGTS e o Acordo Previdenciário Brasil-França",
+    "description": "O serviço de solicitação de saque do FGTS via consulados foi descontinuado, com a Caixa Econômica Federal agora direcionando os pedidos para o aplicativo FGTS, tornando o processo 100% digital. Além disso, o Acordo Previdenciário Brasil-França permite que cidadãos somem tempos de contribuição de ambos os países para acesso a benefícios, facilitando a vida de trabalhadores que atuaram em ambas as nações.",
+    "date": null,
+    "link": "https://www.gov.br/mre/pt-br/consulado-paris/servicos/fgts-e-previdencia",
+    "image": "https://www.gov.br/mre/spinner.gif"
+  },
+  {
     "id": "152",
     "title": "Transparência e Futuro: Itaprev Detalha Gestão Previdenciária em Audiência Pública",
     "description": "O Instituto de Previdência de Itapecerica da Serra (Itaprev) realizou uma audiência pública crucial para apresentar a prestação de contas e os resultados de sua gestão previdenciária. O evento abordou a política de investimentos, a saúde financeira e as perspectivas de sustentabilidade do regime próprio de previdência social, reforçando o compromisso com a transparência e a responsabilidade administrativa.",
@@ -16,6 +24,46 @@
     "image": "https://gravata.pe.gov.br/wp-content/uploads/2026/11/WhatsApp-Image-2026-11-05-at-18.51.09-20-1024x682.jpeg"
   },
   {
+    "id": "128",
+    "title": "STF Avalia Igualdade de Gênero na Previdência Complementar: Impactos do Julgamento da Previ",
+    "description": "O Supremo Tribunal Federal (STF) debate a exigência de tempo de contribuição igual para homens e mulheres na previdência complementar, focando no caso da Previ. Cinco ministros já se manifestaram contra a regra que desconsidera a aposentadoria feminina com menor tempo. O julgamento foi suspenso e aguarda a continuidade dos votos.",
+    "date": null,
+    "link": "https://noticias.stf.jus.br/postsnoticias/supremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar/",
+    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
+  },
+  {
+    "id": "170",
+    "title": "Operação 'Casa de Palha': PF Investiga Desvio de R$ 16 Milhões do Fundo de Previdência de Palhoça",
+    "description": "A Polícia Federal deflagrou a Operação 'Casa de Palha' para investigar um suposto desvio de R$ 16 milhões do Instituto de Previdência Social dos Servidores Públicos de Palhoça (IPPA). As investigações apontam para a utilização de fundos fraudulentos em 2013, com o dinheiro sendo possivelmente empregado na compra de imóveis e veículos. Autoridades buscam identificar os responsáveis e o destino final dos recursos.",
+    "date": null,
+    "link": "https://g1.globo.com/sc/santa-catarina/noticia/2026/10/29/pf-mira-rombo-de-16-milhoes-previdencia-palhoca.ghtml",
+    "image": "https://s2-g1.glbimg.com/KjNSsTRYJpSls7WMCw-tZbjIGaY=/0x0:1300x921/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/9/A/YvZg9bSwGdHLb4ZSd71Q/pf-mira-grupo-suspeito-de-fraudar-r-16-milhoes-no-fundo-de-previdencia-dos-servidores-de-palhoca.jpeg"
+  },
+  {
+    "id": "125",
+    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
+    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
+    "image": ""
+  },
+  {
+    "id": "168",
+    "title": "Operação Buraco Negro: MP-SP Desvenda Fraude de R$ 24,9 Milhões na Previdência de Servidores em Itanhaém",
+    "description": "O Ministério Público de São Paulo deflagrou a Operação Buraco Negro para investigar desvios de R$ 24,9 milhões da previdência municipal de Itanhaém. Dois servidores foram afastados e tiveram bens bloqueados, sob suspeita de peculato, lavagem de dinheiro e associação criminosa. A ação visa proteger os recursos dos aposentados e pensionistas da cidade.",
+    "date": null,
+    "link": "https://g1.globo.com/sp/santos-regiao/noticia/2026/11/06/mp-deflagra-operacao-buraco-negro-contra-desvios-de-r-249-milhoes-de-previdencia-no-litoral-de-sp.ghtml",
+    "image": "https://s2-g1.glbimg.com/r-vok0RcgQUqqJRuyJ5TJM0m_Mg=/0x0:1200x800/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/d/Y/BQuozGTnaNj5uHYBg27Q/itanhaemprev.jpg"
+  },
+  {
+    "id": "124",
+    "title": "Diarista e INSS: Guia Completo para Entender a Contribuição e o Enquadramento Legal",
+    "description": "Este artigo descomplica as regras do INSS para diaristas, explicando a crucial diferença entre a trabalhadora autônoma e a empregada doméstica. Aborda as formas de contribuição, os direitos previdenciários e a importância do registro correto para garantir o acesso aos benefícios.",
+    "date": null,
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae774b2ce7942609fe238363a7b8e5b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fdiarista-precisa-pagar-inss-veja-quando-e-autonoma-e-quando-e-domestica%2f&c=10936730241462492274&mkt=pt-br",
+    "image": ""
+  },
+  {
     "id": "122",
     "title": "Previdência Própria de Gravatá: IPSEG Promove Palestra Essencial para Servidores e Cidadãos",
     "description": "O Instituto de Previdência dos Servidores Municipais de Gravatá (IPSEG) realizará uma palestra informativa sobre a Previdência Própria do município. O evento, aberto a servidores e à população, visa esclarecer dúvidas e aprofundar o conhecimento sobre o Regime Próprio de Previdência Social (RPPS) local.",
@@ -24,12 +72,12 @@
     "image": "https://gravata.pe.gov.br/wp-content/uploads/2026/10/WhatsApp-Image-2026-10-29-at-11.31.02-225x300.jpeg"
   },
   {
-    "id": "179",
-    "title": "STF Inicia Julgamento Crucial sobre Igualdade de Gênero na Previdência Complementar",
-    "description": "O Supremo Tribunal Federal (STF) começou a analisar um recurso que questiona a aplicação de critérios idênticos para homens e mulheres no cálculo da aposentadoria complementar da Previ. A discussão central é se essa prática viola o princípio constitucional da igualdade, com a decisão podendo impactar significativamente os planos de previdência complementar no Brasil.",
+    "id": "137",
+    "title": "Reforma Previdenciária em Campinas: Novas Regras para Aposentadoria de Servidores Municipais",
+    "description": "A Prefeitura de Campinas propõe uma reforma em seu regime previdenciário, elevando a idade mínima para aposentadoria de servidores municipais para 62 anos (mulheres) e 65 anos (homens). O projeto, que busca adequar o sistema à legislação federal e combater um déficit atuarial de R$ 13 bilhões, também inclui regras de transição e alterações no cálculo dos benefícios.",
     "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aef5a8fe62f447a80c35faeff21d1dd&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-comeca-a-julgar-diferenca-de-tratamento-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=11400275671584715882&mkt=pt-br",
-    "image": ""
+    "link": "https://g1.globo.com/sp/campinas-regiao/noticia/2026/10/20/reforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml",
+    "image": "https://s02.video.glbimg.com/x240/15107485.jpg"
   },
   {
     "id": "180",
@@ -46,78 +94,6 @@
     "date": null,
     "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aef5a8fe62f447a80c35faeff21d1dd&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados%2f&c=2020271326690933483&mkt=pt-br",
     "image": ""
-  },
-  {
-    "id": "160",
-    "title": "Desburocratização: Novas Regras para Saque do FGTS e o Acordo Previdenciário Brasil-França",
-    "description": "O serviço de solicitação de saque do FGTS via consulados foi descontinuado, com a Caixa Econômica Federal agora direcionando os pedidos para o aplicativo FGTS, tornando o processo 100% digital. Além disso, o Acordo Previdenciário Brasil-França permite que cidadãos somem tempos de contribuição de ambos os países para acesso a benefícios, facilitando a vida de trabalhadores que atuaram em ambas as nações.",
-    "date": null,
-    "link": "https://www.gov.br/mre/pt-br/consulado-paris/servicos/fgts-e-previdencia",
-    "image": "https://www.gov.br/mre/spinner.gif"
-  },
-  {
-    "id": "137",
-    "title": "Reforma Previdenciária em Campinas: Novas Regras para Aposentadoria de Servidores Municipais",
-    "description": "A Prefeitura de Campinas propõe uma reforma em seu regime previdenciário, elevando a idade mínima para aposentadoria de servidores municipais para 62 anos (mulheres) e 65 anos (homens). O projeto, que busca adequar o sistema à legislação federal e combater um déficit atuarial de R$ 13 bilhões, também inclui regras de transição e alterações no cálculo dos benefícios.",
-    "date": null,
-    "link": "https://g1.globo.com/sp/campinas-regiao/noticia/2026/10/20/reforma-previdencia-prefeitura-campinas-propoe-aumento-idade-minima-servidores-aposentarem.ghtml",
-    "image": "https://s02.video.glbimg.com/x240/15107485.jpg"
-  },
-  {
-    "id": "166",
-    "title": "STF Debate Igualdade de Gênero em Previdência Complementar: Impactos no Tempo de Contribuição para Aposentadoria Integral",
-    "description": "O Supremo Tribunal Federal está analisando um importante caso que questiona a exigência de tempo de contribuição igual para homens e mulheres em planos de previdência complementar. O julgamento, focado na Previ, discute se a igualdade de 30 anos de contribuição afronta a Constituição Federal, considerando a diferença de tempo de aposentadoria para mulheres. A decisão final poderá redefinir os parâmetros para o recebimento de benefícios integrais.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aee08b8e59c4916a7e85a3655b33211&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fsupremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar%2f&c=3779082299344736522&mkt=pt-br",
-    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
-  },
-  {
-    "id": "167",
-    "title": "STF Valida Alteração na Isenção Previdenciária para Servidores Aposentados por Incapacidade: Entenda o Impacto da Decisão",
-    "description": "O Supremo Tribunal Federal (STF) confirmou a validade da regra da Reforma da Previdência de 2019 que limita a isenção da contribuição previdenciária para servidores públicos aposentados por doenças graves e incapacitantes. A decisão, tomada por maioria, altera o cálculo da contribuição, gerando impactos significativos para essa categoria de beneficiários.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aee08b8e59c4916a7e85a3655b33211&url=https%3a%2f%2fnoticias.stf.jus.br%2fpostsnoticias%2fstf-valida-regra-que-altera-isencao-de-contribuicao-previdenciaria-sobre-aposentadoria-de-servidores-incapacitados%2f&c=2020271326690933483&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "124",
-    "title": "Diarista e INSS: Guia Completo para Entender a Contribuição e o Enquadramento Legal",
-    "description": "Este artigo descomplica as regras do INSS para diaristas, explicando a crucial diferença entre a trabalhadora autônoma e a empregada doméstica. Aborda as formas de contribuição, os direitos previdenciários e a importância do registro correto para garantir o acesso aos benefícios.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae774b2ce7942609fe238363a7b8e5b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fdiarista-precisa-pagar-inss-veja-quando-e-autonoma-e-quando-e-domestica%2f&c=10936730241462492274&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "168",
-    "title": "Operação Buraco Negro: MP-SP Desvenda Fraude de R$ 24,9 Milhões na Previdência de Servidores em Itanhaém",
-    "description": "O Ministério Público de São Paulo deflagrou a Operação Buraco Negro para investigar desvios de R$ 24,9 milhões da previdência municipal de Itanhaém. Dois servidores foram afastados e tiveram bens bloqueados, sob suspeita de peculato, lavagem de dinheiro e associação criminosa. A ação visa proteger os recursos dos aposentados e pensionistas da cidade.",
-    "date": null,
-    "link": "https://g1.globo.com/sp/santos-regiao/noticia/2026/11/06/mp-deflagra-operacao-buraco-negro-contra-desvios-de-r-249-milhoes-de-previdencia-no-litoral-de-sp.ghtml",
-    "image": "https://s2-g1.glbimg.com/r-vok0RcgQUqqJRuyJ5TJM0m_Mg=/0x0:1200x800/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/d/Y/BQuozGTnaNj5uHYBg27Q/itanhaemprev.jpg"
-  },
-  {
-    "id": "125",
-    "title": "Aposentadoria do Professor: Desvendando o que Realmente Conta como Tempo de Magistério",
-    "description": "A aposentadoria dos professores possui regras diferenciadas garantidas pela Constituição Federal, mas o que exatamente se enquadra como tempo de magistério pode gerar dúvidas. Este artigo detalha os critérios para INSS e RPPS, esclarecendo a inclusão de funções como coordenação e direção escolar, e a exclusão de professores universitários, além de orientar sobre a documentação necessária.",
-    "date": null,
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6ae81d6a83d942318ea21efd544f8e2b&url=https%3a%2f%2fprevidenciarista.com%2fblog%2fo-que-conta-como-tempo-de-magisterio-para-aposentadoria%2f&c=8599229482605260408&mkt=pt-br",
-    "image": ""
-  },
-  {
-    "id": "170",
-    "title": "Operação 'Casa de Palha': PF Investiga Desvio de R$ 16 Milhões do Fundo de Previdência de Palhoça",
-    "description": "A Polícia Federal deflagrou a Operação 'Casa de Palha' para investigar um suposto desvio de R$ 16 milhões do Instituto de Previdência Social dos Servidores Públicos de Palhoça (IPPA). As investigações apontam para a utilização de fundos fraudulentos em 2013, com o dinheiro sendo possivelmente empregado na compra de imóveis e veículos. Autoridades buscam identificar os responsáveis e o destino final dos recursos.",
-    "date": null,
-    "link": "https://g1.globo.com/sc/santa-catarina/noticia/2026/10/29/pf-mira-rombo-de-16-milhoes-previdencia-palhoca.ghtml",
-    "image": "https://s2-g1.glbimg.com/KjNSsTRYJpSls7WMCw-tZbjIGaY=/0x0:1300x921/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/9/A/YvZg9bSwGdHLb4ZSd71Q/pf-mira-grupo-suspeito-de-fraudar-r-16-milhoes-no-fundo-de-previdencia-dos-servidores-de-palhoca.jpeg"
-  },
-  {
-    "id": "128",
-    "title": "STF Avalia Igualdade de Gênero na Previdência Complementar: Impactos do Julgamento da Previ",
-    "description": "O Supremo Tribunal Federal (STF) debate a exigência de tempo de contribuição igual para homens e mulheres na previdência complementar, focando no caso da Previ. Cinco ministros já se manifestaram contra a regra que desconsidera a aposentadoria feminina com menor tempo. O julgamento foi suspenso e aguarda a continuidade dos votos.",
-    "date": null,
-    "link": "https://noticias.stf.jus.br/postsnoticias/supremo-na-semana-debate-julgamento-sobre-igualdade-entre-homens-e-mulheres-na-previdencia-complementar/",
-    "image": "https://noticias-stf-wp-prd.s3.sa-east-1.amazonaws.com/wp-content/uploads/wpallimport/uploads/2026/10/29210712/noticia_portal_700x374_ep-208.png"
   },
   {
     "id": "175",
@@ -160,14 +136,6 @@
     "image": "https://www.gov.br/previdencia/pt-br/noticias/2026/novembro/operacao-combate-esquema-criminoso-que-vendia-dados-de-segurados-no-parana/6eb6c861-4f88-48bc-a78e-3f190b0ab578.jpeg/@@images/c6b192c3-82b0-4b56-b90a-575ed53564dd.jpeg"
   },
   {
-    "id": "162",
-    "title": "PREVIC Apresenta Plano Nacional de Fomento para Fortalecer a Previdência Complementar Fechada",
-    "description": "A Superintendência Nacional de Previdência Complementar (PREVIC) inicia a segunda temporada do Conexões PREVIC, focando no Plano Nacional de Fomento para o Regime de Previdência Complementar Fechada. O evento online detalhará a proposta para impulsionar o setor, ampliar a cobertura previdenciária e fortalecer as entidades. Autoridades e especialistas discutirão os eixos e ações previstas para o desenvolvimento do sistema.",
-    "date": "2026-11-04T13:00:17.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aee079374c44d08918f72bb53f01da8&url=https%3a%2f%2fwww.gov.br%2fprevic%2fpt-br%2fnoticias%2fplano-nacional-de-fomento-abre-nova-temporada-do-conexoes-previc-dia-6-11&c=10434112209468008062&mkt=pt-br",
-    "image": "https://www.gov.br/previc/pt-br/noticias/plano-nacional-de-fomento-abre-nova-temporada-do-conexoes-previc-dia-6-11/@@images/image-3666-74751d63254980b17e6f16a5cf3af276.png"
-  },
-  {
     "id": "177",
     "title": "PREVIC Lança Plano Nacional de Fomento para Impulsionar a Previdência Complementar Fechada",
     "description": "A PREVIC (Superintendência Nacional de Previdência Complementar) deu início à segunda temporada do Conexões PREVIC, apresentando o Plano Nacional de Fomento. Este plano estratégico visa fortalecer e expandir o sistema de previdência complementar fechada no Brasil, contando com a participação de diversos especialistas e representantes do setor.",
@@ -200,19 +168,19 @@
     "image": ""
   },
   {
-    "id": "146",
-    "title": "3º Seminário de Previdência Complementar: Guia Essencial para o Futuro Financeiro do Servidor Público",
-    "description": "A Funpresp-Exe, Funpresp-Jud e DF-PreviCom promovem o 3º Seminário de Previdência Complementar do Servidor Público em novembro de 2026. O evento gratuito visa capacitar servidores em planejamento financeiro e previdenciário, abordando temas cruciais para a construção de um futuro seguro.",
-    "date": "2026-10-29T18:25:37.000Z",
-    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aeb649370af41ca90de0ba2b2243a6e&url=https%3a%2f%2fwww.gov.br%2fservidor%2fpt-br%2fassuntos%2fnoticias%2f2026%2foutubro%2f3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro-em-brasilia&c=15542924752912275236&mkt=pt-br",
-    "image": ""
-  },
-  {
     "id": "118",
     "title": "3º Seminário Nacional Promove Educação Previdenciária e Financeira para Servidores Públicos",
     "description": "O evento, organizado pela Funpresp-Exe, Funpresp-Jud e DF-PreviCom, visa capacitar servidores públicos sobre planejamento financeiro e previdenciário de longo prazo. Especialistas abordarão temas cruciais como endividamento, regras previdenciárias e estratégias de investimento para a aposentadoria. As inscrições são gratuitas e as vagas presenciais são limitadas.",
     "date": "2026-10-29T18:25:37.000Z",
     "link": "https://www.gov.br/servidor/pt-br/assuntos/noticias/2026/outubro/3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro-em-brasilia",
+    "image": ""
+  },
+  {
+    "id": "146",
+    "title": "3º Seminário de Previdência Complementar: Guia Essencial para o Futuro Financeiro do Servidor Público",
+    "description": "A Funpresp-Exe, Funpresp-Jud e DF-PreviCom promovem o 3º Seminário de Previdência Complementar do Servidor Público em novembro de 2026. O evento gratuito visa capacitar servidores em planejamento financeiro e previdenciário, abordando temas cruciais para a construção de um futuro seguro.",
+    "date": "2026-10-29T18:25:37.000Z",
+    "link": "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=6aeb649370af41ca90de0ba2b2243a6e&url=https%3a%2f%2fwww.gov.br%2fservidor%2fpt-br%2fassuntos%2fnoticias%2f2026%2foutubro%2f3o-seminario-de-previdencia-complementar-do-servidor-publico-sera-realizado-em-novembro-em-brasilia&c=15542924752912275236&mkt=pt-br",
     "image": ""
   },
   {
